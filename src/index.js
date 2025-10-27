@@ -1,0 +1,5 @@
+openStaffLogin()
+{
+    console.log("hello");
+    
+}
