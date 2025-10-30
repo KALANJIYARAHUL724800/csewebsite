@@ -1,19 +1,69 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createUser } from "../index";
 
 const StudentSignup = ({ onClose }) => {
   const navigate = useNavigate();
-
   const handleClose = () => {
-    if (onClose) onClose(); // optional close handler
-    navigate("/home"); // navigate to /home
+    navigate("/home");
+  };
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [serverError, setServerError] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // handle signup logic here (API, validation, etc.)
-    alert("Signup successful!");
-    navigate("/home"); // redirect after signup
+    setErrors({ name: "", email: "", password: "", confirmPassword: "" });
+    setServerError("");
+
+    try {
+      const res = await createUser(formData);
+      alert("Signup successful!");
+      console.log("Server response:", res.data);
+      navigate("/home");
+    } catch (err) {
+      console.error("Signup failed:", err);
+
+      const newErrors = { name: "", email: "", password: "", confirmPassword: "" };
+
+      if (err.response) {
+        const { status, data } = err.response;
+
+        if (status === 400) {
+          data.split(";").forEach((msg) => {
+            msg = msg.trim().toLowerCase();
+            if (msg.includes("name")) newErrors.name = msg;
+            else if (msg.includes("email")) newErrors.email = msg;
+            else if (msg.includes("password") && !msg.includes("confirm"))
+              newErrors.password = msg;
+            else if (msg.includes("confirm")) newErrors.confirmPassword = msg;
+          });
+        } else if (status === 409) {
+          newErrors.email = "Email already registered. Please try another email.";
+        } else {
+          setServerError("Something went wrong. Please try again later.");
+        }
+      } else {
+        setServerError("Network error. Please check your connection.");
+      }
+
+      setErrors(newErrors);
+    }
   };
 
   return (
@@ -34,64 +84,74 @@ const StudentSignup = ({ onClose }) => {
         className="panel bg-white p-4 rounded shadow-lg"
         style={{ width: "380px", position: "relative", borderRadius: "15px" }}
       >
-        <div className="panel-header d-flex justify-content-between align-items-center mb-3">
-          <h2 className="m-0 text-primary">Student Sign Up</h2>
-          <span
-            className="close-btn"
-            style={{
-              fontSize: "1.5rem",
-              cursor: "pointer",
-              fontWeight: "bold",
-              color: "#666",
-            }}
-            onClick={handleClose}
-          >
-            &times;
-          </span>
-        </div>
-
+        <h2 className="text-primary mb-3">Student Sign Up</h2>
+       <span
+          className="close-btn"
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "15px",
+            fontSize: "1.5rem",
+            cursor: "pointer",
+            fontWeight: "bold",
+            color: "#666",
+          }}
+          onClick={handleClose}
+        >
+          &times;
+        </span>
         <form onSubmit={handleSubmit}>
+          {serverError && (
+            <div className="alert alert-danger text-center py-2 mb-2">
+              {serverError}
+            </div>
+          )}
+
           <input
             type="text"
-            className="form-control mb-3"
+            className={`form-control mb-1 ${errors.name ? "is-invalid" : ""}`}
             placeholder="Full Name"
-            required
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
           />
+          {errors.name && <div className="text-danger mb-2">{errors.name}</div>}
+
           <input
             type="email"
-            className="form-control mb-3"
+            className={`form-control mb-1 ${errors.email ? "is-invalid" : ""}`}
             placeholder="Email Address"
-            required
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
           />
-          <input
-            type="text"
-            className="form-control mb-3"
-            placeholder="Student ID"
-            required
-          />
-          <input
-            type="password"
-            className="form-control mb-3"
-            placeholder="Password"
-            required
-          />
-          <input
-            type="password"
-            className="form-control mb-3"
-            placeholder="Confirm Password"
-            required
-          />
+          {errors.email && <div className="text-danger mb-2">{errors.email}</div>}
 
-          <button type="submit" className="btn btn-primary w-100 mb-3">
+          <input
+            type="password"
+            className={`form-control mb-1 ${errors.password ? "is-invalid" : ""}`}
+            placeholder="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+          {errors.password && <div className="text-danger mb-2">{errors.password}</div>}
+
+          <input
+            type="password"
+            className={`form-control mb-1 ${errors.confirmPassword ? "is-invalid" : ""}`}
+            placeholder="Confirm Password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
+          {errors.confirmPassword && (
+            <div className="text-danger mb-2">{errors.confirmPassword}</div>
+          )}
+
+          <button type="submit" className="btn btn-primary w-100 mt-2">
             Sign Up
           </button>
-
-          <div className="login-link text-center">
-            <span className="me-1">Already have an account?</span>
-            <a href="/login" className="text-decoration-none text-primary">
-              Login
-            </a>
-          </div>
         </form>
       </div>
     </div>

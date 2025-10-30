@@ -1,19 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { forgotPassword } from "../index";
 const ForgotPassword = ({ onClose }) => {
   const navigate = useNavigate();
-
+  const [errors, setErrors] = useState({
+    email: "",
+  });
+  const [serverError, setServerError] = useState("");
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+  const [formData, setFormData] = useState({
+    email: "",
+  });
   const handleClose = () => {
     if (onClose) onClose();
-    navigate("/home"); // redirect to home when close
+    navigate("/home");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can handle backend email verification or OTP logic
-    alert("Password reset link sent to your email!");
-    navigate("/home"); // redirect after submitting
+    setServerError("");
+    setErrors({ email: "" });
+
+    try {
+      await forgotPassword(formData);
+      alert("Password reset link sent to your email!");
+      navigate("/home");
+    } catch (err) {
+      if (err.response && err.response.data) {
+        const message = err.response.data;
+        const newErrors = { email: "" };
+        const msgs = message.split(";").map((m) => m.trim());
+        msgs.forEach((msg) => {
+          if (msg.toLowerCase().includes("email")) newErrors.email = msg;
+        });
+
+        setErrors(newErrors);
+      } else {
+        setServerError("Network error. Please check your connection.");
+      }
+    }
   };
 
   return (
@@ -59,25 +87,21 @@ const ForgotPassword = ({ onClose }) => {
             type="email"
             className="form-control mb-3"
             placeholder="Enter your email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
             required
           />
+           {errors.email && (
+            <div className="text-danger small mb-2">{errors.email}</div>
+          )}
+           {serverError && (
+            <div className="text-danger small mb-2">{serverError}</div>
+          )}
 
           <button type="submit" className="btn btn-warning w-100 mb-3">
             Send Reset Link
           </button>
-
-          <div className="back-login text-center">
-            <a
-              href="#"
-              className="text-decoration-none text-secondary"
-              onClick={(e) => {
-                e.preventDefault();
-                navigate("/login");
-              }}
-            >
-              Back to Login
-            </a>
-          </div>
         </form>
       </div>
     </div>

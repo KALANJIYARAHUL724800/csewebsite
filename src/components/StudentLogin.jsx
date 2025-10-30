@@ -2,10 +2,10 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const StudentLogin = () => {
-  const navigate = useNavigate(); // ✅ for page navigation
+  const navigate = useNavigate(); 
 
   const handleClose = () => {
-    navigate("/home"); // ✅ navigate to /home when close clicked
+    navigate("/home"); 
   };
 
   return (
