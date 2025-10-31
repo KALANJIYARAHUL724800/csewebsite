@@ -3,25 +3,6 @@ import { useEffect,useState } from 'react';
 import { getAllAboutContents } from "../index";
 const AboutComponent = () => {
    const [data, setData] = useState(null);
-  useEffect(() => {
-      const fetchData = async () => {
-         try {
-            const response = await getAllAboutContents(); 
-            console.log("Fetched About Content: ", response.data);
-            setData(response.data); 
-         } catch (err) {
-            console.error("Error fetching about content:", err);
-         }
-      };
-      fetchData(); 
-
-      return () => {
-         
-      };
-   }, []);
-   if (data === null) {
-      return <div>Loading...</div>;
-   }
    
   return (
     <div className="about-main">
@@ -36,6 +17,7 @@ const AboutComponent = () => {
             <div className="cube__face face-bottom"><img src="public\cselogo.png" className="cube-img img-fluid" /></div>
           </div>
         </div>
+
         <h2>Empowering Digital Careers Since 1998</h2>
         <p>
           Welcome to <b>CSE Computer Education,</b> the most trusted and long-standing computer training center in <b>Ramanathapuram,</b> Tamil Nadu. Established in <b>1998,</b> we have been at the forefront of delivering high-quality computer education to thousands of students and professionals for over 25 years.

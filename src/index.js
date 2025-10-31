@@ -12,3 +12,7 @@ export const forgotPassword = (userData) => {
 export const getAllAboutContents = () => {
   return axios.get(`${API_BASE}/about-content`);
 };
+
+export const loginUser = () => {
+  return axios.get(`${API_BASE}/login`);
+};
