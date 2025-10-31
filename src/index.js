@@ -9,3 +9,6 @@ export const createUser = (userData) => {
 export const forgotPassword = (userData) => {
   return axios.post(`${API_BASE}/forgot-password`, userData);
 };
+export const getAllAboutContents = () => {
+  return axios.get(`${API_BASE}/about-content`);
+};

@@ -1,17 +1,39 @@
 import React from 'react';
-
+import { useEffect,useState } from 'react';
+import { getAllAboutContents } from "../index";
 const AboutComponent = () => {
+   const [data, setData] = useState(null);
+  useEffect(() => {
+      const fetchData = async () => {
+         try {
+            const response = await getAllAboutContents(); 
+            console.log("Fetched About Content: ", response.data);
+            setData(response.data); 
+         } catch (err) {
+            console.error("Error fetching about content:", err);
+         }
+      };
+      fetchData(); 
+
+      return () => {
+         
+      };
+   }, []);
+   if (data === null) {
+      return <div>Loading...</div>;
+   }
+   
   return (
     <div className="about-main">
         <h1 className='about-h1'>About Us</h1>
-        <div class="scene" aria-hidden="true">
+        <div className="scene" aria-hidden="true">
           <div className="cube" role="img" aria-label="Animated 3D cube">
-            <div className="cube__face face-front"><img src="public\cselogo.png"  className="cube-img img-fluid" alt="" srcset="" /></div>
-            <div className="cube__face face-back"><img src="public\cselogo.png"   className="cube-img img-fluid" alt="" srcset="" /></div>
-            <div className="cube__face face-right"><img src="public\cselogo.png"  className="cube-img img-fluid" alt="" srcset="" /></div>
-            <div className="cube__face face-left"><img src="public\cselogo.png"   className="cube-img img-fluid" alt="" srcset="" /></div>
-            <div className="cube__face face-top"><img src="public\cselogo.png"    className="cube-img img-fluid" alt="" srcset="" /></div>
-            <div className="cube__face face-bottom"><img src="public\cselogo.png" className="cube-img img-fluid" alt="" srcset="" /></div>
+            <div className="cube__face face-front"><img src="public\cselogo.png"  className="cube-img img-fluid" /></div>
+            <div className="cube__face face-back"><img src="public\cselogo.png"   className="cube-img img-fluid" /></div>
+            <div className="cube__face face-right"><img src="public\cselogo.png"  className="cube-img img-fluid" /></div>
+            <div className="cube__face face-left"><img src="public\cselogo.png"   className="cube-img img-fluid" /></div>
+            <div className="cube__face face-top"><img src="public\cselogo.png"    className="cube-img img-fluid" /></div>
+            <div className="cube__face face-bottom"><img src="public\cselogo.png" className="cube-img img-fluid" /></div>
           </div>
         </div>
         <h2>Empowering Digital Careers Since 1998</h2>

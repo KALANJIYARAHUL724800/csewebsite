@@ -29,17 +29,12 @@ const ForgotPassword = ({ onClose }) => {
       alert("Password reset link sent to your email!");
       navigate("/home");
     } catch (err) {
-      if (err.response && err.response.data) {
-        const message = err.response.data;
-        const newErrors = { email: "" };
-        const msgs = message.split(";").map((m) => m.trim());
-        msgs.forEach((msg) => {
-          if (msg.toLowerCase().includes("email")) newErrors.email = msg;
-        });
+      const message = err.response?.data || "Network error. Please check your connection.";
 
-        setErrors(newErrors);
+      if (message.toLowerCase().includes("email")) {
+        setErrors({ email: message });
       } else {
-        setServerError("Network error. Please check your connection.");
+        setServerError(message);
       }
     }
   };
@@ -92,10 +87,10 @@ const ForgotPassword = ({ onClose }) => {
             onChange={handleChange}
             required
           />
-           {errors.email && (
+          {errors.email && (
             <div className="text-danger small mb-2">{errors.email}</div>
           )}
-           {serverError && (
+          {serverError && (
             <div className="text-danger small mb-2">{serverError}</div>
           )}
 
