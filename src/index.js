@@ -16,3 +16,11 @@ export const getAllAboutContents = () => {
 export const loginUser = () => {
   return axios.get(`${API_BASE}/login`);
 };
+
+export const getAllCourses = () => {
+  return axios.get(`${API_BASE}/all-courses`);
+};
+
+export const findCourse = (courseId) => {
+  return axios.get(`${API_BASE}/all-courses/${courseId}`);
+};
