@@ -1,5 +1,4 @@
 import React from 'react';
-
 const ProgressComponent = () => {
   return (
     <div id="progress" className="content-section">
@@ -13,7 +12,7 @@ const ProgressComponent = () => {
                 <strong>Python Programming</strong>
                 <div>Module 3 (In Progress)</div>
                 <div className="progress-bar">
-                  <div className="progress-fill" style={{width: '65%'}}></div>
+                  <div className="progress-fill" style={{ width: '65%' }}></div>
                 </div>
               </div>
             </li>
@@ -22,7 +21,7 @@ const ProgressComponent = () => {
                 <strong>Web Development Basics</strong>
                 <div>Module 1 (In Progress)</div>
                 <div className="progress-bar">
-                  <div className="progress-fill" style={{width: '30%'}}></div>
+                  <div className="progress-fill" style={{ width: '30%' }}></div>
                 </div>
               </div>
             </li>

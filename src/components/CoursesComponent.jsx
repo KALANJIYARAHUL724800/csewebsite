@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getAllCourses } from "../index";
 import { useNavigate } from "react-router-dom";
-
 const CoursesComponent = () => {
   const [courses, setCourses] = useState([]);
-
   useEffect(() => {
     getAllCourses()
       .then((response) => {
@@ -16,14 +14,12 @@ const CoursesComponent = () => {
           return;
         }
         setCourses(fetchedCourses);
-        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching courses:", error);
         navigate("/home");
       });
   }, []);
-
   return (
     <div className="container py-5" id="courses">
       <h1 className="text-center mb-5 text-primary">Available Courses</h1>

@@ -18,6 +18,7 @@ import StudentSignup from './components/StudentSignup';
 import ForgotPassword from './components/ForgotPassword';
 import UpdatePassword from './components/UpdatePassword';
 import CourseContent from './components/CourseContent';
+import AddCourseComponent from './components/AddCourseComponent';
 function App() {
 
   return (
@@ -39,6 +40,7 @@ function App() {
                  <Route path="/update-password" element={<UpdatePassword />} />
                  <Route path="/staff-login" element={<StaffLogin />} />
                  <Route path="/course" element={<CourseContent />} />
+                 <Route path="/addcourse" element={<AddCourseComponent />} />
           </Routes>
            <br /><br />
         </div>

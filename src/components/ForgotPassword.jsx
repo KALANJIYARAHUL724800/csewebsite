@@ -23,7 +23,6 @@ const ForgotPassword = ({ onClose }) => {
     e.preventDefault();
     setServerError("");
     setErrors({ email: "" });
-
     try {
       await forgotPassword(formData);
       alert("Password reset link sent to your email!");

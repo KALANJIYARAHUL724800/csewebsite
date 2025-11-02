@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 const UpdatePassword = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -19,10 +18,8 @@ const UpdatePassword = () => {
         setError("");
         setSuccess("");
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (!formData.password || !formData.confirmPassword) {
             setError("Please fill in both fields.");
             return;
@@ -34,9 +31,7 @@ const UpdatePassword = () => {
         }
         setSuccess("Password updated successfully!");
         setError("");
-       
     };
-
     return (
         <div
             className="overlay d-flex justify-content-center align-items-center"

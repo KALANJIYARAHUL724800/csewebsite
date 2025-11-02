@@ -1,5 +1,4 @@
 import React from 'react'
-
 const footerComponent = () => {
   return (
     <div className='bg-dark footer'>

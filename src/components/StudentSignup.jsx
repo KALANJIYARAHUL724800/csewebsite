@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createUser } from "../index";
-
 const StudentSignup = ({ onClose }) => {
   const navigate = useNavigate();
   const handleClose = () => {
@@ -20,30 +19,22 @@ const StudentSignup = ({ onClose }) => {
     password: "",
     confirmPassword: "",
   });
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({ name: "", email: "", password: "", confirmPassword: "" });
     setServerError("");
-
     try {
       const res = await createUser(formData);
       alert("Signup successful!");
-      console.log("Server response:", res.data);
       navigate("/home");
     } catch (err) {
-      console.error("Signup failed:", err);
-
       const newErrors = { name: "", email: "", password: "", confirmPassword: "" };
-
       if (err.response) {
         const { status, data } = err.response;
-
         if (status === 400) {
           data.split(";").forEach((msg) => {
             msg = msg.trim().toLowerCase();
@@ -61,11 +52,9 @@ const StudentSignup = ({ onClose }) => {
       } else {
         setServerError("Network error. Please check your connection.");
       }
-
       setErrors(newErrors);
     }
   };
-
   return (
     <div
       className="overlay d-flex justify-content-center align-items-center"
@@ -85,7 +74,7 @@ const StudentSignup = ({ onClose }) => {
         style={{ width: "380px", position: "relative", borderRadius: "15px" }}
       >
         <h2 className="text-primary mb-3">Student Sign Up</h2>
-       <span
+        <span
           className="close-btn"
           style={{
             position: "absolute",

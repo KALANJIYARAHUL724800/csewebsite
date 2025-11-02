@@ -1,14 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
 const StaffLogin = ({ onClose }) => {
   const navigate = useNavigate();
-
   const handleClose = () => {
-    if (onClose) onClose(); 
-    navigate("/home"); 
+    if (onClose) onClose();
+    navigate("/home");
   };
-
   return (
     <div
       className="overlay d-flex justify-content-center align-items-center"

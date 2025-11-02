@@ -1,4 +1,3 @@
-// HDCAFullPage.js
 import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -14,21 +13,18 @@ const CourseContent = () => {
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const imageWidth = 400; // width of one image in pixels
+  const imageWidth = 400;
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex(prev => (prev + 1) % images.length);
-    }, 2000); // slide every 2 seconds
+    }, 2000);
     return () => clearInterval(interval);
   }, [images.length]);
 
   return (
     <div className="container my-5">
-      {/* Heading */}
       <h1 className="text-center mb-3">HDCA (Higher Diploma in Computer Applications)</h1>
-
-      {/* Image Marquee Box */}
       <div className="my-5">
         <h2 className="text-center mb-4">HDCA Image Marquee</h2>
         <div
@@ -55,13 +51,9 @@ const CourseContent = () => {
           </div>
         </div>
       </div>
-
-      {/* Subheading */}
       <h4 className="text-center mb-4 text-muted">
         Learn practical computer applications for a successful career
       </h4>
-
-      {/* Overview */}
       <section className="mb-4">
         <h3>Overview</h3>
         <p>
@@ -69,27 +61,21 @@ const CourseContent = () => {
           It focuses on practical applications such as Tally ERP 9, MS Office, programming basics, and database management.
         </p>
       </section>
-
-      {/* About Tally */}
       <section className="mb-4">
         <h3>About Tally</h3>
         <p>
-          Tally ERP 9 is one of the most popular accounting software programs used in businesses. 
+          Tally ERP 9 is one of the most popular accounting software programs used in businesses.
           In HDCA, students learn to manage accounts, generate invoices, prepare financial statements, and handle taxation using Tally.
           Mastering Tally prepares students for roles like Tally Operator, Accountant, and Finance Assistant.
         </p>
       </section>
-
-      {/* MS Office */}
       <section className="mb-4">
         <h3>Microsoft Office Suite</h3>
         <p>
-          MS Office is an essential tool for any office environment. HDCA covers Word for document preparation, Excel for spreadsheets and data analysis, 
+          MS Office is an essential tool for any office environment. HDCA covers Word for document preparation, Excel for spreadsheets and data analysis,
           and PowerPoint for creating professional presentations. These skills help students become proficient in office tasks and administration.
         </p>
       </section>
-
-      {/* Programming */}
       <section className="mb-4">
         <h3>Programming Fundamentals</h3>
         <p>
@@ -97,8 +83,6 @@ const CourseContent = () => {
           This foundation helps in understanding software applications and prepares students for more advanced IT courses in the future.
         </p>
       </section>
-
-      {/* Database */}
       <section className="mb-4">
         <h3>Database Management</h3>
         <p>
@@ -106,8 +90,6 @@ const CourseContent = () => {
           Understanding databases enhances career opportunities in IT and administrative roles.
         </p>
       </section>
-
-      {/* Career Opportunities */}
       <section className="mb-4">
         <h3>Career Opportunities</h3>
         <p>
@@ -115,12 +97,10 @@ const CourseContent = () => {
           The course equips students with practical skills that are highly valued in offices and industries.
         </p>
       </section>
-
-      {/* Conclusion */}
       <section className="mb-4">
         <h3>Conclusion</h3>
         <p>
-          HDCA provides a comprehensive learning experience for students who want to gain practical computer application skills. 
+          HDCA provides a comprehensive learning experience for students who want to gain practical computer application skills.
           It combines software training, programming, and database knowledge, making students job-ready and enhancing their career prospects.
         </p>
       </section>

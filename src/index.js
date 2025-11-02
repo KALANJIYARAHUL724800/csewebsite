@@ -24,3 +24,16 @@ export const getAllCourses = () => {
 export const findCourse = (courseId) => {
   return axios.get(`${API_BASE}/all-courses/${courseId}`);
 };
+
+export const addCourse = (course) => {
+  return axios.post(`${API_BASE}/addcourse`, course);
+};
+
+
+export const updateCourse = (id,coureData) => {
+  return axios.put(`${API_BASE}/updatecourse/${id}`,coureData);
+};
+
+export const searchCourse = (value) => {
+  return axios.get(`${API_BASE}/search`, { params: { value } });
+};

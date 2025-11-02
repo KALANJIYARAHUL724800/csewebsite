@@ -9,7 +9,6 @@ const HeaderComponent = () => {
         <a className="navbar-brand fw-bold header-logo" href="#">
           <img src="public\cselogo.png" alt="cselogo" className='cse-headinglogo' />
         </a>
-
         <button
           className="navbar-toggler"
           type="button"
@@ -73,7 +72,6 @@ const HeaderComponent = () => {
 
       </div>
     </nav>
-    
   );
 };
 
