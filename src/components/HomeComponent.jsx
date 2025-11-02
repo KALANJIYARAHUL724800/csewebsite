@@ -7,7 +7,7 @@ const HomeComponent = () => {
   const [courses, setCourses] = useState([]);
   const [searched, setSearched] = useState(false);
   const studentLogin = () => navigate("/login");
-  const staffLogin = () => navigate("/staff-login");
+  const staffLogin = () => navigate("/admin");
   const handleSearch = () => {
     if (!searchData.trim()) return;
     searchCourse(searchData)
@@ -116,13 +116,13 @@ const HomeComponent = () => {
           >
             Student Login
           </button>
-          <button
+          {/* <button
             id="staffLoginBtn"
             className="auth-btn secondary"
             onClick={staffLogin}
           >
             Staff Portal
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

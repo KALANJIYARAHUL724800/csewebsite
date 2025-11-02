@@ -1,11 +1,69 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginAdmin } from "../index";
+
 const StaffLogin = ({ onClose }) => {
   const navigate = useNavigate();
+
+  // state for server errors & validation errors
+  const [serverError, setServerError] = useState("");
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+  });
+
+  // form data
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  // input change handler
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  // form submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Login Data:", formData);
+    setServerError("");
+    setErrors({ email: "", password: "" });
+
+    try {
+      const res = await loginAdmin(formData);
+      alert("Login successful!");
+      navigate("/home");
+    } catch (err) {
+      const newErrors = { email: "", password: "" };
+      if (err.response) {
+        const { status, data } = err.response;
+        if (status === 400) {
+          data.split(";").forEach((msg) => {
+            msg = msg.trim().toLowerCase();
+            if (msg.includes("email")) newErrors.email = msg;
+            else if (msg.includes("password")) newErrors.password = msg;
+          });
+        } else {
+          setServerError("Something went wrong. Please try again later.");
+        }
+      } else {
+        setServerError("Network error. Please check your connection.");
+      }
+      setErrors(newErrors);
+    }
+  };
+
+  // close modal
   const handleClose = () => {
     if (onClose) onClose();
     navigate("/home");
   };
+
   return (
     <div
       className="overlay d-flex justify-content-center align-items-center"
@@ -40,19 +98,35 @@ const StaffLogin = ({ onClose }) => {
           </span>
         </div>
 
-        <form>
+        <form onSubmit={handleSubmit}>
+          {serverError && (
+            <div className="alert alert-danger text-center py-2 mb-2">
+              {serverError}
+            </div>
+          )}
+
           <input
-            type="text"
-            className="form-control mb-3"
-            placeholder="Staff ID"
-            required
+            type="email"
+            className="form-control mb-2"
+            placeholder="Enter Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
           />
+          {errors.email && <div className="text-danger mb-2">{errors.email}</div>}
+
           <input
             type="password"
             className="form-control mb-2"
-            placeholder="Password"
-            required
+            placeholder="Enter Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
           />
+          {errors.password && (
+            <div className="text-danger mb-2">{errors.password}</div>
+          )}
+
           <a
             href="/forgot-password"
             className="d-block text-end mb-3 text-decoration-none small text-muted"
@@ -66,7 +140,11 @@ const StaffLogin = ({ onClose }) => {
 
           <div className="signup-link text-center">
             <span className="me-1">Don’t have an account?</span>
-            <a href="#" className="text-decoration-none">
+            <a
+              href="#"
+              className="text-decoration-none"
+              onClick={() => navigate("/signup")}
+            >
               Sign Up
             </a>
           </div>

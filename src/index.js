@@ -6,6 +6,10 @@ export const createUser = (userData) => {
   return axios.post(`${API_BASE}/register`, userData);
 };
 
+export const createAdmin = (userData) => {
+  return axios.post(`${API_BASE}/admin-register`, userData);
+};
+
 export const forgotPassword = (userData) => {
   return axios.post(`${API_BASE}/forgot-password`, userData);
 };
@@ -15,6 +19,10 @@ export const getAllAboutContents = () => {
 
 export const loginUser = () => {
   return axios.get(`${API_BASE}/login`);
+};
+
+export const loginAdmin = (userData) => {
+  return axios.post(`${API_BASE}/admin-login`,userData);
 };
 
 export const getAllCourses = () => {

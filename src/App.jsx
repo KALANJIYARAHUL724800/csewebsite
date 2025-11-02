@@ -19,6 +19,7 @@ import ForgotPassword from './components/ForgotPassword';
 import UpdatePassword from './components/UpdatePassword';
 import CourseContent from './components/CourseContent';
 import AddCourseComponent from './components/AddCourseComponent';
+import StaffsignupComponent from './components/StaffsignupComponent';
 function App() {
 
   return (
@@ -38,7 +39,8 @@ function App() {
                  <Route path="/signup" element={<StudentSignup />} />
                  <Route path="/forgot-password" element={<ForgotPassword />} />
                  <Route path="/update-password" element={<UpdatePassword />} />
-                 <Route path="/staff-login" element={<StaffLogin />} />
+                 <Route path="/admin" element={<StaffLogin />} />
+                 <Route path="/admin-signup" element={<StaffsignupComponent />} />
                  <Route path="/course" element={<CourseContent />} />
                  <Route path="/addcourse" element={<AddCourseComponent />} />
           </Routes>

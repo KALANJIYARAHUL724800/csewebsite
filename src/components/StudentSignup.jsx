@@ -137,7 +137,6 @@ const StudentSignup = ({ onClose }) => {
           {errors.confirmPassword && (
             <div className="text-danger mb-2">{errors.confirmPassword}</div>
           )}
-
           <button type="submit" className="btn btn-primary w-100 mt-2">
             Sign Up
           </button>
