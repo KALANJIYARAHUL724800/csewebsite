@@ -45,3 +45,11 @@ export const updateCourse = (id,coureData) => {
 export const searchCourse = (value) => {
   return axios.get(`${API_BASE}/search`, { params: { value } });
 };
+
+export const addCourseContent = (value) => {
+  return axios.post(`${API_BASE}/course-content/insert`,value);
+};
+
+export const searchCourseContent = (id) => {
+  return axios.get(`${API_BASE}/course-content/find/${id}`);
+};

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { getAllCourses, addCourse, updateCourse } from "../index";
+import { getAllCourses, addCourse, updateCourse, searchCourseContent } from "../index";
+import { useNavigate } from "react-router-dom";
 
 const AddCourseComponent = () => {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [formType, setFormType] = useState(null);
 
@@ -34,10 +36,13 @@ const AddCourseComponent = () => {
   const handleInsertSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await addCourse(insertData); 
-      setCourses([...courses, response.data]);      
+      const response = await addCourse(insertData);
+      setCourses([...courses, response.data]);
       setInsertData({ courseName: "", logoUrl: "", courseContent: "", month: "" });
       setFormType(null);
+      console.log(response.data);
+      const courseContent = await searchCourseContent(response.data.id);
+      navigate("/addcoursecontent", { state: { courseContentData : courseContent } });
     } catch (error) {
       console.error("Insert failed:", error.response?.data || error.message);
     }

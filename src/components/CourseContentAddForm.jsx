@@ -1,9 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaLaptopCode, FaBookOpen, FaUserFriends, FaTools, FaListAlt, FaBriefcase, FaIdBadge } from "react-icons/fa";
+import {
+  FaLaptopCode,
+  FaBookOpen,
+  FaUserFriends,
+  FaTools,
+  FaListAlt,
+  FaBriefcase,
+  FaIdBadge,
+} from "react-icons/fa";
+import { useLocation } from "react-router-dom";
+import { searchCourseContent, addCourseContent } from "../index";
 
 const CourseContentForm = () => {
-  // Form state
+  const location = useLocation();
+  const { courseId } = location.state || {};
+
   const [formData, setFormData] = useState({
     courseId: "",
     courseTitle: "",
@@ -11,8 +23,24 @@ const CourseContentForm = () => {
     whoCanJoin: "",
     skillsYouWillGain: "",
     courseTopics: "",
-    careerOpportunities: ""
+    careerOpportunities: "",
   });
+
+  // Fetch course content by ID
+  useEffect(() => {
+    if (courseId) {
+      searchCourseContent(courseId)
+        .then((res) => {
+          const data = res.data;
+          setFormData((prev) => ({
+            ...prev,
+            courseId: data.id || courseId,
+            courseTitle: data.courseName || "",
+          }));
+        })
+        .catch((err) => console.error("Error fetching content:", err));
+    }
+  }, [courseId]);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -21,15 +49,23 @@ const CourseContentForm = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
-    alert("Course content updated successfully!");
+    try {
+      await addCourseContent(formData);
+      alert("Course content saved successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("Error saving course content!");
+    }
   };
 
   return (
     <div className="container my-5">
-      <h2 className="text-center mb-5" style={{ color: "#007bff", fontWeight: "700" }}>
+      <h2
+        className="text-center mb-5"
+        style={{ color: "#007bff", fontWeight: "700" }}
+      >
         Edit Course Content
       </h2>
 
@@ -44,9 +80,7 @@ const CourseContentForm = () => {
             className="form-control"
             name="courseId"
             value={formData.courseId}
-            onChange={handleChange}
-            placeholder="Enter Course ID"
-            required
+            readOnly
           />
         </div>
 
@@ -60,7 +94,7 @@ const CourseContentForm = () => {
             className="form-control"
             name="courseTitle"
             value={formData.courseTitle}
-            onChange={handleChange}
+            readOnly
           />
         </div>
 

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 const DashboardComponent = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
-    localStorage.removeItem("token"); // remove auth token
+    localStorage.removeItem("token");
     navigate("/home");
   };
 
