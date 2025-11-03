@@ -12,6 +12,13 @@ const StaffsignupComponent = () => {
         confirmPassword: "",
         type: false,
     });
+    const [errors, setErrors] = useState({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        type: "",
+    });
 
     // handle input change
     const handleChange = (e) => {
@@ -28,7 +35,7 @@ const StaffsignupComponent = () => {
         try {
             const res = await createAdmin(formData);
             alert("Signup successful!");
-            navigate("/home");
+            navigate("/admin");
         } catch (err) {
             const newErrors = { name: "", email: "", password: "", confirmPassword: "", type: "" };
             if (err.response) {

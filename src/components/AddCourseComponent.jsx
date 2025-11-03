@@ -33,14 +33,13 @@ const AddCourseComponent = () => {
 
   const handleInsertSubmit = async (e) => {
     e.preventDefault();
-    const newId = courses.length + 1;
-    const newCourse = { id: newId, ...insertData };
-    setCourses([...courses, newCourse]);
-    setInsertData({ courseName: "", logoUrl: "", courseContent: "", month: "" });
-    setFormType(null);
     try {
-      await addCourse(newCourse);
+      const response = await addCourse(insertData); 
+      setCourses([...courses, response.data]);      
+      setInsertData({ courseName: "", logoUrl: "", courseContent: "", month: "" });
+      setFormType(null);
     } catch (error) {
+      console.error("Insert failed:", error.response?.data || error.message);
     }
   };
 
@@ -78,6 +77,8 @@ const AddCourseComponent = () => {
                 backgroundColor: "#000",
                 color: "#fff",
                 borderRadius: "10px",
+                width: "90%",
+                wordWrap: "break-word"
               }}
             >
               <thead className="table-dark">
@@ -95,7 +96,23 @@ const AddCourseComponent = () => {
                   <tr key={course.id}>
                     <td>{course.id}</td>
                     <td>{course.courseName}</td>
-                    <td>{course.logoUrl}</td>
+                    <td>
+                      {course.logoUrl ? (
+                        <img
+                          src={course.logoUrl}
+                          alt="Course Logo"
+                          style={{
+                            width: "100px",
+                            height: "80px",
+                            objectFit: "cover",
+                            borderRadius: "5px"
+                          }}
+                        />
+                      ) : (
+                        <span style={{ color: "#ccc" }}>No Logo</span>
+                      )}
+                    </td>
+
                     <td>{course.courseContent}</td>
                     <td>{course.month}</td>
                     <td>

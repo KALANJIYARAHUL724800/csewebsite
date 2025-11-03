@@ -30,14 +30,15 @@ const StaffLogin = ({ onClose }) => {
   // form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login Data:", formData);
     setServerError("");
     setErrors({ email: "", password: "" });
 
     try {
       const res = await loginAdmin(formData);
+      console.log("Login Data:", res.data);
+      localStorage.setItem("token", res.data.token);
       alert("Login successful!");
-      navigate("/home");
+      navigate("/dashboard", { state: { user: res.data } });
     } catch (err) {
       const newErrors = { email: "", password: "" };
       if (err.response) {
@@ -83,7 +84,7 @@ const StaffLogin = ({ onClose }) => {
         style={{ width: "350px", position: "relative", borderRadius: "15px" }}
       >
         <div className="panel-header d-flex justify-content-between align-items-center mb-3">
-          <h2 className="m-0 text-success">Staff Login</h2>
+          <h2 className="m-0 text-success">Admin Login</h2>
           <span
             className="close-btn"
             style={{
@@ -137,17 +138,6 @@ const StaffLogin = ({ onClose }) => {
           <button type="submit" className="btn btn-success w-100 mb-3">
             Login
           </button>
-
-          <div className="signup-link text-center">
-            <span className="me-1">Don’t have an account?</span>
-            <a
-              href="#"
-              className="text-decoration-none"
-              onClick={() => navigate("/signup")}
-            >
-              Sign Up
-            </a>
-          </div>
         </form>
       </div>
     </div>

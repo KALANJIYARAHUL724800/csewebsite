@@ -40,7 +40,7 @@ const HomeComponent = () => {
             <input
               type="text"
               name="searchData"
-              placeholder="Search for courses, tutorials, or resources..."
+              placeholder="உங்களுக்கு தேவையான கம்ப்யூட்டர்  பயிற்சியை இங்கே Type செய்யவும் "
               value={searchData}
               id="search"
               onChange={(e) => setSearchData(e.target.value)}

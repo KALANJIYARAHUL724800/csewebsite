@@ -20,6 +20,9 @@ import UpdatePassword from './components/UpdatePassword';
 import CourseContent from './components/CourseContent';
 import AddCourseComponent from './components/AddCourseComponent';
 import StaffsignupComponent from './components/StaffsignupComponent';
+import DashboardComponent from './components/DashboardComponent';
+import ProtectedRoute from './components/ProtectedRoute';
+import CourseContentAddForm from './components/CourseContentAddForm';
 function App() {
 
   return (
@@ -29,22 +32,31 @@ function App() {
         <div>
           <Routes>
             <Route path="/" element={<HomeComponent />} />
-             <Route path="/home" element={<HomeComponent />} />
+            <Route path="/home" element={<HomeComponent />} />
             <Route path="/about" element={<AboutComponent />} />
-             <Route path="/courses" element={<CoursesComponent />} />
-             <Route path="/progress" element={<ProgressComponent />} />
-              <Route path="/contact" element={<ContactComponent />} />
-               <Route path="/gallery" element={<GalleryComponent />} />
-                <Route path="/login" element={<StudentLogin />} />
-                 <Route path="/signup" element={<StudentSignup />} />
-                 <Route path="/forgot-password" element={<ForgotPassword />} />
-                 <Route path="/update-password" element={<UpdatePassword />} />
-                 <Route path="/admin" element={<StaffLogin />} />
-                 <Route path="/admin-signup" element={<StaffsignupComponent />} />
-                 <Route path="/course" element={<CourseContent />} />
-                 <Route path="/addcourse" element={<AddCourseComponent />} />
+            <Route path="/courses" element={<CoursesComponent />} />
+            <Route path="/progress" element={<ProgressComponent />} />
+            <Route path="/contact" element={<ContactComponent />} />
+            <Route path="/gallery" element={<GalleryComponent />} />
+            <Route path="/login" element={<StudentLogin />} />
+            <Route path="/signup" element={<StudentSignup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/update-password" element={<UpdatePassword />} />
+            <Route path="/admin" element={<StaffLogin />} />
+            <Route path="/admin-signup" element={<StaffsignupComponent />} />
+            <Route path="/course" element={<CourseContent />} />
+            <Route path="/addcoursecontent" element={<CourseContentAddForm />} />
+            <Route path="/addcourse" element={<AddCourseComponent />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <DashboardComponent />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
-           <br /><br />
+          <br /><br />
         </div>
       </Router>
       <FooterComponent />
