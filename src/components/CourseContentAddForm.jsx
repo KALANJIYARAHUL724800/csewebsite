@@ -9,12 +9,11 @@ import {
   FaBriefcase,
   FaIdBadge,
 } from "react-icons/fa";
-import { useLocation } from "react-router-dom";
-import { searchCourseContent, addCourseContent } from "../index";
+import { useNavigate } from "react-router-dom";
+import { addCourseContent, latestCourse } from "../index";
 
 const CourseContentForm = () => {
-  const location = useLocation();
-  const { courseId } = location.state || {};
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     courseId: "",
@@ -26,47 +25,64 @@ const CourseContentForm = () => {
     careerOpportunities: "",
   });
 
-  // Fetch course content by ID
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+
   useEffect(() => {
-    if (courseId) {
-      searchCourseContent(courseId)
-        .then((res) => {
-          const data = res.data;
+    const fetchLatestCourse = async () => {
+      try {
+        setLoading(true);
+        const response = await latestCourse();
+        console.log(response.data);
+        if (response && response.data) {
           setFormData((prev) => ({
             ...prev,
-            courseId: data.id || courseId,
-            courseTitle: data.courseName || "",
+            courseId: response.data.id,
+            courseName: response.data.courseName,
           }));
-        })
-        .catch((err) => console.error("Error fetching content:", err));
-    }
-  }, [courseId]);
+        }
+      } catch (err) {
+        console.error("Error fetching latest course:", err);
+        alert("Failed to fetch latest course.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Handle input changes
+    fetchLatestCourse();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSaving(true);
     try {
       await addCourseContent(formData);
       alert("Course content saved successfully!");
+      navigate("/courses");
     } catch (err) {
       console.error(err);
       alert("Error saving course content!");
+    } finally {
+      setSaving(false);
     }
   };
 
+  if (loading) {
+    return (
+      <div className="text-center my-5">
+        <h4>Loading latest course...</h4>
+      </div>
+    );
+  }
+
   return (
     <div className="container my-5">
-      <h2
-        className="text-center mb-5"
-        style={{ color: "#007bff", fontWeight: "700" }}
-      >
-        Edit Course Content
+      <h2 className="text-center mb-5" style={{ color: "#007bff", fontWeight: "700" }}>
+        Add Course Content
       </h2>
 
       <form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: "800px" }}>
@@ -93,8 +109,9 @@ const CourseContentForm = () => {
             type="text"
             className="form-control"
             name="courseTitle"
-            value={formData.courseTitle}
-            readOnly
+            value={formData.courseName}
+            onChange={handleChange}
+            required
           />
         </div>
 
@@ -109,6 +126,7 @@ const CourseContentForm = () => {
             value={formData.whatYouWillLearn}
             onChange={handleChange}
             rows="3"
+            required
           />
         </div>
 
@@ -169,8 +187,8 @@ const CourseContentForm = () => {
         </div>
 
         <div className="text-center mt-4">
-          <button type="submit" className="btn btn-primary px-5">
-            Save Changes
+          <button type="submit" className="btn btn-primary px-5" disabled={saving}>
+            {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </form>

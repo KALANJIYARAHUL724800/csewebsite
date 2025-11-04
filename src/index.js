@@ -42,8 +42,8 @@ export const updateCourse = (id,coureData) => {
   return axios.put(`${API_BASE}/updatecourse/${id}`,coureData);
 };
 
-export const searchCourse = (value) => {
-  return axios.get(`${API_BASE}/search`, { params: { value } });
+export const searchCourse = (id) => {
+  return axios.get(`${API_BASE}/find/${id}`);
 };
 
 export const addCourseContent = (value) => {
@@ -51,5 +51,14 @@ export const addCourseContent = (value) => {
 };
 
 export const searchCourseContent = (id) => {
-  return axios.get(`${API_BASE}/course-content/find/${id}`);
+  return axios.get(`${API_BASE}/course-content/search/${id}`);
+};
+export const search = (value) => {
+  return axios.get(`${API_BASE}/search`, {
+    params: { value: value }  
+  });
+};
+
+export const latestCourse = () => {
+  return axios.get(`${API_BASE}/latest-course`);
 };

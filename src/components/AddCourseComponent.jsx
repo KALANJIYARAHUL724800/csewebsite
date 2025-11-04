@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAllCourses, addCourse, updateCourse, searchCourseContent } from "../index";
+import { getAllCourses, addCourse, updateCourse, searchCourse } from "../index";
 import { useNavigate } from "react-router-dom";
 
 const AddCourseComponent = () => {
@@ -25,7 +25,7 @@ const AddCourseComponent = () => {
   useEffect(() => {
     getAllCourses()
       .then((response) => setCourses(response.data))
-      .catch((error) => { });
+      .catch((error) => console.error(error));
   }, []);
 
   const handleInsertChange = (e) => {
@@ -36,13 +36,21 @@ const AddCourseComponent = () => {
   const handleInsertSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Add the course
       const response = await addCourse(insertData);
-      setCourses([...courses, response.data]);
+      const newCourse = response.data;
+
+      // Update local state
+      setCourses([...courses, newCourse]);
       setInsertData({ courseName: "", logoUrl: "", courseContent: "", month: "" });
       setFormType(null);
-      console.log(response.data);
-      const courseContent = await searchCourseContent(response.data.id);
-      navigate("/addcoursecontent", { state: { courseContentData : courseContent } });
+
+      // Fetch the actual course content
+      const courseContent = (await searchCourse(newCourse.id)).data;
+
+      // Navigate with state
+      navigate("/addcoursecontent", { state: { courseContentData: courseContent } });
+
     } catch (error) {
       console.error("Insert failed:", error.response?.data || error.message);
     }
@@ -65,11 +73,14 @@ const AddCourseComponent = () => {
     try {
       await updateCourse(updateData.id, updateData);
     } catch (error) {
+      console.error(error);
     }
   };
+
   const handleDelete = (id) => {
     setCourses(courses.filter((c) => c.id !== id));
   };
+
   return (
     <div className="container mt-4">
       <h3 className="text-center mb-4">Course Details</h3>
@@ -117,7 +128,6 @@ const AddCourseComponent = () => {
                         <span style={{ color: "#ccc" }}>No Logo</span>
                       )}
                     </td>
-
                     <td>{course.courseContent}</td>
                     <td>{course.month}</td>
                     <td>
@@ -173,6 +183,7 @@ const AddCourseComponent = () => {
           </div>
         </>
       )}
+
       {formType && (
         <div className="d-flex justify-content-center mt-5">
           <div

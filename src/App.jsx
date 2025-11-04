@@ -44,7 +44,8 @@ function App() {
             <Route path="/update-password" element={<UpdatePassword />} />
             <Route path="/admin" element={<StaffLogin />} />
             <Route path="/admin-signup" element={<StaffsignupComponent />} />
-            <Route path="/course" element={<CourseContent />} />
+            {/* <Route path="/course" element={<CourseContent />} /> */}
+            <Route path="/course/:id" element={<CourseContent />} />
             <Route path="/addcoursecontent" element={<CourseContentAddForm />} />
             <Route path="/addcourse" element={<AddCourseComponent />} />
             <Route

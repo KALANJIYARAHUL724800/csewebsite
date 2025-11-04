@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAllCourses } from "../index";
+import { getAllCourses,searchCourseContent } from "../index";
 import { useNavigate } from "react-router-dom";
 const CoursesComponent = () => {
   const [courses, setCourses] = useState([]);
