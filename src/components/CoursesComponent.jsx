@@ -47,7 +47,7 @@ const CoursesComponent = () => {
                   <span className="text-muted">
                     <i className="fas fa-clock"></i> {course.month}
                   </span>
-                  <a href={`/course/${course.id}`} className="btn btn-primary btn-sm">Enroll Now</a>
+                  <a href={`/course/${course.id}`} className="btn btn-primary btn-sm">Learn More and Fees</a>
                 </div>
               </div>
             </div>

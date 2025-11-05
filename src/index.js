@@ -22,7 +22,7 @@ export const loginUser = () => {
 };
 
 export const loginAdmin = (userData) => {
-  return axios.post(`${API_BASE}/admin-login`,userData);
+  return axios.post(`${API_BASE}/admin-login`, userData);
 };
 
 export const getAllCourses = () => {
@@ -38,8 +38,8 @@ export const addCourse = (course) => {
 };
 
 
-export const updateCourse = (id,coureData) => {
-  return axios.put(`${API_BASE}/updatecourse/${id}`,coureData);
+export const updateCourse = (id, coureData) => {
+  return axios.put(`${API_BASE}/updatecourse/${id}`, coureData);
 };
 
 export const searchCourse = (id) => {
@@ -47,18 +47,32 @@ export const searchCourse = (id) => {
 };
 
 export const addCourseContent = (value) => {
-  return axios.post(`${API_BASE}/course-content/insert`,value);
+  return axios.post(`${API_BASE}/course-content/insert`, value);
 };
 
 export const searchCourseContent = (id) => {
-  return axios.get(`${API_BASE}/course-content/search/${id}`);
+  return axios.get(`${API_BASE}/course-content/find/${id}`);
 };
 export const search = (value) => {
   return axios.get(`${API_BASE}/search`, {
-    params: { value: value }  
+    params: { value: value }
   });
 };
 
 export const latestCourse = () => {
-  return axios.get(`${API_BASE}/latest-course`);
+  return axios.get(`${API_BASE}/course-content/latest-course`);
+};
+
+export const insertFeesEnquiry = (value) => {
+  return axios.post(`${API_BASE}/enquiry/insert`, value);
+};
+
+export const showAllFeesEnquiry = () => {
+  return axios.get(`${API_BASE}/enquiry/show`);
+};
+
+export const searchDateEnquiry = (startDate, endDate) => {
+  return axios.get(`${API_BASE}/enquiry/between-dates`, {
+    params: { startDate, endDate }
+  });
 };

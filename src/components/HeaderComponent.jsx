@@ -7,7 +7,7 @@ const HeaderComponent = () => {
       <div className="container-fluid">
 
         <a className="navbar-brand fw-bold header-logo" href="#">
-          <img src="public\cselogo.png" alt="cselogo" className='cse-headinglogo' />
+        <img src="/cselogo.png" alt="cselogo" className='cse-headinglogo' />
         </a>
         <button
           className="navbar-toggler"

@@ -8,6 +8,7 @@ import {
   FaListAlt,
   FaBriefcase,
   FaIdBadge,
+  FaImage,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { addCourseContent, latestCourse } from "../index";
@@ -17,7 +18,8 @@ const CourseContentForm = () => {
 
   const [formData, setFormData] = useState({
     courseId: "",
-    courseTitle: "",
+    courseName: "",
+    logoUrl: "",
     whatYouWillLearn: "",
     whoCanJoin: "",
     skillsYouWillGain: "",
@@ -33,12 +35,12 @@ const CourseContentForm = () => {
       try {
         setLoading(true);
         const response = await latestCourse();
-        console.log(response.data);
         if (response && response.data) {
           setFormData((prev) => ({
             ...prev,
             courseId: response.data.id,
             courseName: response.data.courseName,
+            logoUrl: response.data.logoUrl,
           }));
         }
       } catch (err) {
@@ -56,10 +58,12 @@ const CourseContentForm = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
     try {
+      console.log(formData)
       await addCourseContent(formData);
       alert("Course content saved successfully!");
       navigate("/courses");
@@ -108,10 +112,40 @@ const CourseContentForm = () => {
           <input
             type="text"
             className="form-control"
-            name="courseTitle"
+            name="courseName"
             value={formData.courseName}
             onChange={handleChange}
             required
+          />
+        </div>
+
+        {/* Course Logo */}
+        {formData.logoUrl && (
+          <div className="mb-3 text-center">
+            <label className="form-label fw-bold">
+              <FaImage className="me-2" /> Course Logo
+            </label>
+            <div>
+              <img
+                src={formData.logoUrl}
+                alt="Course Logo"
+                style={{ maxWidth: "150px", maxHeight: "150px", objectFit: "contain" }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Optionally allow editing logo URL */}
+        <div className="mb-3">
+          <label className="form-label fw-bold">
+            <FaImage className="me-2" /> Logo URL
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            name="logoUrl"
+            value={formData.logoUrl}
+            onChange={handleChange}
           />
         </div>
 

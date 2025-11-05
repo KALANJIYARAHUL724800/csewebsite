@@ -23,6 +23,7 @@ import StaffsignupComponent from './components/StaffsignupComponent';
 import DashboardComponent from './components/DashboardComponent';
 import ProtectedRoute from './components/ProtectedRoute';
 import CourseContentAddForm from './components/CourseContentAddForm';
+import ShowFeesEnquiryComponent from './components/ShowFeesEnquiryComponent';
 function App() {
 
   return (
@@ -44,10 +45,20 @@ function App() {
             <Route path="/update-password" element={<UpdatePassword />} />
             <Route path="/admin" element={<StaffLogin />} />
             <Route path="/admin-signup" element={<StaffsignupComponent />} />
-            {/* <Route path="/course" element={<CourseContent />} /> */}
             <Route path="/course/:id" element={<CourseContent />} />
-            <Route path="/addcoursecontent" element={<CourseContentAddForm />} />
-            <Route path="/addcourse" element={<AddCourseComponent />} />
+            <Route path="/enquiry" element={<ShowFeesEnquiryComponent />} />
+            <Route path="/addcoursecontent"
+              element={
+                <ProtectedRoute>
+                  <CourseContentAddForm />
+                </ProtectedRoute>
+              } />
+            <Route path="/addcourse"
+              element={
+                <ProtectedRoute>
+                  <AddCourseComponent />
+                </ProtectedRoute>
+              } />
             <Route
               path="/dashboard"
               element={
