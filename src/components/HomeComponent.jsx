@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { search } from "../index";
-
+import { search, showAllBatches } from "../index";
 
 const HomeComponent = () => {
   const navigate = useNavigate();
@@ -9,6 +8,25 @@ const HomeComponent = () => {
   const [courses, setCourses] = useState([]);
   const [searched, setSearched] = useState(false);
   const [giftClicked, setGiftClicked] = useState(false);
+  const [batches, setBatches] = useState([]);
+  const [showBatchPopup, setShowBatchPopup] = useState(false);
+  const [hasBatches, setHasBatches] = useState(false);
+
+  useEffect(() => {
+    showAllBatches()
+      .then((response) => {
+        if (response.data && response.data.length > 0) {
+          setHasBatches(true);
+          setBatches(response.data);
+        } else {
+          setHasBatches(false);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching batches:", err);
+        setHasBatches(false);
+      });
+  }, []);
 
   const studentLogin = () => navigate("/login");
 
@@ -27,7 +45,10 @@ const HomeComponent = () => {
   };
 
   const giftPopup = () => {
-    // Show confetti
+    if (batches.length === 0) {
+      alert("No batches available right now!");
+      return;
+    }
     confetti({
       particleCount: 100,
       startVelocity: 30,
@@ -35,48 +56,87 @@ const HomeComponent = () => {
       origin: { x: 0.5, y: 0.1 },
     });
 
-    // Hide gift and show "Hello"
     setGiftClicked(true);
+    setShowBatchPopup(true);
   };
 
   return (
     <div className="cse-main">
       <div className="main-content" id="mainContent">
-        {/* Gift box or Hello div */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginBottom: "20px",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "10px",
-          }}
-        >
-          {!giftClicked ? (
-            <img
-              src="/gift.png"
-              className="shake img img-fluid"
-              style={{ width: "300px", height: "300px", cursor: "pointer" }}
-              alt="Gift Box"
-              onClick={giftPopup}
-            />
-          ) : (
-            <div
-              style={{
-                padding: "20px 40px",
-                backgroundColor: "#f0f0f0",
-                borderRadius: "8px",
-                boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-                fontWeight: "bold",
-                fontSize: "1.5rem",
-                textAlign: "center",
-              }}
-            >
-              Hello
-            </div>
-          )}
-        </div>
+        {/* Gift box or Batch popup */}
+        {hasBatches && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "20px",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "10px",
+              position: "relative",
+            }}
+          >
+            {!giftClicked ? (
+              <img
+                src="/gift.png"
+                className="shake img img-fluid"
+                style={{ width: "300px", height: "300px", cursor: "pointer" }}
+                alt="Gift Box"
+                onClick={giftPopup}
+              />
+            ) : (
+              showBatchPopup && (
+                <div
+                  className="batch-popup"
+                  style={{
+                    padding: "20px 40px",
+                    backgroundColor: "#fff",
+                    borderRadius: "10px",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+                    animation: "fadeIn 0.5s ease-in-out",
+                    maxWidth: "400px",
+                    textAlign: "center",
+                  }}
+                >
+                  <h3>Available Batches</h3>
+                  <ul style={{ listStyle: "none", padding: 0, marginTop: "10px" }}>
+                    {batches.map((batch) => (
+                      <li
+                        key={batch.id}
+                        style={{
+                          padding: "10px",
+                          borderBottom: "1px solid #ccc",
+                          textAlign: "left",
+                        }}
+                      >
+                        <strong>{batch.course}</strong> <br />
+                        Date: {batch.date} <br />
+                        Time: {batch.time}
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    onClick={() => {
+                      setShowBatchPopup(false);
+                      setGiftClicked(false);
+                    }}
+                    style={{
+                      marginTop: "15px",
+                      padding: "8px 16px",
+                      border: "none",
+                      borderRadius: "5px",
+                      backgroundColor: "#007bff",
+                      color: "#fff",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Close
+                  </button>
+                </div>
+              )
+            )}
+          </div>
+        )}
 
         {/* Top Row: Logo + Heading */}
         <div
@@ -195,6 +255,14 @@ const HomeComponent = () => {
           </button>
         </div>
       </div>
+
+      {/* CSS Animation */}
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 };

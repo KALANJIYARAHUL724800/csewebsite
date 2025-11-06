@@ -18,7 +18,7 @@ const CourseContentForm = () => {
 
   const [formData, setFormData] = useState({
     courseId: "",
-    courseName: "",
+    courseTitle: "",
     logoUrl: "",
     whatYouWillLearn: "",
     whoCanJoin: "",
@@ -29,6 +29,8 @@ const CourseContentForm = () => {
 
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const fetchLatestCourse = async () => {
@@ -39,7 +41,7 @@ const CourseContentForm = () => {
           setFormData((prev) => ({
             ...prev,
             courseId: response.data.id,
-            courseName: response.data.courseName,
+            courseTitle: response.data.courseName,
             logoUrl: response.data.logoUrl,
           }));
         }
@@ -50,26 +52,41 @@ const CourseContentForm = () => {
         setLoading(false);
       }
     };
-
     fetchLatestCourse();
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: null }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
+    setErrors({});
+    setSuccess(false);
+    navigate("/courses")
     try {
-      console.log(formData)
-      await addCourseContent(formData);
-      alert("Course content saved successfully!");
-      navigate("/courses");
+      const payload = {
+        ...formData,
+        courseId: Number(formData.courseId), // convert to number
+      };
+
+      await addCourseContent(payload);
+
+      // Show success popup
+      setSuccess(true);
+
+      // Reset form if needed
+      // setFormData({...}); // optional
     } catch (err) {
       console.error(err);
-      alert("Error saving course content!");
+      if (err.response && err.response.data) {
+        setErrors(err.response.data);
+      } else {
+        alert("Error saving course content!");
+      }
     } finally {
       setSaving(false);
     }
@@ -83,43 +100,49 @@ const CourseContentForm = () => {
     );
   }
 
+  const renderInput = (label, name, icon, type = "text", rows = 1) => (
+    <div className="mb-3">
+      <label className="form-label fw-bold">
+        {icon} {label}
+      </label>
+      {type === "textarea" ? (
+        <textarea
+          className={`form-control ${errors[name] ? "is-invalid" : ""}`}
+          name={name}
+          value={formData[name]}
+          onChange={handleChange}
+          rows={rows}
+        />
+      ) : (
+        <input
+          type={type}
+          className={`form-control ${errors[name] ? "is-invalid" : ""}`}
+          name={name}
+          value={formData[name]}
+          onChange={handleChange}
+        />
+      )}
+      {errors[name] && <div className="invalid-feedback">{errors[name]}</div>}
+    </div>
+  );
+
   return (
     <div className="container my-5">
       <h2 className="text-center mb-5" style={{ color: "#007bff", fontWeight: "700" }}>
         Add Course Content
       </h2>
 
+      {/* Success popup */}
+      {success && (
+        <div className="alert alert-success text-center" role="alert">
+          Course content saved successfully!
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: "800px" }}>
-        {/* Course ID */}
-        <div className="mb-3">
-          <label className="form-label fw-bold">
-            <FaIdBadge className="me-2" /> Course ID
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            name="courseId"
-            value={formData.courseId}
-            readOnly
-          />
-        </div>
-
-        {/* Course Title */}
-        <div className="mb-3">
-          <label className="form-label fw-bold">
-            <FaBookOpen className="me-2" /> Course Title
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            name="courseName"
-            value={formData.courseName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {/* Course Logo */}
+        {renderInput("Course ID", "courseId", <FaIdBadge className="me-2" />, "text")}
+        {renderInput("Course Title", "courseTitle", <FaBookOpen className="me-2" />)}
+        
         {formData.logoUrl && (
           <div className="mb-3 text-center">
             <label className="form-label fw-bold">
@@ -135,90 +158,12 @@ const CourseContentForm = () => {
           </div>
         )}
 
-        {/* Optionally allow editing logo URL */}
-        <div className="mb-3">
-          <label className="form-label fw-bold">
-            <FaImage className="me-2" /> Logo URL
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            name="logoUrl"
-            value={formData.logoUrl}
-            onChange={handleChange}
-          />
-        </div>
-
-        {/* What You Will Learn */}
-        <div className="mb-3">
-          <label className="form-label fw-bold">
-            <FaLaptopCode className="me-2" /> What You Will Learn
-          </label>
-          <textarea
-            className="form-control"
-            name="whatYouWillLearn"
-            value={formData.whatYouWillLearn}
-            onChange={handleChange}
-            rows="3"
-            required
-          />
-        </div>
-
-        {/* Who Can Join */}
-        <div className="mb-3">
-          <label className="form-label fw-bold">
-            <FaUserFriends className="me-2" /> Who Can Join
-          </label>
-          <textarea
-            className="form-control"
-            name="whoCanJoin"
-            value={formData.whoCanJoin}
-            onChange={handleChange}
-            rows="2"
-          />
-        </div>
-
-        {/* Skills You Will Gain */}
-        <div className="mb-3">
-          <label className="form-label fw-bold">
-            <FaTools className="me-2" /> Skills You Will Gain
-          </label>
-          <textarea
-            className="form-control"
-            name="skillsYouWillGain"
-            value={formData.skillsYouWillGain}
-            onChange={handleChange}
-            rows="2"
-          />
-        </div>
-
-        {/* Course Topics */}
-        <div className="mb-3">
-          <label className="form-label fw-bold">
-            <FaListAlt className="me-2" /> Course Topics
-          </label>
-          <textarea
-            className="form-control"
-            name="courseTopics"
-            value={formData.courseTopics}
-            onChange={handleChange}
-            rows="2"
-          />
-        </div>
-
-        {/* Career Opportunities */}
-        <div className="mb-3">
-          <label className="form-label fw-bold">
-            <FaBriefcase className="me-2" /> Career Opportunities
-          </label>
-          <textarea
-            className="form-control"
-            name="careerOpportunities"
-            value={formData.careerOpportunities}
-            onChange={handleChange}
-            rows="3"
-          />
-        </div>
+        {renderInput("Logo URL", "logoUrl", <FaImage className="me-2" />)}
+        {renderInput("What You Will Learn", "whatYouWillLearn", <FaLaptopCode className="me-2" />, "textarea", 3)}
+        {renderInput("Who Can Join", "whoCanJoin", <FaUserFriends className="me-2" />, "textarea", 2)}
+        {renderInput("Skills You Will Gain", "skillsYouWillGain", <FaTools className="me-2" />, "textarea", 2)}
+        {renderInput("Course Topics", "courseTopics", <FaListAlt className="me-2" />, "textarea", 2)}
+        {renderInput("Career Opportunities", "careerOpportunities", <FaBriefcase className="me-2" />, "textarea", 3)}
 
         <div className="text-center mt-4">
           <button type="submit" className="btn btn-primary px-5" disabled={saving}>

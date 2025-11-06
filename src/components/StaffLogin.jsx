@@ -35,8 +35,8 @@ const StaffLogin = ({ onClose }) => {
 
     try {
       const res = await loginAdmin(formData);
-      console.log("Login Data:", res.data);
-      localStorage.setItem("token", res.data.token);
+      const expiryTime = new Date().getTime() + 60 * 60 * 1000; 
+      localStorage.setItem("token", expiryTime);
       alert("Login successful!");
       navigate("/dashboard", { state: { user: res.data } });
     } catch (err) {
@@ -58,13 +58,10 @@ const StaffLogin = ({ onClose }) => {
       setErrors(newErrors);
     }
   };
-
-  // close modal
   const handleClose = () => {
     if (onClose) onClose();
     navigate("/home");
   };
-
   return (
     <div
       className="overlay d-flex justify-content-center align-items-center"

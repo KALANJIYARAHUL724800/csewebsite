@@ -37,7 +37,6 @@ export const addCourse = (course) => {
   return axios.post(`${API_BASE}/addcourse`, course);
 };
 
-
 export const updateCourse = (id, coureData) => {
   return axios.put(`${API_BASE}/updatecourse/${id}`, coureData);
 };
@@ -75,4 +74,26 @@ export const searchDateEnquiry = (startDate, endDate) => {
   return axios.get(`${API_BASE}/enquiry/between-dates`, {
     params: { startDate, endDate }
   });
+};
+
+export const insertBatches = (value) => {
+  return axios.post(`${API_BASE}/batches/insert`, value);
+};
+
+export const showAllBatches = () => {
+  return axios.get(`${API_BASE}/batches`);
+};
+
+export const findBatch = (id) => {
+  return axios.get(`${API_BASE}/batches/${id}`);
+};
+export const deletedBatch = (id) => {
+  return axios.delete(`${API_BASE}/batches/${id}`);
+};
+
+export const updateBatch = (id, coureData) => {
+  return axios.put(`${API_BASE}/batches/update/${id}`, coureData);
+};
+export const updatePassword = (updateData) => {
+  return axios.put(`${API_BASE}/change-password`, updateData);
 };

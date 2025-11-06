@@ -24,6 +24,8 @@ import DashboardComponent from './components/DashboardComponent';
 import ProtectedRoute from './components/ProtectedRoute';
 import CourseContentAddForm from './components/CourseContentAddForm';
 import ShowFeesEnquiryComponent from './components/ShowFeesEnquiryComponent';
+import EventComponent from './components/EventComponent';
+import BatchComponent from './components/BatchComponent';
 function App() {
 
   return (
@@ -44,9 +46,21 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/update-password" element={<UpdatePassword />} />
             <Route path="/admin" element={<StaffLogin />} />
+            <Route path="/events" element={<EventComponent />} />
             <Route path="/admin-signup" element={<StaffsignupComponent />} />
             <Route path="/course/:id" element={<CourseContent />} />
-            <Route path="/enquiry" element={<ShowFeesEnquiryComponent />} />
+            <Route path="/batch"
+              element={
+                <ProtectedRoute>
+                  <BatchComponent />
+                </ProtectedRoute>
+              } />
+            <Route path="/enquiry"
+              element={
+                <ProtectedRoute>
+                  <ShowFeesEnquiryComponent />
+                </ProtectedRoute>
+              } />
             <Route path="/addcoursecontent"
               element={
                 <ProtectedRoute>

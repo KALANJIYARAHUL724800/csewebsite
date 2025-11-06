@@ -57,9 +57,9 @@ const DashboardComponent = () => {
             <li>
               <button
                 className="btn btn-link d-flex align-items-center w-100 text-start"
-                onClick={() => navigate("/events")}
+                onClick={() => navigate("/batch")}
               >
-                <AiOutlineCalendar className="me-2" /> Events
+                <AiOutlineCalendar className="me-2" /> Add New Batch
               </button>
             </li>
           </ul>

@@ -22,6 +22,8 @@ const AddCourseComponent = () => {
     month: "",
   });
 
+  const [errors, setErrors] = useState({}); // <-- store field errors
+
   useEffect(() => {
     getAllCourses()
       .then((response) => setCourses(response.data))
@@ -31,34 +33,43 @@ const AddCourseComponent = () => {
   const handleInsertChange = (e) => {
     const { name, value } = e.target;
     setInsertData({ ...insertData, [name]: value });
+    setErrors({ ...errors, [name]: "" }); // clear error on change
   };
 
   const handleInsertSubmit = async (e) => {
     e.preventDefault();
+    setErrors({}); // reset errors before submit
+
     try {
-      // Add the course
       const response = await addCourse(insertData);
       const newCourse = response.data;
 
-      // Update local state
       setCourses([...courses, newCourse]);
       setInsertData({ courseName: "", logoUrl: "", courseContent: "", month: "" });
       setFormType(null);
 
-      // Fetch the actual course content
       const courseContent = (await searchCourse(newCourse.id)).data;
-
-      // Navigate with state
       navigate("/addcoursecontent", { state: { courseContentData: courseContent } });
-
     } catch (error) {
-      console.error("Insert failed:", error.response?.data || error.message);
+      // Handle backend validation error
+      const backendMessage = error.response?.data;
+      if (backendMessage) {
+        const fieldErrors = {};
+        backendMessage.split(";").forEach((err) => {
+          const [field, message] = err.split(":").map((s) => s.trim());
+          if (field && message) fieldErrors[field] = message;
+        });
+        setErrors(fieldErrors);
+      } else {
+        console.error("Insert failed:", error.message);
+      }
     }
   };
 
   const handleEdit = (course) => {
     setUpdateData(course);
     setFormType("update");
+    setErrors({});
   };
 
   const handleUpdateChange = (e) => {
@@ -81,6 +92,34 @@ const AddCourseComponent = () => {
     setCourses(courses.filter((c) => c.id !== id));
   };
 
+  const renderInput = (label, name, value, onChange) => (
+    <div className="mb-3">
+      <label className="form-label">{label}</label>
+      <input
+        type="text"
+        className={`form-control ${errors[name] ? "is-invalid" : ""}`}
+        name={name}
+        value={value}
+        onChange={onChange}
+      />
+      {errors[name] && <div className="invalid-feedback">{errors[name]}</div>}
+    </div>
+  );
+
+  const renderTextarea = (label, name, value, onChange) => (
+    <div className="mb-3">
+      <label className="form-label">{label}</label>
+      <textarea
+        className={`form-control ${errors[name] ? "is-invalid" : ""}`}
+        name={name}
+        rows="2"
+        value={value}
+        onChange={onChange}
+      ></textarea>
+      {errors[name] && <div className="invalid-feedback">{errors[name]}</div>}
+    </div>
+  );
+
   return (
     <div className="container mt-4">
       <h3 className="text-center mb-4">Course Details</h3>
@@ -94,7 +133,7 @@ const AddCourseComponent = () => {
                 color: "#fff",
                 borderRadius: "10px",
                 width: "90%",
-                wordWrap: "break-word"
+                wordWrap: "break-word",
               }}
             >
               <thead className="table-dark">
@@ -121,7 +160,7 @@ const AddCourseComponent = () => {
                             width: "100px",
                             height: "80px",
                             objectFit: "cover",
-                            borderRadius: "5px"
+                            borderRadius: "5px",
                           }}
                         />
                       ) : (
@@ -174,10 +213,7 @@ const AddCourseComponent = () => {
             </table>
           </div>
           <div className="text-center mt-4">
-            <button
-              className="btn btn-success"
-              onClick={() => setFormType("insert")}
-            >
+            <button className="btn btn-success" onClick={() => setFormType("insert")}>
               + Add New Course
             </button>
           </div>
@@ -201,47 +237,10 @@ const AddCourseComponent = () => {
               <>
                 <h5 className="text-center mb-3">Insert Course</h5>
                 <form onSubmit={handleInsertSubmit}>
-                  <div className="mb-3">
-                    <label className="form-label">Course Name</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="courseName"
-                      value={insertData.courseName}
-                      onChange={handleInsertChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Logo URL</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="logoUrl"
-                      value={insertData.logoUrl}
-                      onChange={handleInsertChange}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Course Content</label>
-                    <textarea
-                      className="form-control"
-                      name="courseContent"
-                      rows="2"
-                      value={insertData.courseContent}
-                      onChange={handleInsertChange}
-                    ></textarea>
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Month</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="month"
-                      value={insertData.month}
-                      onChange={handleInsertChange}
-                    />
-                  </div>
+                  {renderInput("Course Name", "courseName", insertData.courseName, handleInsertChange)}
+                  {renderInput("Logo URL", "logoUrl", insertData.logoUrl, handleInsertChange)}
+                  {renderTextarea("Course Content", "courseContent", insertData.courseContent, handleInsertChange)}
+                  {renderInput("Month", "month", insertData.month, handleInsertChange)}
                   <button className="btn btn-success w-100" type="submit">
                     Insert
                   </button>
@@ -251,47 +250,10 @@ const AddCourseComponent = () => {
               <>
                 <h5 className="text-center mb-3">Edit Course</h5>
                 <form onSubmit={handleUpdateSubmit}>
-                  <div className="mb-3">
-                    <label className="form-label">Course Name</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="courseName"
-                      value={updateData.courseName}
-                      onChange={handleUpdateChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Logo URL</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="logoUrl"
-                      value={updateData.logoUrl}
-                      onChange={handleUpdateChange}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Course Content</label>
-                    <textarea
-                      className="form-control"
-                      name="courseContent"
-                      rows="2"
-                      value={updateData.courseContent}
-                      onChange={handleUpdateChange}
-                    ></textarea>
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Month</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="month"
-                      value={updateData.month}
-                      onChange={handleUpdateChange}
-                    />
-                  </div>
+                  {renderInput("Course Name", "courseName", updateData.courseName, handleUpdateChange)}
+                  {renderInput("Logo URL", "logoUrl", updateData.logoUrl, handleUpdateChange)}
+                  {renderTextarea("Course Content", "courseContent", updateData.courseContent, handleUpdateChange)}
+                  {renderInput("Month", "month", updateData.month, handleUpdateChange)}
                   <button className="btn btn-primary w-100" type="submit">
                     Update
                   </button>

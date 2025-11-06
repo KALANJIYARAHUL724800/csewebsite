@@ -112,7 +112,6 @@ const StaffsignupComponent = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        required
                     />
                     {errors.name && <div className="text-danger mb-2">{errors.name}</div>}
                     <input
@@ -122,7 +121,6 @@ const StaffsignupComponent = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        required
                     />
                     {errors.email && <div className="text-danger mb-2">{errors.email}</div>}
                     <input
@@ -132,7 +130,6 @@ const StaffsignupComponent = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
-                        required
                     />
                     {errors.password && <div className="text-danger mb-2">{errors.password}</div>}
                     <input
@@ -142,7 +139,6 @@ const StaffsignupComponent = () => {
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleChange}
-                        required
                     />
                     {errors.confirmPassword && <div className="text-danger mb-2">{errors.confirmPassword}</div>}
                     <div className="form-check mb-3">
@@ -154,7 +150,6 @@ const StaffsignupComponent = () => {
                                 checked={formData.type}
                                 onChange={handleChange}
                                 style={{ position: "relative", right: "10px" }}
-                                required
                             />
                             I agree to the admin box
                         </label>

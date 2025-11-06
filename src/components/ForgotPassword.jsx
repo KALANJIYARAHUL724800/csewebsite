@@ -84,7 +84,6 @@ const ForgotPassword = ({ onClose }) => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            required
           />
           {errors.email && (
             <div className="text-danger small mb-2">{errors.email}</div>

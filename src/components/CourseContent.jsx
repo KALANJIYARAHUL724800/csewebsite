@@ -14,6 +14,7 @@ import {
 import { searchCourseContent, insertFeesEnquiry } from "../index";
 
 const CourseContent = () => {
+  const [errors, setErrors] = useState({ name: "", phone: "" });
   const { id } = useParams();
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -35,7 +36,6 @@ const CourseContent = () => {
         setLoading(false);
       })
       .catch(err => {
-        console.error("Error fetching course data:", err);
         setLoading(false);
       });
   }, [id]);
@@ -68,14 +68,11 @@ const CourseContent = () => {
       const payload = {
         name: formData.name,
         phone: formData.phone,
-        courseId: courseData._id || courseData.courseId, 
+        courseId: courseData._id || courseData.courseId,
         courseTitle: courseData.courseName || courseData.courseTitle,
         date: formData.date,
         time: formData.time
       };
-
-      console.log("Submitting payload:", payload);
-
       await insertFeesEnquiry(payload);
       setShowForm(false);
       setShowSuccess(true);
@@ -83,8 +80,21 @@ const CourseContent = () => {
       setTimeout(() => setShowSuccess(false), 5000);
 
     } catch (error) {
-      console.error("Error submitting enquiry:", error);
-      alert("Failed to submit enquiry. Please try again.");
+      if (error.response && error.response.status === 400) {
+        const message = error.response.data; // e.g., "Name is required; Phone number is invalid;"
+        const newErrors = {};
+
+        if (message.toLowerCase().includes("name")) {
+          newErrors.name = message.split(";").find(m => m.toLowerCase().includes("name"))?.trim();
+        }
+        if (message.toLowerCase().includes("phone")) {
+          newErrors.phone = message.split(";").find(m => m.toLowerCase().includes("phone"))?.trim();
+        }
+
+        setErrors(prev => ({ ...prev, ...newErrors }));
+      } else {
+        alert("Failed to submit enquiry. Please try again.");
+      }
     }
   };
 
@@ -182,8 +192,8 @@ const CourseContent = () => {
                   placeholder="Name"
                   value={formData.name}
                   onChange={handleFormChange}
-                  required
                 />
+                {errors.name && <div className="text-danger small mt-1">{errors.name}</div>}
               </div>
 
               <div className="mb-3">
@@ -193,9 +203,10 @@ const CourseContent = () => {
                   className="form-control"
                   placeholder="Phone Number"
                   value={formData.phone}
-                  onChange={handleFormChange}
-                  required
+                  maxLength={10}
+                  onChange={handleFormChange} 
                 />
+                 {errors.phone && <div className="text-danger small mt-1">{errors.phone}</div>}
               </div>
 
               <div className="d-flex justify-content-between">
