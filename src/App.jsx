@@ -26,6 +26,7 @@ import CourseContentAddForm from './components/CourseContentAddForm';
 import ShowFeesEnquiryComponent from './components/ShowFeesEnquiryComponent';
 import EventComponent from './components/EventComponent';
 import BatchComponent from './components/BatchComponent';
+import TestDashboard from './components/TestDashboard';
 function App() {
 
   return (
@@ -36,6 +37,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomeComponent />} />
             <Route path="/home" element={<HomeComponent />} />
+            <Route path="/notification" element={<TestDashboard />} />
             <Route path="/about" element={<AboutComponent />} />
             <Route path="/courses" element={<CoursesComponent />} />
             <Route path="/progress" element={<ProgressComponent />} />
