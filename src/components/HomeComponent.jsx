@@ -57,6 +57,8 @@ const HomeComponent = () => {
       alert("No batches available right now!");
       return;
     }
+    const audio = new Audio("/partyPop/party.mp3");
+    audio.play();
     setGiftClicked(true);
     setShowBatchPopup(true);
     startConfetti();
