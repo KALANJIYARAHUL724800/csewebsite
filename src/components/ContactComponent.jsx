@@ -4,7 +4,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 const ContactComponent = () => {
   return (
     <div className="contact-container container py-5">
-      <h1 className="contact-title text-center mb-4">Contact Information</h1>
+      <h1 className="contact-title text-center mb-4" style={{color: '#004aad'}}>Contact Information</h1>
 
       <div className="contact-card card mx-auto shadow-sm" style={{ maxWidth: '600px' }}>
         <div className="contact-card-body card-body">

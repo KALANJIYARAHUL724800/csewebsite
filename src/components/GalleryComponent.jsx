@@ -1,19 +1,20 @@
 import React from 'react'
 
 const GalleryComponent = () => {
-     const images = [
+  const images = [
     { src: '/gallery/Class-1.jpg', alt: 'Class 1' },
-    { src: '/gallery/entrance2.jpg', alt: 'Entrance 2' },
+    { src: '/gallery/Entrance.jpg', alt: 'Entrance ' },
+    { src: '/gallery/entrance2.jpg', alt: 'entrance 2' },
     { src: '/gallery/Counselling-1.jpg', alt: 'Counselling 1' },
     { src: '/gallery/Counselling-2.jpg', alt: 'Counselling 2' },
     { src: '/gallery/Class-2.jpg', alt: 'Class 2' },
-    { src: '/gallery/Class-4.jpg', alt: 'Class 4' },
+    { src: '/gallery/cls3.jpg', alt: 'cls3 4' },
     { src: '/gallery/Lab.png', alt: 'Lab' },
   ];
   return (
-     <div id="gallery" className="gallery-section py-5">
+    <div id="gallery" className="gallery-section py-5">
       <div className="container">
-        <h1 className="text-center mb-5 fw-bold gallery-title">Gallery</h1>
+        <h1 className="text-center mb-5 fw-bold gallery-title" style={{color: '#004aad'}}>Gallery</h1>
 
         <div className="row g-4 justify-content-center">
           {images.map((img, index) => (

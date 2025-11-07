@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { search, showAllBatches } from "../index";
 
@@ -11,6 +11,8 @@ const HomeComponent = () => {
   const [batches, setBatches] = useState([]);
   const [showBatchPopup, setShowBatchPopup] = useState(false);
   const [hasBatches, setHasBatches] = useState(false);
+
+  const confettiInterval = useRef(null);
 
   useEffect(() => {
     showAllBatches()
@@ -30,6 +32,50 @@ const HomeComponent = () => {
 
   const studentLogin = () => navigate("/login");
 
+  const startConfetti = () => {
+    if (confettiInterval.current) return;
+    confetti({ particleCount: 100, startVelocity: 30, spread: 360, origin: { x: 0.5, y: 0.1 }, });
+    confettiInterval.current = setInterval(() => {
+      confetti({
+        particleCount: 5,
+        startVelocity: 30,
+        spread: 360,
+        origin: { x: Math.random(), y: Math.random() * 0.5 },
+      });
+    }, 250);
+  };
+
+  const stopConfetti = () => {
+    if (confettiInterval.current) {
+      clearInterval(confettiInterval.current);
+      confettiInterval.current = null;
+    }
+  };
+
+  const giftPopup = () => {
+    if (batches.length === 0) {
+      alert("No batches available right now!");
+      return;
+    }
+    setGiftClicked(true);
+    setShowBatchPopup(true);
+    startConfetti();
+  };
+
+  const closePopup = () => {
+    setShowBatchPopup(false);
+    setGiftClicked(false);
+    stopConfetti();
+    const randomDelay = Math.floor(Math.random() * 10000) + 5000;
+    setTimeout(() => {
+      if (hasBatches) {
+        setGiftClicked(true);
+        setShowBatchPopup(true);
+        startConfetti();
+      }
+    }, randomDelay);
+  };
+
   const handleSearch = () => {
     if (!searchData.trim()) return;
     search(searchData)
@@ -42,22 +88,6 @@ const HomeComponent = () => {
         setCourses([]);
         setSearched(true);
       });
-  };
-
-  const giftPopup = () => {
-    if (batches.length === 0) {
-      alert("No batches available right now!");
-      return;
-    }
-    confetti({
-      particleCount: 100,
-      startVelocity: 30,
-      spread: 360,
-      origin: { x: 0.5, y: 0.1 },
-    });
-
-    setGiftClicked(true);
-    setShowBatchPopup(true);
   };
 
   return (
@@ -116,10 +146,7 @@ const HomeComponent = () => {
                     ))}
                   </ul>
                   <button
-                    onClick={() => {
-                      setShowBatchPopup(false);
-                      setGiftClicked(false);
-                    }}
+                    onClick={closePopup}
                     style={{
                       marginTop: "15px",
                       padding: "8px 16px",

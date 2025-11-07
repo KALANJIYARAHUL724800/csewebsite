@@ -1,25 +1,47 @@
 import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaUser, FaPhone, FaBookOpen, FaCalendarAlt, FaClock } from 'react-icons/fa';
-import { showAllFeesEnquiry } from "../index";
+import { showAllFeesEnquiry, searchDateEnquiry } from "../index";
+import { useLocation } from "react-router-dom";
 
 const ShowFeesEnquiryComponent = () => {
   const [enquiries, setEnquiries] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [isFilteredMode, setIsFilteredMode] = useState(false);
 
-  // Fetch data from backend on component mount
+  const location = useLocation();
+  const state = location.state || {};
+  const passedStartDate = state.startDate;
+  const passedEndDate = state.endDate;
+
   useEffect(() => {
-    showAllFeesEnquiry()
-      .then((res) => {
-        setEnquiries(res.data); // assuming res.data is the array of enquiries
-        setFilteredData(res.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching enquiries:", err);
-      });
-  }, []);
+    if (passedStartDate && passedEndDate) {
+      setStartDate(passedStartDate);
+      setEndDate(passedEndDate);
+      setIsFilteredMode(true);
+
+      searchDateEnquiry(passedStartDate, passedEndDate)
+        .then((res) => {
+          setEnquiries(res.data);
+          setFilteredData(res.data);
+        })
+        .catch((err) => {
+          console.error("Error fetching filtered enquiries:", err);
+        });
+    } else {
+      showAllFeesEnquiry()
+        .then((res) => {
+          setIsFilteredMode(false);
+          setEnquiries(res.data);
+          setFilteredData(res.data);
+        })
+        .catch((err) => {
+          console.error("Error fetching enquiries:", err);
+        });
+    }
+  }, [passedStartDate, passedEndDate]);
 
   const handleFilter = () => {
     if (!startDate && !endDate) {
@@ -87,18 +109,18 @@ const ShowFeesEnquiryComponent = () => {
           <thead className="table-secondary text-dark">
             <tr>
               <th>ID</th>
-              <th><FaUser className="me-1"/> Name</th>
-              <th><FaPhone className="me-1"/> Phone</th>
-              <th><FaBookOpen className="me-1"/> Course</th>
-              <th><FaCalendarAlt className="me-1"/> Date</th>
-              <th><FaClock className="me-1"/> Time</th>
+              <th><FaUser className="me-1" /> Name</th>
+              <th><FaPhone className="me-1" /> Phone</th>
+              <th><FaBookOpen className="me-1" /> Course</th>
+              <th><FaCalendarAlt className="me-1" /> Date</th>
+              <th><FaClock className="me-1" /> Time</th>
             </tr>
           </thead>
           <tbody>
             {filteredData.length > 0 ? (
-              filteredData.map((enquiry) => (
+              filteredData.map((enquiry, index) => (
                 <tr key={enquiry.id} className="align-middle">
-                  <td>{enquiry.id}</td>
+                  <td>{isFilteredMode ? index + 1 : enquiry.id}</td>
                   <td className="text-success fw-bold">{enquiry.name}</td>
                   <td>{enquiry.phone}</td>
                   <td className="fw-semibold">{enquiry.courseName}</td>
@@ -108,7 +130,9 @@ const ShowFeesEnquiryComponent = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="text-center text-danger fw-bold">No enquiries found</td>
+                <td colSpan="6" className="text-center text-danger fw-bold">
+                  No enquiries found
+                </td>
               </tr>
             )}
           </tbody>

@@ -1,28 +1,78 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { enquiryCountNotification } from "../index";
 import {
   AiOutlinePlus,
   AiOutlineUnorderedList,
   AiOutlineLineChart,
-  AiOutlineCalendar
+  AiOutlineCalendar,
 } from "react-icons/ai";
 
 const DashboardComponent = () => {
   const navigate = useNavigate();
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [notificationCount, setNotificationCount] = useState(null);
+
+  useEffect(() => {
+    const today = new Date().toISOString().split("T")[0];
+    setStartDate(today);
+    setEndDate(today);
+    enquiryCountNotification(today, today)
+      .then((res) => {
+        setNotificationCount(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching notification count:", err);
+      });
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/home");
   };
-
+  const notificationPopUp = () => {
+    navigate("/enquiry", { state: { startDate, endDate } });
+  };
   return (
     <div className="container-fluid">
       {/* Header */}
-      <div className="d-flex justify-content-between align-items-center py-3 border-bottom">
-        <h2 className="mb-0">Admin Dashboard</h2>
-        <button className="btn btn-danger" onClick={handleLogout}>
-          Logout
-        </button>
+      <div className="d-flex justify-content-between align-items-center py-3 border-bottom flex-wrap">
+        <h2 className="mb-2 mb-md-0">Admin Dashboard</h2>
+
+        <div className="d-flex align-items-center">
+          {/* Notification Icon with Badge */}
+          <div className="position-relative me-3" style={{ lineHeight: 0 }}>
+            <img
+              src="/notification.png"
+              alt="Notification"
+              style={{
+                height: "40px",
+                cursor: "pointer",
+                display: "block",
+              }}
+              onClick={notificationPopUp}
+            />
+
+            {/* Red count badge */}
+            <span
+              className="position-absolute badge rounded-pill bg-danger"
+              style={{
+                fontSize: "11px",
+                top: "2px",
+                right: "2px",
+                transform: "translate(50%, -50%)",
+              }}
+            >
+              {notificationCount ?? 0}
+            </span>
+          </div>
+
+          {/* Logout button */}
+          <button className="btn btn-danger btn-sm" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
       </div>
 
       <div className="row">
@@ -49,9 +99,9 @@ const DashboardComponent = () => {
             <li>
               <button
                 className="btn btn-link d-flex align-items-center w-100 text-start"
-                onClick={() => navigate("/progress")}
+                onClick={() => navigate("/enquiry")}
               >
-                <AiOutlineLineChart className="me-2" /> Student Progress
+                <AiOutlineLineChart className="me-2" /> Show All Enquires
               </button>
             </li>
             <li>
@@ -73,19 +123,19 @@ const DashboardComponent = () => {
           {/* Metrics */}
           <div className="row mt-4">
             <div className="col-12 col-sm-6 col-lg-4 mb-3">
-              <div className="card text-center p-3">
+              <div className="card text-center p-3 shadow-sm">
                 <h5>Total Students</h5>
                 <p>120</p>
               </div>
             </div>
             <div className="col-12 col-sm-6 col-lg-4 mb-3">
-              <div className="card text-center p-3">
+              <div className="card text-center p-3 shadow-sm">
                 <h5>Total Courses</h5>
                 <p>15</p>
               </div>
             </div>
             <div className="col-12 col-sm-6 col-lg-4 mb-3">
-              <div className="card text-center p-3">
+              <div className="card text-center p-3 shadow-sm">
                 <h5>Active Staff</h5>
                 <p>5</p>
               </div>

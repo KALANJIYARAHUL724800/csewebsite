@@ -28,7 +28,7 @@ const CoursesComponent = () => {
 
   return (
     <div className="container py-5" id="courses">
-      <h1 className="text-center mb-5 text-primary">Available Courses</h1>
+      <h1 className="text-center mb-5" style={{color: '#004aad'}}>Available Courses</h1>
       
       {loading ? (
         <div className="text-center my-5">

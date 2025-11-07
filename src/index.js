@@ -97,3 +97,9 @@ export const updateBatch = (id, coureData) => {
 export const updatePassword = (updateData) => {
   return axios.put(`${API_BASE}/change-password`, updateData);
 };
+
+export const enquiryCountNotification = (startDate, endDate) => {
+  return axios.get(`${API_BASE}/enquiry/count`, {
+    params: { startDate, endDate }
+  });
+};
