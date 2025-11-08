@@ -6,16 +6,7 @@ const AboutComponent = () => {
   return (
     <div className="about-main">
       <h1 className='about-h1'>About Us</h1>
-      <div className="scene" aria-hidden="true">
-        <div className="cube" role="img" aria-label="Animated 3D cube">
-          <div className="cube__face face-front"><img src="public\cselogo.png" className="cube-img img-fluid" /></div>
-          <div className="cube__face face-back"><img src="public\cselogo.png" className="cube-img img-fluid" /></div>
-          <div className="cube__face face-right"><img src="public\cselogo.png" className="cube-img img-fluid" /></div>
-          <div className="cube__face face-left"><img src="public\cselogo.png" className="cube-img img-fluid" /></div>
-          <div className="cube__face face-top"><img src="public\cselogo.png" className="cube-img img-fluid" /></div>
-          <div className="cube__face face-bottom"><img src="public\cselogo.png" className="cube-img img-fluid" /></div>
-        </div>
-      </div>
+     
 
       <h2>Empowering Digital Careers Since 1998</h2>
       <p>

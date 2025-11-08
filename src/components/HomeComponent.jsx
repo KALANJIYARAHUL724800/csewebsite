@@ -174,17 +174,27 @@ const HomeComponent = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "40px",
             flexWrap: "wrap",
             marginBottom: "20px",
+            padding: "0px"
           }}
         >
-          <img
+          {/* <img
             src="/cselogo.png"
             alt="cselogo"
             style={{ maxWidth: "150px", height: "auto" }}
-          />
-          <div className="welcome-text" style={{ textAlign: "left" }}>
+          /> */}
+          <div className="scene" aria-hidden="true">
+            <div className="cube" role="img" aria-label="Animated 3D cube">
+              <div className="cube__face face-front"><img src="/cselogo.png" className="cube-img img-fluid" /></div>
+              <div className="cube__face face-back"><img src="/cselogo.png" className="cube-img img-fluid" /></div>
+              <div className="cube__face face-right"><img src="/cselogo.png" className="cube-img img-fluid" /></div>
+              <div className="cube__face face-left"><img src="/cselogo.png" className="cube-img img-fluid" /></div>
+              <div className="cube__face face-top"><img src="/cselogo.png" className="cube-img img-fluid" /></div>
+              <div className="cube__face face-bottom"><img src="/cselogo.png" className="cube-img img-fluid" /></div>
+            </div>
+          </div>
+          <div className="welcome-text" style={{ textAlign: "left", position: "relative" }}>
             <h1>Welcome to CSE</h1>
             <p>Let's start your learning journey here</p>
           </div>
@@ -284,14 +294,6 @@ const HomeComponent = () => {
           </button>
         </div>
       </div>
-
-      {/* CSS Animation */}
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 };

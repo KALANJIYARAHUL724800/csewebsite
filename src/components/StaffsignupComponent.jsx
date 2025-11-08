@@ -31,7 +31,6 @@ const StaffsignupComponent = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Form Data:", formData);
         try {
             const res = await createAdmin(formData);
             alert("Signup successful!");

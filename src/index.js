@@ -103,3 +103,16 @@ export const enquiryCountNotification = (startDate, endDate) => {
     params: { startDate, endDate }
   });
 };
+
+export const enquiryExportExcel = (startDate, endDate) => {
+  return axios.get(`${API_BASE}/enquiry/export-between-dates`, {
+    params: { startDate, endDate },
+    responseType: 'blob',
+  });
+};
+
+export const enquiryExportAll = () => {
+  return axios.get(`${API_BASE}/enquiry/export`, {
+    responseType: 'blob', 
+  });
+};

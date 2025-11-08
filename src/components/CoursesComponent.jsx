@@ -7,6 +7,9 @@ const CoursesComponent = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const coursesPerPage = 5;
+
   useEffect(() => {
     getAllCourses()
       .then((response) => {
@@ -26,10 +29,35 @@ const CoursesComponent = () => {
       .finally(() => setLoading(false));
   }, [navigate]);
 
+  const indexOfLastCourse = currentPage * coursesPerPage;
+  const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+  const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
+  const totalPages = Math.ceil(courses.length / coursesPerPage);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prev => prev + 1);
+      scrollToTop();
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prev => prev - 1);
+      scrollToTop();
+    }
+  };
+
   return (
     <div className="container py-5" id="courses">
-      <h1 className="text-center mb-5" style={{color: '#004aad'}}>Available Courses</h1>
-      
+      <h1 className="text-center mb-5" style={{ color: "#004aad" }}>
+        Available Courses
+      </h1>
+
       {loading ? (
         <div className="text-center my-5">
           <div className="spinner-border text-primary" role="status">
@@ -38,41 +66,64 @@ const CoursesComponent = () => {
           <p className="mt-3">Loading courses...</p>
         </div>
       ) : (
-        <div
-          className="courses-grid"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "1rem",
-          }}
-        >
-          {courses.length > 0 ? (
-            courses.map((course) => (
-              <div key={course.id} className="card h-100 shadow-sm text-center">
-                <img
-                  src={course.logoUrl || "https://via.placeholder.com/150"}
-                  className="card-img-top img-fluid mx-auto mt-3"
-                  alt={course.courseName}
-                  style={{ height: "100px", width: "100px", objectFit: "contain" }}
-                />
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title text-primary">{course.courseName}</h5>
-                  <p className="card-text">{course.courseContent}</p>
-                  <div className="mt-auto d-flex justify-content-between align-items-center">
-                    <span className="text-muted">
-                      <i className="fas fa-clock"></i> {course.month}
-                    </span>
-                    <a href={`/course/${course.id}`} className="btn btn-primary btn-sm">
-                      Learn More and Fees
-                    </a>
+        <>
+          <div
+            className="courses-grid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: "1rem",
+            }}
+          >
+            {currentCourses.length > 0 ? (
+              currentCourses.map((course) => (
+                <div key={course.id} className="card h-100 shadow-sm text-center">
+                  <img
+                    src={course.logoUrl || "https://via.placeholder.com/150"}
+                    className="card-img-top img-fluid mx-auto mt-3"
+                    alt={course.courseName}
+                    style={{ height: "100px", width: "100px", objectFit: "contain" }}
+                  />
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title text-primary">{course.courseName}</h5>
+                    <p className="card-text">{course.courseContent}</p>
+                    <div className="mt-auto d-flex justify-content-between align-items-center">
+                      <span className="text-muted">
+                        <i className="fas fa-clock"></i> {course.month}
+                      </span>
+                      <a href={`/course/${course.id}`} className="btn btn-primary btn-sm">
+                        Learn More and Fees
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-center">No courses available.</p>
-          )}
-        </div>
+              ))
+            ) : (
+              <p className="text-center">No courses available.</p>
+            )}
+          </div>
+
+          {/* Pagination */}
+          <div className="d-flex justify-content-center mt-4 gap-2">
+            <button
+              className="btn btn-secondary"
+              onClick={handlePrev}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span className="align-self-center">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              className="btn btn-secondary"
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
