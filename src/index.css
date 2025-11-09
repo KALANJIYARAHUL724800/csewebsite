@@ -631,3 +631,55 @@ body {
   animation: wobble 1s ease-in-out infinite;
   transform-origin: center bottom;
 }
+
+.marquee-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  background: #fff;
+  padding: 10px 0;
+  position: relative;
+  top: 35px;
+}
+
+.marquee-track {
+  display: flex;
+  gap: 20px;
+  animation: scroll 25s linear infinite;
+  width: max-content;
+}
+
+.marquee-track img {
+  height: 150px;
+  width: auto;
+  border-radius: 15px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s;
+}
+
+.marquee-track img:hover {
+  transform: scale(1.05);
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .marquee-track img {
+    height: 100px;
+    border-radius: 10px;
+  }
+  .marquee-track {
+    gap: 10px;
+    animation: scroll 30s linear infinite;
+  }
+}
+

@@ -4,7 +4,6 @@ import { createAdmin } from "../index";
 const StaffsignupComponent = () => {
     const navigate = useNavigate();
     const [serverError, setServerError] = useState("");
-
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -19,8 +18,6 @@ const StaffsignupComponent = () => {
         confirmPassword: "",
         type: "",
     });
-
-    // handle input change
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData({
@@ -28,7 +25,6 @@ const StaffsignupComponent = () => {
             [name]: type === "checkbox" ? checked : value,
         });
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -59,11 +55,10 @@ const StaffsignupComponent = () => {
             setErrors(newErrors);
         }
     };
-
     const handleClose = () => {
         navigate("/home");
     };
-
+    
     return (
         <div
             className="overlay d-flex justify-content-center align-items-center"

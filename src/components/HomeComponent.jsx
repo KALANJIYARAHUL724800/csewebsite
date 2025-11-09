@@ -11,9 +11,7 @@ const HomeComponent = () => {
   const [batches, setBatches] = useState([]);
   const [showBatchPopup, setShowBatchPopup] = useState(false);
   const [hasBatches, setHasBatches] = useState(false);
-
   const confettiInterval = useRef(null);
-
   useEffect(() => {
     showAllBatches()
       .then((response) => {
@@ -138,15 +136,36 @@ const HomeComponent = () => {
                         style={{
                           padding: "10px",
                           borderBottom: "1px solid #ccc",
-                          textAlign: "left",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          flexWrap: "wrap",
                         }}
                       >
-                        <strong>{batch.course}</strong> <br />
-                        Date: {batch.date} <br />
-                        Time: {batch.time}
+                        <div style={{ textAlign: "left" }}>
+                          <strong>{batch.course}</strong> <br />
+                          Date: {batch.date} <br />
+                          Time: {batch.time}
+                        </div>
+                        <a
+                          href="/enquiry"
+                          className="btn btn-success"
+                          style={{
+                            marginTop: "5px",
+                            textDecoration: "none",
+                            color: "white",
+                            fontWeight: "bold",
+                            padding: "6px 12px",
+                            borderRadius: "6px",
+                            left: "10px"
+                          }}
+                        >
+                          Fees
+                        </a>
                       </li>
                     ))}
                   </ul>
+
                   <button
                     onClick={closePopup}
                     style={{
@@ -179,11 +198,6 @@ const HomeComponent = () => {
             padding: "0px"
           }}
         >
-          {/* <img
-            src="/cselogo.png"
-            alt="cselogo"
-            style={{ maxWidth: "150px", height: "auto" }}
-          /> */}
           <div className="scene" aria-hidden="true">
             <div className="cube" role="img" aria-label="Animated 3D cube">
               <div className="cube__face face-front"><img src="/cselogo.png" className="cube-img img-fluid" /></div>
@@ -267,7 +281,7 @@ const HomeComponent = () => {
                         href={`/course/${course.id}`}
                         className="btn btn-primary btn-sm"
                       >
-                        Enroll Now
+                        Learn More
                       </a>
                     </div>
                   </div>
@@ -292,6 +306,28 @@ const HomeComponent = () => {
           >
             Student Login
           </button>
+        </div>
+        <div className="container-fluid dflex mb-5 marquee-container">
+          <div className="marquee-track">
+            <img src="/gallery/Class-1.jpg" alt="Class 1" />
+            <img src="/gallery/Class-2.jpg" alt="Class 2" />
+            <img src="/gallery/cls3.jpg" alt="Class 3" />
+            <img src="/gallery/Counselling-1.jpg" alt="Counselling 1" />
+            <img src="/gallery/Counselling-2.jpg" alt="Counselling 2" />
+            <img src="/gallery/Entrance.jpg" alt="Entrance" />
+            <img src="/gallery/entrance2.jpg" alt="Entrance 2" />
+            <img src="/gallery/Lab.png" alt="Lab" />
+
+            {/* Duplicate for seamless infinite effect */}
+            <img src="/gallery/Class-1.jpg" alt="Class 1" />
+            <img src="/gallery/Class-2.jpg" alt="Class 2" />
+            <img src="/gallery/cls3.jpg" alt="Class 3" />
+            <img src="/gallery/Counselling-1.jpg" alt="Counselling 1" />
+            <img src="/gallery/Counselling-2.jpg" alt="Counselling 2" />
+            <img src="/gallery/Entrance.jpg" alt="Entrance" />
+            <img src="/gallery/entrance2.jpg" alt="Entrance 2" />
+            <img src="/gallery/Lab.png" alt="Lab" />
+          </div>
         </div>
       </div>
     </div>

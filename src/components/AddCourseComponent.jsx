@@ -6,7 +6,6 @@ const AddCourseComponent = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [formType, setFormType] = useState(null);
-
   const [insertData, setInsertData] = useState({
     courseName: "",
     logoUrl: "",
@@ -22,7 +21,7 @@ const AddCourseComponent = () => {
     month: "",
   });
 
-  const [errors, setErrors] = useState({}); // <-- store field errors
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     getAllCourses()
@@ -33,12 +32,12 @@ const AddCourseComponent = () => {
   const handleInsertChange = (e) => {
     const { name, value } = e.target;
     setInsertData({ ...insertData, [name]: value });
-    setErrors({ ...errors, [name]: "" }); // clear error on change
+    setErrors({ ...errors, [name]: "" });
   };
 
   const handleInsertSubmit = async (e) => {
     e.preventDefault();
-    setErrors({}); // reset errors before submit
+    setErrors({});
 
     try {
       const response = await addCourse(insertData);
@@ -51,7 +50,6 @@ const AddCourseComponent = () => {
       const courseContent = (await searchCourse(newCourse.id)).data;
       navigate("/addcoursecontent", { state: { courseContentData: courseContent } });
     } catch (error) {
-      // Handle backend validation error
       const backendMessage = error.response?.data;
       if (backendMessage) {
         const fieldErrors = {};
@@ -76,7 +74,9 @@ const AddCourseComponent = () => {
     const { name, value } = e.target;
     setUpdateData({ ...updateData, [name]: value });
   };
-
+  function handleUpdateContent(id) {
+    navigate(`/addcoursecontent/${id}`);
+  }
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     setCourses(courses.map((c) => (c.id === updateData.id ? updateData : c)));
@@ -119,7 +119,6 @@ const AddCourseComponent = () => {
       {errors[name] && <div className="invalid-feedback">{errors[name]}</div>}
     </div>
   );
-
   return (
     <div className="container mt-4">
       <h3 className="text-center mb-4">Course Details</h3>
@@ -144,6 +143,7 @@ const AddCourseComponent = () => {
                   <th>Content</th>
                   <th>Month</th>
                   <th>Actions</th>
+                  <th>Update Content</th>
                 </tr>
               </thead>
               <tbody>
@@ -206,6 +206,9 @@ const AddCourseComponent = () => {
                           Delete
                         </button>
                       </div>
+                    </td>
+                    <td>
+                      <button className="btn btn-success" onClick={() => handleUpdateContent(course.id)}>Update</button>
                     </td>
                   </tr>
                 ))}

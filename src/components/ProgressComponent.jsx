@@ -2,7 +2,7 @@ import React from 'react';
 const ProgressComponent = () => {
   return (
     <div id="progress" className="content-section">
-      <h1 style={{color: '#004aad'}}>Your Progress</h1>
+      <h1 style={{ color: '#004aad' }}>Your Progress</h1>
       <div className="progress-container">
         <div className="progress-card">
           <h3><i className="fas fa-book-open"></i> Current Courses</h3>

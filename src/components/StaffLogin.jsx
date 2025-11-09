@@ -4,21 +4,15 @@ import { loginAdmin } from "../index";
 
 const StaffLogin = ({ onClose }) => {
   const navigate = useNavigate();
-
-  // state for server errors & validation errors
   const [serverError, setServerError] = useState("");
   const [errors, setErrors] = useState({
     email: "",
     password: "",
   });
-
-  // form data
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
-  // input change handler
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -26,13 +20,10 @@ const StaffLogin = ({ onClose }) => {
       [name]: value,
     });
   };
-
-  // form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setServerError("");
     setErrors({ email: "", password: "" });
-
     try {
       const res = await loginAdmin(formData);
       const expiryTime = new Date().getTime() + 60 * 60 * 1000; 

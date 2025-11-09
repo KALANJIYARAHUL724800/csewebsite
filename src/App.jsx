@@ -67,6 +67,14 @@ function App() {
                   <CourseContentAddForm />
                 </ProtectedRoute>
               } />
+            <Route
+              path="/addcoursecontent/:id"
+              element={
+                <ProtectedRoute>
+                  <CourseContentAddForm />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/addcourse"
               element={
                 <ProtectedRoute>

@@ -2,6 +2,11 @@ import axios from "axios";
 
 const API_BASE = "http://localhost:8080/api";
 
+export const logout = () => {
+    localStorage.removeItem("token");
+    window.location.href="/home";
+  };
+
 export const createUser = (userData) => {
   return axios.post(`${API_BASE}/register`, userData);
 };
@@ -56,6 +61,10 @@ export const search = (value) => {
   return axios.get(`${API_BASE}/search`, {
     params: { value: value }
   });
+};
+
+export const updateCourseContent = (id, coureData) => {
+  return axios.put(`${API_BASE}/course-content/update/${id}`, coureData);
 };
 
 export const latestCourse = () => {
@@ -115,4 +124,8 @@ export const enquiryExportAll = () => {
   return axios.get(`${API_BASE}/enquiry/export`, {
     responseType: 'blob', 
   });
+};
+
+export const showAllAbout = () => {
+  return axios.get(`${API_BASE}/about/all`);
 };

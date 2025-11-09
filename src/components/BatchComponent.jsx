@@ -8,12 +8,9 @@ const BatchComponent = () => {
     const [editIndex, setEditIndex] = useState(null);
     const [errors, setErrors] = useState({});
     const [successMsg, setSuccessMsg] = useState('');
-
-    // Fetch all batches from API on load
     useEffect(() => {
         loadBatches();
     }, []);
-
     const loadBatches = async () => {
         try {
             const response = await showAllBatches();
@@ -22,48 +19,40 @@ const BatchComponent = () => {
             console.error("Error fetching batches:", error);
         }
     };
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-        setErrors({ ...errors, [name]: '' }); // clear error when typing
+        setErrors({ ...errors, [name]: '' });
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
         setSuccessMsg('');
-
         try {
             if (editIndex !== null) {
-                // Update existing batch
                 const batchToUpdate = batches[editIndex];
                 await updateBatch(batchToUpdate.id, formData);
                 setSuccessMsg('Batch updated successfully!');
-                setEditIndex(null); // exit edit mode
+                setEditIndex(null);
             } else {
-                // Add new batch
                 await insertBatches(formData);
                 setSuccessMsg('Batch added successfully!');
             }
-
             setFormData({ course: '', date: '', time: '' });
             setTimeout(() => setSuccessMsg(''), 3000);
-            loadBatches(); // refresh list
+            loadBatches();
         } catch (error) {
             if (error.response && error.response.status === 400) {
-                setErrors(error.response.data); // backend validation errors
+                setErrors(error.response.data);
             } else {
                 console.error("Unexpected error:", error);
             }
         }
     };
-
     const handleEdit = (index) => {
         setFormData(batches[index]);
         setEditIndex(index);
     };
-
     const handleDelete = async (index) => {
         const batch = batches[index];
         if (!batch.id) {
@@ -71,9 +60,7 @@ const BatchComponent = () => {
             alert("Cannot delete this batch — missing ID.");
             return;
         }
-
         if (!window.confirm(`Are you sure you want to delete batch "${batch.course}"?`)) return;
-
         try {
             await deletedBatch(batch.id);
             setSuccessMsg("Batch deleted successfully!");
@@ -84,7 +71,6 @@ const BatchComponent = () => {
             alert("Failed to delete batch. Please try again.");
         }
     };
-
     return (
         <div className="container mt-4" style={{ fontFamily: "'Roboto', sans-serif" }}>
             {/* Page Heading */}

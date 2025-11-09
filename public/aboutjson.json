@@ -1,0 +1,98 @@
+{
+  "hero": {
+    "title": "CSE Computer Education",
+    "subtitle": "Empowering Digital Careers Since 1998",
+    "description": "ISO 9001:2015 Certified • Only Tally Assessment Center (TAC) in Ramanathapuram",
+    "backgroundImage": "public/about_bg.png",
+    "logo": "public/cselogo.png",
+    "buttons": [
+      { "text": "Our Services", "link": "#services", "style": "outline-light" },
+      { "text": "Contact Us", "link": "#contact", "style": "warning" }
+    ]
+  },
+
+  "about": {
+    "title": "About Us",
+    "description": "Welcome to CSE Computer Education, the most trusted computer training center in Ramanathapuram. Since 1998, we've trained thousands with career-oriented, hands-on programs — programming, Tally, design, and more.",
+    "reasonsTitle": "Why choose us?",
+    "reasons": [
+      "25+ years of proven experience",
+      "Government-recognized & ISO 9001:2015 certifications",
+      "Practical project submissions & placement support",
+      "Free guides & outreach for school students"
+    ],
+    "image": "public/gallery/Counselling-2.jpg"
+  },
+
+  "features": [
+    {
+      "icon": "fa-laptop-code",
+      "title": "Practical Learning",
+      "desc": "Live projects, internships and portfolio-ready assignments."
+    },
+    {
+      "icon": "fa-user-graduate",
+      "title": "Expert Faculty",
+      "desc": "Experienced trainers & industry-oriented mentors."
+    },
+    {
+      "icon": "fa-chart-line",
+      "title": "Career Support",
+      "desc": "Resume help, mock interviews and placement drives."
+    },
+    {
+      "icon": "fa-certificate",
+      "title": "Certifications",
+      "desc": "ISO & Tally certified courses to boost credibility."
+    },
+    {
+      "icon": "fa-globe",
+      "title": "Community Work",
+      "desc": "Free guides & outreach for school students every year."
+    },
+    {
+      "icon": "fa-thumbs-up",
+      "title": "Proven Results",
+      "desc": "Thousands of successful students and alumni."
+    }
+  ],
+
+  "testimonials": [
+    {
+      "img": "https://i.pravatar.cc/120?img=12",
+      "name": "Priya M",
+      "role": "Web Developer",
+      "text": "CSE guided me from zero to launching my first website. Practical and friendly!"
+    },
+    {
+      "img": "https://i.pravatar.cc/120?img=17",
+      "name": "Rahul K",
+      "role": "Software Engineer",
+      "text": "Their Java & Python training helped me crack interviews with confidence."
+    },
+    {
+      "img": "https://i.pravatar.cc/120?img=22",
+      "name": "Sneha S",
+      "role": "Tally Operator",
+      "text": "Tally certification was a game-changer for my accounting career."
+    }
+  ],
+
+  "gallery": [
+    "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSzGqzrdifJqi0yfDVt4EB-2FkMA80B850oGDUsusgSSvP_HLJtUxkHePB59KxcJ-mf9hmnszYuHHV98rGzjfYgTcOx4jLR8h7SJJ9l8uE6D4T3iNeZYzqLVQJf1BvttqP0FRRZv=s680-w680-h510-rw",
+    "public/gallery/Counselling-1.jpg",
+    "public/gallery/Counselling-2.jpg",
+    "public/gallery/Lab.png",
+    "public/gallery/Class-2.jpg"
+  ],
+
+  "contactForm": {
+    "fields": [
+      { "name": "name", "label": "Name", "type": "text", "required": true },
+      { "name": "email", "label": "Email", "type": "email", "required": true },
+      { "name": "message", "label": "Message", "type": "textarea", "required": true }
+    ],
+    "buttonText": "Send Message",
+    "successText": "Sent!"
+  }
+}

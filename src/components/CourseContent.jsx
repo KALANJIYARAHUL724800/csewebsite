@@ -81,7 +81,7 @@ const CourseContent = () => {
 
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        const message = error.response.data; // e.g., "Name is required; Phone number is invalid;"
+        const message = error.response.data;
         const newErrors = {};
 
         if (message.toLowerCase().includes("name")) {

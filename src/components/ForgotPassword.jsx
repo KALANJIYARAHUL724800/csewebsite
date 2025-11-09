@@ -71,12 +71,10 @@ const ForgotPassword = ({ onClose }) => {
             &times;
           </span>
         </div>
-
         <form onSubmit={handleSubmit}>
           <p className="text-muted small mb-3">
             Enter your registered email to receive a password reset link.
           </p>
-
           <input
             type="email"
             className="form-control mb-3"
@@ -91,7 +89,6 @@ const ForgotPassword = ({ onClose }) => {
           {serverError && (
             <div className="text-danger small mb-2">{serverError}</div>
           )}
-
           <button type="submit" className="btn btn-warning w-100 mb-3">
             Send Reset Link
           </button>

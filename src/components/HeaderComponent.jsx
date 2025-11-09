@@ -1,13 +1,14 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { logout } from "../index";
 const HeaderComponent = () => {
   return (
     <nav className="navbar navbar-expand-lg header sticky-top">
       <div className="container-fluid">
 
         <a className="navbar-brand fw-bold header-logo" href="#">
-        <img src="/cselogo.png" alt="cselogo" className='cse-headinglogo' />
+          <img src="/cselogo.png" alt="cselogo" className='cse-headinglogo' />
         </a>
         <button
           className="navbar-toggler"
@@ -62,7 +63,7 @@ const HeaderComponent = () => {
                 <i className="bi bi-gear-fill me-1"></i> Settings
               </a>
             </li>
-            <li className="nav-item">
+            <li className="nav-item" onClick={logout}>
               <a className="nav-link text-danger" href="#">
                 <i className="bi bi-box-arrow-right me-1"></i> Logout
               </a>

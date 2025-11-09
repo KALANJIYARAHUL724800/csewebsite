@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { getAllCourses } from "../index";
 import { useNavigate } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const CoursesComponent = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [currentPage, setCurrentPage] = useState(1);
   const coursesPerPage = 5;
-
   useEffect(() => {
+    AOS.init({ duration: 800, once: true });
     getAllCourses()
       .then((response) => {
         const fetchedCourses = response.data;
-        const hasValidCourse = fetchedCourses.some(course => course.id > 0);
-
+        const hasValidCourse = fetchedCourses.some((course) => course.id > 0);
         if (!hasValidCourse) {
           navigate("/home");
           return;
@@ -28,36 +28,30 @@ const CoursesComponent = () => {
       })
       .finally(() => setLoading(false));
   }, [navigate]);
-
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
   const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
   const totalPages = Math.ceil(courses.length / coursesPerPage);
-
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
   const handleNext = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(prev => prev + 1);
+      setCurrentPage((prev) => prev + 1);
       scrollToTop();
     }
   };
-
   const handlePrev = () => {
     if (currentPage > 1) {
-      setCurrentPage(prev => prev - 1);
+      setCurrentPage((prev) => prev - 1);
       scrollToTop();
     }
   };
-
   return (
     <div className="container py-5" id="courses">
       <h1 className="text-center mb-5" style={{ color: "#004aad" }}>
         Available Courses
       </h1>
-
       {loading ? (
         <div className="text-center my-5">
           <div className="spinner-border text-primary" role="status">
@@ -77,7 +71,11 @@ const CoursesComponent = () => {
           >
             {currentCourses.length > 0 ? (
               currentCourses.map((course) => (
-                <div key={course.id} className="card h-100 shadow-sm text-center">
+                <div
+                  key={course.id}
+                  className="card h-100 shadow-sm text-center"
+                  data-aos="fade-up"
+                >
                   <img
                     src={course.logoUrl || "https://via.placeholder.com/150"}
                     className="card-img-top img-fluid mx-auto mt-3"

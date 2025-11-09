@@ -11,26 +11,21 @@ const ShowFeesEnquiryComponent = () => {
   const [endDate, setEndDate] = useState("");
   const [isFilteredMode, setIsFilteredMode] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
-
   const location = useLocation();
   const state = location.state || {};
   const passedStartDate = state.startDate;
   const passedEndDate = state.endDate;
-
-  // Helper: format date to YYYY-MM-DD
   const formatDate = (date) => {
     const d = new Date(date);
     const month = (d.getMonth() + 1).toString().padStart(2, '0');
     const day = d.getDate().toString().padStart(2, '0');
     return `${d.getFullYear()}-${month}-${day}`;
   };
-
   useEffect(() => {
     if (passedStartDate && passedEndDate) {
       setStartDate(passedStartDate);
       setEndDate(passedEndDate);
       setIsFilteredMode(true);
-
       searchDateEnquiry(passedStartDate, passedEndDate)
         .then((res) => {
           setEnquiries(res.data);
@@ -47,54 +42,43 @@ const ShowFeesEnquiryComponent = () => {
         .catch((err) => console.error("Error fetching enquiries:", err));
     }
   }, [passedStartDate, passedEndDate]);
-
   const handleFilter = () => {
     if (!startDate && !endDate) {
       setFilteredData(enquiries);
       return;
     }
-
     const filtered = enquiries.filter(enquiry => {
       const enquiryDate = new Date(enquiry.currentDate);
       const start = startDate ? new Date(startDate) : null;
       const end = endDate ? new Date(endDate) : null;
-
       if (start && end) return enquiryDate >= start && enquiryDate <= end;
       if (start) return enquiryDate >= start;
       if (end) return enquiryDate <= end;
       return true;
     });
-
     setFilteredData(filtered);
   };
-
   const handleReset = () => {
     setStartDate("");
     setEndDate("");
     setFilteredData(enquiries);
   };
-
   const exportExcel = () => {
-    // Use selected dates or default to today
     const start = startDate || formatDate(new Date());
     const end = endDate || formatDate(new Date());
-
     enquiryExportExcel(start, end)
       .then((res) => {
         const blob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-
         const now = new Date();
         const formattedNow = now.toISOString().slice(0, 19).replace('T', '_').replace(/:/g, '-');
         link.setAttribute('download', `enquiries_${start}_${end}_${formattedNow}.xlsx`);
-
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
-
         setDownloadSuccess(true);
         setTimeout(() => setDownloadSuccess(false), 3000);
       })

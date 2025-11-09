@@ -1,123 +1,306 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
-import { getAllAboutContents } from "../index";
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "aos/dist/aos.css";
+import AOS from "aos";
+import { showAllAbout } from "../index";
+
 const AboutComponent = () => {
   const [data, setData] = useState(null);
+  const [contact, setContact] = useState({ name: "", email: "", message: "" });
+  const [errors, setErrors] = useState({});
+  const [sent, setSent] = useState(false);
+
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+    const fetchData = async () => {
+      try {
+        const res = await showAllAbout();
+        const aboutContent = JSON.parse(res.data[0].content);
+        setData(aboutContent);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, []);
+  if (!data) return <p>Loading...</p>;
+  const handleChange = (e) => setContact({ ...contact, [e.target.name]: e.target.value });
+
+  const validate = () => {
+    const err = {};
+    if (!contact.name.trim()) err.name = "Name required";
+    if (!contact.email.match(/^\S+@\S+\.\S+$/)) err.email = "Valid email required";
+    if (!contact.message.trim()) err.message = "Message required";
+    return err;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const v = validate();
+    setErrors(v);
+    if (Object.keys(v).length === 0) {
+      setSent(true);
+      setTimeout(() => {
+        setSent(false);
+        setContact({ name: "", email: "", message: "" });
+      }, 1800);
+    }
+  };
+
+  const features = [
+    { icon: "fa-laptop-code", title: "Practical Learning", desc: "Live projects, internships and portfolio-ready assignments." },
+    { icon: "fa-user-graduate", title: "Expert Faculty", desc: "Experienced trainers & industry-oriented mentors." },
+    { icon: "fa-chart-line", title: "Career Support", desc: "Resume help, mock interviews and placement drives." },
+    { icon: "fa-certificate", title: "Certifications", desc: "ISO & Tally certified courses to boost credibility." },
+    { icon: "fa-globe", title: "Community Work", desc: "Free guides & outreach for school students every year." },
+    { icon: "fa-thumbs-up", title: "Proven Results", desc: "Thousands of successful students and alumni." },
+  ];
+
+  const testimonials = [
+    { img: "https://i.pravatar.cc/120?img=12", name: "Priya M", role: "Web Developer", text: "CSE guided me from zero to launching my first website. Practical and friendly!" },
+    { img: "https://i.pravatar.cc/120?img=17", name: "Rahul K", role: "Software Engineer", text: "Their Java & Python training helped me crack interviews with confidence." },
+    { img: "https://i.pravatar.cc/120?img=22", name: "Sneha S", role: "Tally Operator", text: "Tally certification was a game-changer for my accounting career." },
+  ];
+
+  const galleryImages = [
+    "public/gallery/Counselling-1.jpg",
+    "public/gallery/Counselling-2.jpg",
+    "public/gallery/Lab.png",
+    "public/gallery/Class-2.jpg",
+  ];
+
   return (
-    <div className="about-main">
-      <h1 className='about-h1'>About Us</h1>
-     
+    <div className="about-page bg-light m-0 p-0" style={{ overflowX: "hidden" }}>
+      {/* HERO SECTION */}
+      {data.hero && (
+        <section
+          className="hero-section text-center d-flex align-items-center justify-content-center position-relative"
+          style={{
+            background: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${data.hero.backgroundImage}') center/cover no-repeat`,
+            minHeight: "100vh",
+            margin: 0,
+            padding: 0,
+          }}
+        >
+          <div data-aos="fade-down">
+            <img
+              src={data.hero.logo}
+              alt="CSE Logo"
+              style={{ height: "180px" }}
+            />
+            <h1 className="display-5 fw-bold text-white mt-4">{data.hero.title}</h1>
+            <p className="lead text-light">{data.hero.subtitle}</p>
+            <p className="text-white-50">{data.hero.description}</p>
 
-      <h2>Empowering Digital Careers Since 1998</h2>
-      <p>
-        Welcome to <b>CSE Computer Education,</b> the most trusted and long-standing computer training center in <b>Ramanathapuram,</b> Tamil Nadu. Established in <b>1998,</b> we have been at the forefront of delivering high-quality computer education to thousands of students and professionals for over 25 years.
-      </p>
-      <p>
-        Recognized for excellence and innovation, CSE Computer Education is an <b>ISO 9001:2015 certified institution</b> that offers a wide range of <b>industry-relevant computer courses,</b> from foundational computer literacy to advanced programming and software development. Whether you’re a school student, college graduate, working professional, or job seeker, our courses are tailored to equip you with the skills needed for today’s digital world.
-      </p>
+            <div className="mt-3">
+              {data.hero.buttons.map((btn, i) => (
+                <a
+                  key={i}
+                  href={btn.link}
+                  className={`btn btn-${btn.style} btn-lg me-2`}
+                >
+                  {btn.text}
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
-      <h2>Why Choose CSE Computer Education?</h2>
-      <p>We stand out as a leading <b>computer education institute in Ramanathapuram</b> for several key reasons:</p>
-      <ul>
-        <li><b>25+ years of proven experience</b> in the education industry</li>
-        <li><b>ISO 9001:2015 certified</b> for quality education and management</li>
-        <li>Only <b>Tally Assessment Center (TAC)</b> in Ramanathapuram</li>
-        <li><b>Government-recognized certifications</b> upon course completion</li>
-        <li><b>Highly qualified and experienced faculty,</b> including engineering graduates</li>
-        <li>Courses designed with <b>practical project work and hands-on training</b></li>
-        <li>Strong focus on <b>career placement support</b> through job fairs and internship opportunities</li>
-        <li>Contribution to society by offering <b>free exam guides</b> to school students</li>
-      </ul>
+      {/* ABOUT SECTION */}
+      {data?.about && (
+        <section className="container py-5" data-aos="fade-up">
+          <div className="row align-items-center gy-4">
+            <div className="col-md-6">
+              <h2 className="fw-bold mb-3 text-dark">{data.about.title}</h2>
+              <p className="text-muted lh-lg">{data.about.description}</p>
 
-      <i className="fa fa-eye"></i>
-      <h2>Our Vision</h2>
-      <p>
-        To bridge the digital divide by providing affordable, high-quality computer education that empowers individuals with the knowledge and skills required for the modern workplace.
-      </p>
+              <h5 className="mt-4 text-primary fw-semibold">{data.about.reasonsTitle}</h5>
+              <ul className="list-unstyled text-muted ps-2">
+                {data.about.reasons?.map((reason, index) => (
+                  <li key={index} className="mb-2">
+                    ✅ {reason}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-      <i className="fa fa-bullseye"></i>
-      <h2>Our Mission</h2>
-      <ul>
-        <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>To offer a wide range of <b>career-oriented computer courses</b></li>
-        <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>To maintain the highest standards of <b>quality and ethics</b> in education</li>
-        <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>To create <b>employment-ready candidates</b> with practical project experience</li>
-        <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>To <b>support students’ academic growth</b> through free learning resources</li>
-        <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>To contribute to the <b>IT development of rural and semi-urban India</b></li>
-      </ul>
+            <div className="col-md-6 text-center">
+              <img
+                src={data.about.image}
+                alt="About"
+                className="img-fluid rounded-4 shadow-lg"
+                style={{ maxHeight: "350px", objectFit: "cover" }}
+              />
+            </div>
+          </div>
+        </section>
+      )}
 
-      <h2>Unique Highlights</h2>
-      <h3>Only Tally Assessment Center in Ramanathapuram</h3>
-      <p>
-        CSE Computer Education is proud to be the <b>only authorized Tally Assessment Center (TAC)</b> in the region. After completing Tally training at our center, students can appear for <b>official Tally online assessments</b>, and receive <b>certificates directly from Tally Solutions Pvt Ltd</b>, enhancing their credibility and job prospects.
-      </p>
 
-      <h3>Career-Oriented Project Submissions</h3>
-      <p>
-        Every student at CSE is required to complete a <b>course-based project</b> and submit a detailed report. This hands-on experience ensures that students not only learn the theory but also gain <b>practical skills</b> in real-world scenarios.
-      </p>
+      {/* SERVICES */}
+      {data.features && (
+        <section id="services" className="py-5 bg-white" data-aos="fade-up">
+          {/* Otherwise, you can add a heading manually */}
+          <h3 className="text-center fw-bold mb-5">Our Features</h3>
 
-      <h3>Job Fair and Placement Support</h3>
-      <p>To bridge the gap between training and employment, we <b>conduct regular job fairs</b> for our students, connecting them with local businesses and IT firms. Our dedicated placement cell supports students with:</p>
-      <ul>
-        <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>Resume building</li>
-        <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>Interview preparation</li>
-        <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>Company referrals</li>
-        <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>Internship connections</li>
-      </ul>
+          <div className="container">
+            <div className="row g-4">
+              {data.features.map((f, i) => (
+                <div
+                  key={i}
+                  className="col-md-4"
+                  data-aos="zoom-in"
+                  data-aos-delay={i * 100}
+                >
+                  <div className="card p-4 text-center shadow-sm border-0 h-100 hover-card">
+                    <div className="mb-3">
+                      {/* FontAwesome icon class */}
+                      <i className={`fas ${f.icon} fa-3x text-warning`}></i>
+                    </div>
+                    <h5 className="fw-bold">{f.title}</h5>
+                    <p className="text-muted">{f.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
-      <div className="features">
-        <div className="feature-card">
-          <i className="fas fa-laptop-code"></i>
-          <h2>Practical Learning</h2>
-          <ul>
-            <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>Custom-tailored <b>internship programs for programming students</b></li>
-            <li style={{ marginLeft: '30px', listStyleType: 'circle' }}><b>Live projects and real-world tasks</b> as part of the course</li>
-            <li style={{ marginLeft: '30px', listStyleType: 'circle' }}><b>Project submission and evaluation</b> for certification</li>
-          </ul>
+
+      {/* TESTIMONIALS */}
+      {data.testimonials && (
+        <section className="py-5" data-aos="fade-up">
+          <h3 className="text-center fw-bold mb-4">Testimonials</h3>
+          <div className="container">
+            <div className="row g-4">
+              {data.testimonials.map((t, i) => (
+                <div key={i} className="col-md-4" data-aos="flip-left" data-aos-delay={i * 150}>
+                  <div className="card text-center p-4 border-0 shadow-sm h-100">
+                    <img
+                      src={t.img}
+                      alt={t.name}
+                      className="rounded-circle mx-auto"
+                      width="100"
+                      height="100"
+                      style={{ objectFit: "cover" }}
+                    />
+                    <h5 className="mt-3">{t.name}</h5>
+                    <p className="text-muted small">{t.role}</p>
+                    <p className="fst-italic text-muted">“{t.text}”</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+
+      {/* GALLERY */}
+      <section className="py-5 bg-white" data-aos="fade-up">
+        <h3 className="text-center fw-bold mb-4">Gallery</h3>
+        <div className="container">
+          <div
+            id="galleryCarousel"
+            className="carousel slide shadow rounded overflow-hidden"
+            data-bs-ride="carousel"
+          >
+            <div className="carousel-inner">
+              {galleryImages.map((g, i) => {
+                const src = g.startsWith("public/") ? g.replace("public", "") : g;
+                return (
+                  <div key={i} className={`carousel-item ${i === 0 ? "active" : ""}`}>
+                    <img
+                      src={src}
+                      className="d-block w-100"
+                      alt={`slide-${i}`}
+                      style={{ height: "480px", objectFit: "cover" }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            <button
+              className="carousel-control-prev"
+              type="button"
+              data-bs-target="#galleryCarousel"
+              data-bs-slide="prev"
+            >
+              <span className="carousel-control-prev-icon"></span>
+            </button>
+
+            <button
+              className="carousel-control-next"
+              type="button"
+              data-bs-target="#galleryCarousel"
+              data-bs-slide="next"
+            >
+              <span className="carousel-control-next-icon"></span>
+            </button>
+          </div>
         </div>
+      </section>
 
-        <div className="feature-card">
-          <i className="fas fa-user-graduate"></i>
-          <h2>Our Team – Qualified & Passionate Faculty</h2>
-          <p>Our strength lies in our <b>dedicated team of trainers and instructors</b>, who are committed to helping students succeed. We have a team of:</p>
-          <ul>
-            <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>Experienced <b>Engineering graduates</b> for programming courses</li>
-            <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>Certified <b>Tally and office application trainers</b></li>
-            <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>Graphic and web design specialists</li>
-            <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>Soft skills and interview training experts</li>
-          </ul>
+      {/* CONTACT FORM */}
+      {data.contactForm && (<section id="contact" className="py-5" data-aos="fade-up">
+        <h3 className="text-center fw-bold mb-4">Contact Us</h3>
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-md-8">
+              <form onSubmit={handleSubmit} className="card p-4 shadow border-0">
+                <div className="mb-3">
+                  <label className="form-label">Name</label>
+                  <input
+                    name="name"
+                    value={contact.name}
+                    onChange={handleChange}
+                    className={`form-control ${errors.name ? "is-invalid" : ""}`}
+                  />
+                  {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Email</label>
+                  <input
+                    name="email"
+                    value={contact.email}
+                    onChange={handleChange}
+                    className={`form-control ${errors.email ? "is-invalid" : ""}`}
+                  />
+                  {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Message</label>
+                  <textarea
+                    name="message"
+                    value={contact.message}
+                    onChange={handleChange}
+                    rows="4"
+                    className={`form-control ${errors.message ? "is-invalid" : ""}`}
+                  ></textarea>
+                  {errors.message && <div className="invalid-feedback">{errors.message}</div>}
+                </div>
+                <button type="submit" className="btn btn-primary">
+                  {sent ? "Sent!" : "Send Message"}
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
+      </section>)}
 
-        <div className="feature-card">
-          <i className="fa-solid fa-globe"></i>
-          <h2>Social Commitment</h2>
-          <p>At CSE Computer Education, we believe in <b>giving back to the community.</b> Every year, we provide <b>free previous year question and answer books</b> for <b>10th and 12th standard students</b> in and around Ramanathapuram.</p>
-        </div>
-
-        <div className="feature-card">
-          <i className="fa-solid fa-shield-halved"></i>
-          <h2>Our Legacy of Trust</h2>
-          <p>With over two decades of consistent performance and commitment to excellence, we have built a <b>reputation of trust</b> among parents, students, and professionals in Ramanathapuram. Thousands of students have successfully completed their courses at CSE Computer Education and gone on to secure <b>jobs in top companies</b>, start freelance careers, or <b>pursue higher education</b>.</p>
-        </div>
-
-        <div className="feature-card">
-          <i className="fa fa-thumbs-up"></i>
-          <h2>Student Success Stories</h2>
-          <ul>
-            <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>Software Developers</li>
-            <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>Web Designers</li>
-            <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>Accountants and Tally Operators</li>
-            <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>Freelance Graphic Designers</li>
-            <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>System Administrators</li>
-            <li style={{ marginLeft: '30px', listStyleType: 'circle' }}>Office Executives</li>
-          </ul>
-        </div>
-
-        <div className="feature-card">
-          <h2>Start Your Digital Journey with CSE Today!</h2>
-          <p>Join the thousands of students who have transformed their lives through CSE Computer Education. Whether you are a beginner or looking to upskill, we have the right course for you. Learn the skills, get certified, and build your career confidently.</p>
-        </div>
-      </div>
+      <style>
+        {`
+          .hover-card:hover {
+            transform: translateY(-8px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+          }
+        `}
+      </style>
     </div>
   );
 };

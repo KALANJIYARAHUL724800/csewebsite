@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { updatePassword } from "../index"; // Make sure the path is correct
-import axios from "axios"; // Needed if your updatePassword uses axios
+import { updatePassword } from "../index"; 
 
 const UpdatePassword = () => {
   const navigate = useNavigate();
@@ -11,45 +10,35 @@ const UpdatePassword = () => {
     password: "",
     confirmPassword: "",
   });
-
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
   const handleClose = () => {
     navigate("/home");
   };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setError("");
     setSuccess("");
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!formData.email || !formData.password || !formData.confirmPassword) {
       setError("Please fill in all fields.");
       return;
     }
-
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
-
     try {
-      // Call the backend API
       const response = await updatePassword(formData);
-      console.log("Response:", response.data);
       setSuccess("Password updated successfully!");
       setError("");
 
       setTimeout(() => navigate("/home"), 2000);
 
     } catch (err) {
-      console.error(err);
       setError(err.response?.data?.message || "Failed to update password.");
       setSuccess("");
     }
