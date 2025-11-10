@@ -12,13 +12,13 @@ import {
   FaDollarSign
 } from 'react-icons/fa';
 import { searchCourseContent, insertFeesEnquiry } from "../index";
-
+import { useNavigate } from "react-router-dom";
 const CourseContent = () => {
   const [errors, setErrors] = useState({ name: "", phone: "" });
   const { id } = useParams();
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState({
@@ -41,7 +41,7 @@ const CourseContent = () => {
   }, [id]);
 
   if (loading) return <p className="text-center mt-5">Loading course...</p>;
-  if (!courseData) return <p className="text-center mt-5 text-danger">Course not found</p>;
+  if (!courseData) return navigate("/courses");
 
   const courseSections = [
     { icon: <FaBookOpen size={30} />, title: "Course Title", text: courseData.courseName || courseData.courseTitle },

@@ -4,7 +4,9 @@ import { loginAdmin } from "../index";
 
 const StaffLogin = ({ onClose }) => {
   const navigate = useNavigate();
+
   const [serverError, setServerError] = useState("");
+  const [successMessage, setSuccessMessage] = useState(""); // <-- success message state
   const [errors, setErrors] = useState({
     email: "",
     password: "",
@@ -13,6 +15,7 @@ const StaffLogin = ({ onClose }) => {
     email: "",
     password: "",
   });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -20,16 +23,22 @@ const StaffLogin = ({ onClose }) => {
       [name]: value,
     });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setServerError("");
     setErrors({ email: "", password: "" });
+    setSuccessMessage("");
+
     try {
       const res = await loginAdmin(formData);
-      const expiryTime = new Date().getTime() + 60 * 60 * 1000; 
+      const expiryTime = new Date().getTime() + 60 * 60 * 1000;
       localStorage.setItem("token", expiryTime);
-      alert("Login successful!");
-      navigate("/dashboard", { state: { user: res.data } });
+      setSuccessMessage("Login successful! Redirecting...");
+      setTimeout(() => {
+        navigate("/dashboard", { state: { user: res.data } });
+      }, 1500);
+
     } catch (err) {
       const newErrors = { email: "", password: "" };
       if (err.response) {
@@ -49,10 +58,12 @@ const StaffLogin = ({ onClose }) => {
       setErrors(newErrors);
     }
   };
+
   const handleClose = () => {
     if (onClose) onClose();
     navigate("/home");
   };
+
   return (
     <div
       className="overlay d-flex justify-content-center align-items-center"
@@ -88,12 +99,21 @@ const StaffLogin = ({ onClose }) => {
         </div>
 
         <form onSubmit={handleSubmit}>
+          {/* Server error */}
           {serverError && (
             <div className="alert alert-danger text-center py-2 mb-2">
               {serverError}
             </div>
           )}
 
+          {/* Success message */}
+          {successMessage && (
+            <div className="alert alert-success text-center py-2 mb-2">
+              {successMessage}
+            </div>
+          )}
+
+          {/* Email input */}
           <input
             type="email"
             className="form-control mb-2"
@@ -101,9 +121,12 @@ const StaffLogin = ({ onClose }) => {
             name="email"
             value={formData.email}
             onChange={handleChange}
+            style={errors.email ? { border: "1.5px solid red", boxShadow: "0 0 5px rgba(255,0,0,0.5)" } : {}}
           />
+
           {errors.email && <div className="text-danger mb-2">{errors.email}</div>}
 
+          {/* Password input */}
           <input
             type="password"
             className="form-control mb-2"
@@ -111,7 +134,11 @@ const StaffLogin = ({ onClose }) => {
             name="password"
             value={formData.password}
             onChange={handleChange}
+            minLength={8}
+            maxLength={16}
+            style={errors.password ? { border: "1.5px solid red", boxShadow: "0 0 5px rgba(255,0,0,0.5)" } : {}}
           />
+
           {errors.password && (
             <div className="text-danger mb-2">{errors.password}</div>
           )}

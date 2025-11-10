@@ -13,6 +13,7 @@ const StudentSignup = ({ onClose }) => {
     confirmPassword: "",
   });
   const [serverError, setServerError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -27,10 +28,13 @@ const StudentSignup = ({ onClose }) => {
     e.preventDefault();
     setErrors({ name: "", email: "", password: "", confirmPassword: "" });
     setServerError("");
+    setSuccessMessage("");
     try {
       const res = await createUser(formData);
-      alert("Signup successful!");
-      navigate("/home");
+      setSuccessMessage("Signup successful! Redirecting...");
+      setTimeout(() => {
+        navigate("/login", { state: { user: res.data } });
+      }, 1500);
     } catch (err) {
       const newErrors = { name: "", email: "", password: "", confirmPassword: "" };
       if (err.response) {
@@ -95,7 +99,12 @@ const StudentSignup = ({ onClose }) => {
               {serverError}
             </div>
           )}
-
+          {/* Success message */}
+          {successMessage && (
+            <div className="alert alert-success text-center py-2 mb-2">
+              {successMessage}
+            </div>
+          )}
           <input
             type="text"
             className={`form-control mb-1 ${errors.name ? "is-invalid" : ""}`}
@@ -121,6 +130,8 @@ const StudentSignup = ({ onClose }) => {
             className={`form-control mb-1 ${errors.password ? "is-invalid" : ""}`}
             placeholder="Password"
             name="password"
+            minLength={8}
+            maxLength={16}
             value={formData.password}
             onChange={handleChange}
           />
@@ -131,6 +142,8 @@ const StudentSignup = ({ onClose }) => {
             className={`form-control mb-1 ${errors.confirmPassword ? "is-invalid" : ""}`}
             placeholder="Confirm Password"
             name="confirmPassword"
+            minLength={8}
+            maxLength={16}
             value={formData.confirmPassword}
             onChange={handleChange}
           />

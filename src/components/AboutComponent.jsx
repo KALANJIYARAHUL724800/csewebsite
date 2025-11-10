@@ -48,21 +48,6 @@ const AboutComponent = () => {
     }
   };
 
-  const features = [
-    { icon: "fa-laptop-code", title: "Practical Learning", desc: "Live projects, internships and portfolio-ready assignments." },
-    { icon: "fa-user-graduate", title: "Expert Faculty", desc: "Experienced trainers & industry-oriented mentors." },
-    { icon: "fa-chart-line", title: "Career Support", desc: "Resume help, mock interviews and placement drives." },
-    { icon: "fa-certificate", title: "Certifications", desc: "ISO & Tally certified courses to boost credibility." },
-    { icon: "fa-globe", title: "Community Work", desc: "Free guides & outreach for school students every year." },
-    { icon: "fa-thumbs-up", title: "Proven Results", desc: "Thousands of successful students and alumni." },
-  ];
-
-  const testimonials = [
-    { img: "https://i.pravatar.cc/120?img=12", name: "Priya M", role: "Web Developer", text: "CSE guided me from zero to launching my first website. Practical and friendly!" },
-    { img: "https://i.pravatar.cc/120?img=17", name: "Rahul K", role: "Software Engineer", text: "Their Java & Python training helped me crack interviews with confidence." },
-    { img: "https://i.pravatar.cc/120?img=22", name: "Sneha S", role: "Tally Operator", text: "Tally certification was a game-changer for my accounting career." },
-  ];
-
   const galleryImages = [
     "public/gallery/Counselling-1.jpg",
     "public/gallery/Counselling-2.jpg",

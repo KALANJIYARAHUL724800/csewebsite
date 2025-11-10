@@ -22,8 +22,8 @@ export const getAllAboutContents = () => {
   return axios.get(`${API_BASE}/about-content`);
 };
 
-export const loginUser = () => {
-  return axios.get(`${API_BASE}/login`);
+export const loginUser = (val) => {
+  return axios.post(`${API_BASE}/login`,val);
 };
 
 export const loginAdmin = (userData) => {
@@ -128,4 +128,14 @@ export const enquiryExportAll = () => {
 
 export const showAllAbout = () => {
   return axios.get(`${API_BASE}/about/all`);
+};
+
+export const courseCount = () => {
+  return axios.get(`${API_BASE}/countcourse`);
+};
+export const countAdmin = () => {
+  return axios.get(`${API_BASE}/countAdmin`);
+};
+export const countStudents = () => {
+  return axios.get(`${API_BASE}/countStudents`);
 };

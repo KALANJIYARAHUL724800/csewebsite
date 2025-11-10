@@ -1,112 +1,117 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { enquiryCountNotification } from "../index";
+import {
+  enquiryCountNotification,
+  courseCount,
+  countAdmin,
+  countStudents,
+} from "../index";
 import {
   AiOutlinePlus,
   AiOutlineUnorderedList,
   AiOutlineLineChart,
   AiOutlineCalendar,
 } from "react-icons/ai";
+import { FaUserGraduate, FaBook, FaChalkboardTeacher } from "react-icons/fa";
 
 const DashboardComponent = () => {
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [notificationCount, setNotificationCount] = useState(null);
+  const [courseCounts, SetCourseCount] = useState(null);
+  const [adminCount, SetAdminCount] = useState(null);
+  const [studentsCount, SetStudentsCount] = useState(null);
 
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     setStartDate(today);
     setEndDate(today);
+
+    countStudents()
+      .then((res) => SetStudentsCount(res.data))
+      .catch((err) => console.error(err));
+
+    countAdmin()
+      .then((res) => SetAdminCount(res.data))
+      .catch((err) => console.error(err));
+
+    courseCount()
+      .then((res) => SetCourseCount(res.data))
+      .catch((err) => console.error(err));
+
     enquiryCountNotification(today, today)
-      .then((res) => {
-        setNotificationCount(res.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching notification count:", err);
-      });
+      .then((res) => setNotificationCount(res.data))
+      .catch((err) => console.error(err));
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/home");
   };
+
   const notificationPopUp = () => {
     navigate("/enquiry", { state: { startDate, endDate } });
   };
+
   return (
-    <div className="container-fluid">
+    <div className="container-fluid p-0">
       {/* Header */}
-      <div className="d-flex justify-content-between align-items-center py-3 border-bottom flex-wrap">
+      <div className="d-flex justify-content-between align-items-center p-3 border-bottom flex-wrap bg-white shadow-sm">
         <h2 className="mb-2 mb-md-0">Admin Dashboard</h2>
 
         <div className="d-flex align-items-center">
-          {/* Notification Icon with Badge */}
-          <div className="position-relative me-3" style={{ lineHeight: 0 }}>
+          {/* Notification */}
+          <div className="position-relative me-3">
             <img
               src="/notification.png"
               alt="Notification"
-              style={{
-                height: "40px",
-                cursor: "pointer",
-                display: "block",
-              }}
+              style={{ height: "40px", cursor: "pointer" }}
               onClick={notificationPopUp}
             />
-
-            {/* Red count badge */}
-            <span
-              className="position-absolute badge rounded-pill bg-danger"
-              style={{
-                fontSize: "11px",
-                top: "2px",
-                right: "2px",
-                transform: "translate(50%, -50%)",
-              }}
-            >
+            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
               {notificationCount ?? 0}
             </span>
           </div>
 
-          {/* Logout button */}
           <button className="btn btn-danger btn-sm" onClick={handleLogout}>
             Logout
           </button>
         </div>
       </div>
 
-      <div className="row">
+      <div className="row g-0">
         {/* Sidebar */}
-        <div className="col-12 col-md-3 bg-light p-3 mb-3 mb-md-0 rounded">
-          <h5>Navigation</h5>
+        <div className="col-12 col-md-3 bg-light p-3 border-end vh-100">
+          <h5 className="mb-4">Navigation</h5>
           <ul className="list-unstyled">
-            <li>
+            <li className="mb-2">
               <button
-                className="btn btn-link d-flex align-items-center w-100 text-start"
+                className="btn btn-outline-primary w-100 d-flex align-items-center"
                 onClick={() => navigate("/addcourse")}
               >
                 <AiOutlinePlus className="me-2" /> Add Course
               </button>
             </li>
-            <li>
+            <li className="mb-2">
               <button
-                className="btn btn-link d-flex align-items-center w-100 text-start"
+                className="btn btn-outline-primary w-100 d-flex align-items-center"
                 onClick={() => navigate("/courses")}
               >
                 <AiOutlineUnorderedList className="me-2" /> View Courses
               </button>
             </li>
-            <li>
+            <li className="mb-2">
               <button
-                className="btn btn-link d-flex align-items-center w-100 text-start"
+                className="btn btn-outline-primary w-100 d-flex align-items-center"
                 onClick={() => navigate("/enquiry")}
               >
-                <AiOutlineLineChart className="me-2" /> Show All Enquires
+                <AiOutlineLineChart className="me-2" /> Show All Enquiries
               </button>
             </li>
-            <li>
+            <li className="mb-2">
               <button
-                className="btn btn-link d-flex align-items-center w-100 text-start"
+                className="btn btn-outline-primary w-100 d-flex align-items-center"
                 onClick={() => navigate("/batch")}
               >
                 <AiOutlineCalendar className="me-2" /> Add New Batch
@@ -116,28 +121,33 @@ const DashboardComponent = () => {
         </div>
 
         {/* Main Content */}
-        <div className="col-12 col-md-9 p-3">
+        <div className="col-12 col-md-9 p-4">
           <h4>Welcome, Admin!</h4>
-          <p>Here you can manage courses, view student progress, and more.</p>
+          <p>Manage courses, view student progress, and monitor notifications.</p>
 
-          {/* Metrics */}
-          <div className="row mt-4">
-            <div className="col-12 col-sm-6 col-lg-4 mb-3">
-              <div className="card text-center p-3 shadow-sm">
-                <h5>Total Students</h5>
-                <p>120</p>
+          {/* Metrics Cards */}
+          <div className="row g-3 mt-4">
+            <div className="col-12 col-sm-6 col-lg-4">
+              <div className="card shadow-sm text-center p-3 h-100">
+                <FaUserGraduate size={30} className="mb-2 text-primary" />
+                <h6>Total Students</h6>
+                <h3>{studentsCount ?? 0}</h3>
               </div>
             </div>
-            <div className="col-12 col-sm-6 col-lg-4 mb-3">
-              <div className="card text-center p-3 shadow-sm">
-                <h5>Total Courses</h5>
-                <p>15</p>
+
+            <div className="col-12 col-sm-6 col-lg-4">
+              <div className="card shadow-sm text-center p-3 h-100">
+                <FaBook size={30} className="mb-2 text-success" />
+                <h6>Total Courses</h6>
+                <h3>{courseCounts ?? 0}</h3>
               </div>
             </div>
-            <div className="col-12 col-sm-6 col-lg-4 mb-3">
-              <div className="card text-center p-3 shadow-sm">
-                <h5>Active Staff</h5>
-                <p>5</p>
+
+            <div className="col-12 col-sm-6 col-lg-4">
+              <div className="card shadow-sm text-center p-3 h-100">
+                <FaChalkboardTeacher size={30} className="mb-2 text-warning" />
+                <h6>Active Staff</h6>
+                <h3>{adminCount ?? 0}</h3>
               </div>
             </div>
           </div>

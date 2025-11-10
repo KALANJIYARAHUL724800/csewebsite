@@ -1,9 +1,68 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../index";
 const StudentLogin = () => {
   const navigate = useNavigate();
   const handleClose = () => {
-    navigate("/home");
+    navigate("/home")
+  };
+
+  const [serverError, setServerError] = useState("");
+  const [successMessage, setSuccessMessage] = useState(""); // <-- success message state
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+  });
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setServerError("");
+    setErrors({ email: "", password: "" });
+    setSuccessMessage("");
+
+    try {
+      const res = await loginUser(formData);
+      const expiryTime = new Date().getTime() + 60 * 60 * 1000;
+      localStorage.setItem("token", expiryTime);
+      setSuccessMessage("Login successful! Redirecting...");
+      setTimeout(() => {
+        navigate("/student-dashboard", { state: { user: res.data } });
+      }, 1500);
+
+    } catch (err) {
+      const newErrors = { email: "", password: "" };
+      if (err.response) {
+        const { data, status } = err.response;
+        if (status === 400) {
+          // Convert data to string if it's an object
+          const errorText = typeof data === "string" ? data : Object.values(data).join("; ");
+          errorText.split(";").forEach((msg) => {
+            msg = msg.trim().toLowerCase();
+            if (msg.includes("email")) newErrors.email = msg;
+            else if (msg.includes("password")) newErrors.password = msg;
+          });
+        } else {
+          setServerError("Something went wrong. Please try again later.");
+        }
+      } else {
+        setServerError("Network error. Please check your connection.");
+      }
+      setErrors(newErrors);
+    }
+
+
   };
   return (
     <div
@@ -38,34 +97,61 @@ const StudentLogin = () => {
             &times;
           </span>
         </div>
-        <form>
+        <form onSubmit={handleSubmit}>
+          {/* Server error */}
+          {serverError && (
+            <div className="alert alert-danger text-center py-2 mb-2">
+              {serverError}
+            </div>
+          )}
+
+          {/* Success message */}
+          {successMessage && (
+            <div className="alert alert-success text-center py-2 mb-2">
+              {successMessage}
+            </div>
+          )}
+
+          {/* Email input */}
           <input
-            type="text"
-            className="form-control mb-3"
-            placeholder="Student ID / Email"
-            required
+            type="email"
+            className="form-control mb-2"
+            placeholder="Enter Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            style={errors.email ? { border: "1.5px solid red", boxShadow: "0 0 5px rgba(255,0,0,0.5)" } : {}}
           />
+
+          {errors.email && <div className="text-danger mb-2">{errors.email}</div>}
+
+          {/* Password input */}
           <input
             type="password"
             className="form-control mb-2"
-            placeholder="Password"
-            required
+            placeholder="Enter Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            minLength={8}
+            maxLength={16}
+            style={errors.password ? { border: "1.5px solid red", boxShadow: "0 0 5px rgba(255,0,0,0.5)" } : {}}
           />
+
+          {errors.password && (
+            <div className="text-danger mb-2">{errors.password}</div>
+          )}
+
           <a
             href="/forgot-password"
             className="d-block text-end mb-3 text-decoration-none small text-muted"
           >
             Forgot Password?
           </a>
+
           <button type="submit" className="btn btn-primary w-100 mb-3">
             Login
           </button>
-          <div className="signup-link text-center">
-            <span className="me-1">Don’t have an account?</span>
-            <a href="/signup" className="text-decoration-none">
-              Sign Up
-            </a>
-          </div>
         </form>
       </div>
     </div>

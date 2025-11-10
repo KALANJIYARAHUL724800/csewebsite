@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { logout } from "../index";
+import { useState } from 'react';
 const HeaderComponent = () => {
+  const [login, setLogin] = useState(() => localStorage.getItem("token"));
+
+  useEffect(() => {
+    if (!login) {
+      console.log("User not logged in");
+    }
+  }, [login]);
   return (
     <nav className="navbar navbar-expand-lg header sticky-top">
       <div className="container-fluid">
@@ -63,11 +71,13 @@ const HeaderComponent = () => {
                 <i className="bi bi-gear-fill me-1"></i> Settings
               </a>
             </li>
-            <li className="nav-item" onClick={logout}>
-              <a className="nav-link text-danger" href="#">
-                <i className="bi bi-box-arrow-right me-1"></i> Logout
-              </a>
-            </li>
+            {login && (
+              <li className="nav-item" onClick={logout}>
+                <a className="nav-link text-danger" href="#">
+                  <i className="bi bi-box-arrow-right me-1"></i> Logout
+                </a>
+              </li>
+            )}
           </ul>
         </div>
 
