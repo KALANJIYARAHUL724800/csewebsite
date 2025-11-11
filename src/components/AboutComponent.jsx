@@ -155,33 +155,101 @@ const AboutComponent = () => {
       )}
 
 
-      {/* TESTIMONIALS */}
-      {data.testimonials && (
-        <section className="py-5" data-aos="fade-up">
-          <h3 className="text-center fw-bold mb-4">Testimonials</h3>
-          <div className="container">
-            <div className="row g-4">
-              {data.testimonials.map((t, i) => (
-                <div key={i} className="col-md-4" data-aos="flip-left" data-aos-delay={i * 150}>
-                  <div className="card text-center p-4 border-0 shadow-sm h-100">
-                    <img
-                      src={t.img}
-                      alt={t.name}
-                      className="rounded-circle mx-auto"
-                      width="100"
-                      height="100"
-                      style={{ objectFit: "cover" }}
-                    />
-                    <h5 className="mt-3">{t.name}</h5>
-                    <p className="text-muted small">{t.role}</p>
-                    <p className="fst-italic text-muted">“{t.text}”</p>
-                  </div>
-                </div>
-              ))}
+{/* TESTIMONIALS */}
+{data.testimonials && (
+  <section className="py-5" data-aos="fade-up">
+    <h3 className="text-center fw-bold mb-5">Testimonials</h3>
+    <div className="container">
+      <div className="row g-4">
+        {data.testimonials.map((t, i) => (
+          <div
+            key={i}
+            className="col-md-6"
+            data-aos="flip-left"
+            data-aos-delay={i * 150}
+          >
+            <div className="testimonial-card p-4 h-100 position-relative d-flex align-items-center justify-content-between">
+              <div className="border-animate"></div>
+
+              {/* LEFT SIDE */}
+              <div className="text-center me-3 flex-shrink-0">
+                <img
+                  src={t.img}
+                  alt={t.name}
+                  className="rounded-circle mb-3 shadow-lg"
+                  width="90"
+                  height="90"
+                  style={{ objectFit: "cover" }}
+                />
+                <h6 className="fw-bold mb-0">{t.name}</h6>
+                <p className="text-muted small mb-0">{t.role}</p>
+              </div>
+
+              {/* MIDDLE LINE */}
+              <div className="divider mx-3"></div>
+
+              {/* RIGHT SIDE */}
+              <div className="flex-grow-1">
+                <h3>Information</h3>
+                <p className="fst-italic text-muted mb-0">“{t.text}”</p>
+              </div>
             </div>
           </div>
-        </section>
-      )}
+        ))}
+      </div>
+    </div>
+
+    {/* CSS STYLING */}
+    <style>
+      {`
+        .testimonial-card {
+          background: #fff;
+          border-radius: 15px;
+          box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+          overflow: hidden;
+          position: relative;
+        }
+
+        .testimonial-card .border-animate {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 15px;
+          padding: 2px;
+          background: linear-gradient(270deg, #ff6ec4, #7873f5, #42a5f5, #ff6ec4);
+          background-size: 600% 600%;
+          animation: borderMove 6s linear infinite;
+          -webkit-mask: 
+            linear-gradient(#fff 0 0) content-box, 
+            linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+                  mask-composite: exclude;
+        }
+
+        @keyframes borderMove {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+
+        .divider {
+          width: 2px;
+          height: 100%;
+          background: linear-gradient(180deg, #ff6ec4, #7873f5, #42a5f5);
+          border-radius: 5px;
+          opacity: 0.8;
+        }
+
+        .testimonial-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+          transition: all 0.4s ease;
+        }
+      `}
+    </style>
+  </section>
+)}
+
 
 
       {/* GALLERY */}
