@@ -1,6 +1,6 @@
-import React, { useState,useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Select from 'react-select';
-import { insertTestimonials,moveImage } from "../index";
+import { insertTestimonials, moveImage } from "../index";
 
 const TestiMonialsComponent = () => {
     const [formData, setFormData] = useState({
@@ -23,13 +23,17 @@ const TestiMonialsComponent = () => {
     ];
     const handleChange = (e) => {
         const { name, value, files } = e.target;
-        if (name === 'image') {
-            setFormData(prev => ({
+        if (name === "image") {
+            const selectedFile = files && files.length > 0 ? files[0] : null;
+
+            setFormData((prev) => ({
                 ...prev,
-                image: files && files.length > 0 ? files[0] : null
+                image: selectedFile,
+                imageUrl: selectedFile ? selectedFile.name : "",
             }));
+            if (selectedFile) console.log("Selected image name:", selectedFile.name);
         } else {
-            setFormData(prev => ({ ...prev, [name]: value }));
+            setFormData((prev) => ({ ...prev, [name]: value }));
         }
     };
 
@@ -41,22 +45,23 @@ const TestiMonialsComponent = () => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrors({}); 
-    
+        setErrors({});
         try {
             let imageUrl = '';
             if (formData.image) {
                 const imageForm = new FormData();
                 imageForm.append('image', formData.image);
-                const uploadRes = await moveImage(imageForm); 
-                imageUrl = uploadRes.url; 
+                const uploadRes = await moveImage(imageForm);
+                imageUrl = uploadRes.url;
             }
             const payload = new FormData();
             payload.append('name', formData.name);
             payload.append('courseName', formData.courseName);
             payload.append('place', formData.place);
             payload.append('text', formData.text);
-            if (imageUrl) payload.append('image', imageUrl); 
+            payload.append('imageUrl', formData.imageUrl || '');
+            if (imageUrl) payload.append('image', imageUrl);
+            console.log('Image name appended to payload:', formData);
             await insertTestimonials(payload);
             setSuccessMessage('Thank you! Your testimonial has been submitted successfully.');
             setFormData({
@@ -65,10 +70,9 @@ const TestiMonialsComponent = () => {
                 courseName: '',
                 place: '',
                 text: '',
+                imageUrl: '',
             });
-            if (fileInputRef.current) {
-                fileInputRef.current.value = null;
-            }
+            if (fileInputRef.current) fileInputRef.current.value = null;
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 setErrors(error.response.data);
@@ -76,7 +80,6 @@ const TestiMonialsComponent = () => {
                 console.error('Error submitting testimonial:', error);
             }
         }
-    
         setTimeout(() => setSuccessMessage(''), 5000);
     };
     const customSelectStyles = {
@@ -128,7 +131,7 @@ const TestiMonialsComponent = () => {
                     />
                     {errors.image && <div className="invalid-feedback">{errors.image}</div>}
                 </div>
-
+                <input type="hidden" name="imageUrl" value={formData.imageUrl || ''} />
                 {/* Course Name select */}
                 <div className="mb-3">
                     <label htmlFor="courseName" className="form-label">
