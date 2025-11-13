@@ -1,11 +1,11 @@
 import axios from "axios";
 
 const API_BASE = "http://localhost:8080/api";
-
+const NODE_API = `http://localhost:3001/upload`;
 export const logout = () => {
-    localStorage.removeItem("token");
-    window.location.href="/home";
-  };
+  localStorage.removeItem("token");
+  window.location.href = "/home";
+};
 
 export const createUser = (userData) => {
   return axios.post(`${API_BASE}/register`, userData);
@@ -23,7 +23,7 @@ export const getAllAboutContents = () => {
 };
 
 export const loginUser = (val) => {
-  return axios.post(`${API_BASE}/login`,val);
+  return axios.post(`${API_BASE}/login`, val);
 };
 
 export const loginAdmin = (userData) => {
@@ -122,7 +122,7 @@ export const enquiryExportExcel = (startDate, endDate) => {
 
 export const enquiryExportAll = () => {
   return axios.get(`${API_BASE}/enquiry/export`, {
-    responseType: 'blob', 
+    responseType: 'blob',
   });
 };
 
@@ -138,4 +138,39 @@ export const countAdmin = () => {
 };
 export const countStudents = () => {
   return axios.get(`${API_BASE}/countStudents`);
+};
+
+export const insertTestimonials = async (formData) => {
+  const response = await axios.post(`${API_BASE}/testimonials/insert`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+  return response.data;
+};
+
+export const moveImage = async (formData) => {
+  const response = await axios.post('http://localhost:3001/upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+  return response.data;
+};
+
+export const updateTestimonial = (id, formData) => {
+  const data = new FormData();
+  for (let key in formData) {
+    if (formData[key] !== null && formData[key] !== undefined) {
+      data.append(key, formData[key]);
+    }
+  }
+
+  return axios.put(`${API_BASE}/testimonials/update/${id}`, data, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+}
+
+export const showAllTestimonials = () => {
+  return axios.get(`${API_BASE}/testimonials/all`);
+};
+
+export const findTestimonials = (id) => {
+  return axios.get(`${API_BASE}/testimonials/${id}`);
 };

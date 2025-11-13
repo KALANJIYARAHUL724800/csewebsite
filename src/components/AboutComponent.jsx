@@ -181,7 +181,7 @@ const AboutComponent = () => {
                   height="90"
                   style={{ objectFit: "cover" }}
                 />
-                <h6 className="fw-bold mb-0">{t.name}</h6>
+                <h6 className="fw-bold mb-0">Name : {t.name}</h6>
                 <p className="text-muted small mb-0">{t.role}</p>
               </div>
 

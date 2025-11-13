@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { search, showAllBatches } from "../index";
+import { search, showAllBatches, showAllTestimonials } from "../index";
 
 const HomeComponent = () => {
   const navigate = useNavigate();
@@ -9,6 +9,7 @@ const HomeComponent = () => {
   const [searched, setSearched] = useState(false);
   const [giftClicked, setGiftClicked] = useState(false);
   const [batches, setBatches] = useState([]);
+  const [testimonials, setTestimonials] = useState([]);
   const [showBatchPopup, setShowBatchPopup] = useState(false);
   const [hasBatches, setHasBatches] = useState(false);
   const confettiInterval = useRef(null);
@@ -20,6 +21,19 @@ const HomeComponent = () => {
           setBatches(response.data);
         } else {
           setHasBatches(false);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching batches:", err);
+        setHasBatches(false);
+      });
+    showAllTestimonials()
+      .then((response) => {
+        if (response.data && response.data.length > 0) {
+          console.log(response.data);
+          setTestimonials(response.data)
+        } else {
+
         }
       })
       .catch((err) => {
@@ -329,6 +343,39 @@ const HomeComponent = () => {
             <img src="/gallery/Lab.png" alt="Lab" />
           </div>
         </div>
+
+        <div className="container py-5">
+          <h2 className="text-center mb-4">Testimonials</h2>
+          <div className="row">
+            {testimonials.map((t) => (
+              <div key={t.id} className="col-md-6 mb-4">
+                <div className="testimonial-card p-4 h-100 d-flex align-items-center justify-content-between shadow-sm">
+                  <div className="text-center me-3 flex-shrink-0">
+                    <img
+                      src={
+                        t.image
+                          ? `${process.env.REACT_APP_API_BASE_URL}/uploads/${t.image}`
+                          : "/default-user.png"
+                      }
+                      alt={t.name}
+                      className="rounded-circle mb-3 shadow-lg"
+                      width="90"
+                      height="90"
+                      style={{ objectFit: "cover" }}
+                    />
+                    <h6 className="fw-bold mb-0">{t.name}</h6>
+                    <p className="text-muted small mb-0">{t.courseName}</p>
+                  </div>
+                  <div className="flex-grow-1">
+                    <p className="fst-italic text-muted mb-0">“{t.text}”</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+
       </div>
     </div>
   );

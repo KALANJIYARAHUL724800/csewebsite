@@ -24,6 +24,7 @@ import BatchComponent from './components/BatchComponent';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
 import StudentDashBoard from './components/StudentDashBoard';
+import TestiMonialsComponent from './components/TestiMonialsComponent';
 
 function App() {
   return (
@@ -42,7 +43,7 @@ function App() {
           <Route path="/events" element={<EventComponent />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/update-password" element={<UpdatePassword />} />
-
+          <Route path="/testimonials" element={<TestiMonialsComponent />} />
           {/* Public Routes only if not logged in */}
           <Route path="/login" element={
             <PublicRoute>
