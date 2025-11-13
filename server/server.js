@@ -21,7 +21,7 @@ for (let drive of drives) {
 if (!projectRoot) {
   process.exit(1);
 }
-const uploadFolder = path.join(projectRoot, 'frontend', 'public', 'uploads');
+const uploadFolder = path.join(projectRoot, 'front-end', 'public', 'uploads');
 if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder, { recursive: true });
 app.use('/uploads', express.static(uploadFolder));
 app.post('/upload', (req, res) => {
