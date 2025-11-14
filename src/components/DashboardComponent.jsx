@@ -117,6 +117,14 @@ const DashboardComponent = () => {
                 <AiOutlineCalendar className="me-2" /> Add New Batch
               </button>
             </li>
+            <li className="mb-2">
+              <button
+                className="btn btn-outline-primary w-100 d-flex align-items-center"
+                onClick={() => navigate("/testimonials")}
+              >
+                <FaUserGraduate className="me-2" /> Add Testimonials
+              </button>
+            </li>
           </ul>
         </div>
 

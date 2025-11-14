@@ -1,10 +1,30 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Select from 'react-select';
-import { insertTestimonials, moveImage } from "../index";
+import { insertTestimonials, moveImage, getAllCourses } from "../index";
 
 const TestiMonialsComponent = () => {
+    const [course, setCourse] = new useState(null)
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const res = await getAllCourses();
+                const options = res.data.map(c => ({
+                    value: c.id,
+                    label: c.courseName
+                }));
+                setCourse(options);
+            } catch (error) {
+                console.error("Error fetching courses:", error);
+            }
+        };
+
+        fetchCourses();
+    }, []);
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
+        enrollno: '',
         image: null,
         courseName: '',
         place: '',
@@ -13,7 +33,6 @@ const TestiMonialsComponent = () => {
     const fileInputRef = useRef(null);
     const [errors, setErrors] = useState({});
     const [successMessage, setSuccessMessage] = useState('');
-
     const allCourses = [
         { value: 'Computer Science', label: 'Computer Science' },
         { value: 'Data Science', label: 'Data Science' },
@@ -25,18 +44,16 @@ const TestiMonialsComponent = () => {
         const { name, value, files } = e.target;
         if (name === "image") {
             const selectedFile = files && files.length > 0 ? files[0] : null;
-
             setFormData((prev) => ({
                 ...prev,
                 image: selectedFile,
                 imageUrl: selectedFile ? selectedFile.name : "",
             }));
-            if (selectedFile) console.log("Selected image name:", selectedFile.name);
+            if (selectedFile) console.log();
         } else {
             setFormData((prev) => ({ ...prev, [name]: value }));
         }
     };
-
     const handleSelectChange = (selectedOption) => {
         setFormData(prev => ({
             ...prev,
@@ -45,6 +62,8 @@ const TestiMonialsComponent = () => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
+        setIsSubmitting(true);
         setErrors({});
         try {
             let imageUrl = '';
@@ -56,16 +75,17 @@ const TestiMonialsComponent = () => {
             }
             const payload = new FormData();
             payload.append('name', formData.name);
+            payload.append('enrollno', formData.enrollno);
             payload.append('courseName', formData.courseName);
             payload.append('place', formData.place);
             payload.append('text', formData.text);
             payload.append('imageUrl', formData.imageUrl || '');
             if (imageUrl) payload.append('image', imageUrl);
-            console.log('Image name appended to payload:', formData);
             await insertTestimonials(payload);
             setSuccessMessage('Thank you! Your testimonial has been submitted successfully.');
             setFormData({
                 name: '',
+                enrollno: '',
                 image: null,
                 courseName: '',
                 place: '',
@@ -76,11 +96,11 @@ const TestiMonialsComponent = () => {
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 setErrors(error.response.data);
-            } else {
-                console.error('Error submitting testimonial:', error);
             }
+        } finally {
+            setIsSubmitting(false);
+            setTimeout(() => setSuccessMessage(''), 5000);
         }
-        setTimeout(() => setSuccessMessage(''), 5000);
     };
     const customSelectStyles = {
         control: (provided, state) => ({
@@ -114,6 +134,21 @@ const TestiMonialsComponent = () => {
                     />
                     {errors.name && <div className="invalid-feedback">{errors.name}</div>}
                 </div>
+                <div className="mb-3">
+                    <label htmlFor="enrollno" className="form-label">
+                        Enroll No <i className="bi bi-person-fill ms-2"></i>
+                    </label>
+                    <input
+                        type="number"
+                        id="enrollno"
+                        name="enrollno"
+                        value={formData.enrollno}
+                        onChange={handleChange}
+                        className={`form-control ${errors.enrollno ? 'is-invalid' : ''}`}
+                        placeholder="Enter enroll no"
+                    />
+                    {errors.enrollno && <div className="invalid-feedback">{errors.enrollno}</div>}
+                </div>
 
                 {/* Image input */}
                 <div className="mb-3">
@@ -139,8 +174,8 @@ const TestiMonialsComponent = () => {
                     </label>
                     <Select
                         id="courseName"
-                        options={allCourses}
-                        value={allCourses.find(c => c.value === formData.courseName) || null}
+                        options={course}
+                        value={course?.find(c => c.value === formData.courseName) || null}
                         onChange={handleSelectChange}
                         placeholder="Select a course"
                         isClearable

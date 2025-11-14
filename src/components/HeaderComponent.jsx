@@ -46,11 +46,11 @@ const HeaderComponent = () => {
                 <i className="bi bi-book-fill me-1"></i> Courses
               </a>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <a className="nav-link" href="/progress">
                 <i className="bi bi-graph-up me-1"></i> Progress
               </a>
-            </li>
+            </li> */}
             <li className="nav-item">
               <a className="nav-link" href="#">
                 <i className="bi bi-calendar-event-fill me-1"></i> Event
