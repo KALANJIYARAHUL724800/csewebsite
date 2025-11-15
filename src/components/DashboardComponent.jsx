@@ -5,6 +5,7 @@ import {
   courseCount,
   countAdmin,
   countStudents,
+  moveImage
 } from "../index";
 import {
   AiOutlinePlus,
@@ -12,7 +13,7 @@ import {
   AiOutlineLineChart,
   AiOutlineCalendar,
 } from "react-icons/ai";
-import { FaUserGraduate, FaBook, FaChalkboardTeacher } from "react-icons/fa";
+import { FaUserGraduate, FaBook, FaChalkboardTeacher, FaUpload } from "react-icons/fa";
 
 const DashboardComponent = () => {
   const navigate = useNavigate();
@@ -22,7 +23,35 @@ const DashboardComponent = () => {
   const [courseCounts, SetCourseCount] = useState(null);
   const [adminCount, SetAdminCount] = useState(null);
   const [studentsCount, SetStudentsCount] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [file, setFile] = useState(null);
+  const [title, setTitle] = useState("");
 
+  function uploadPosts() {
+    setShowForm(true);
+  }
+  function closeForm() {
+    setShowForm(false);
+    setFile(null);
+    setTitle("");
+  }
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!file) return alert("Please select a file!");
+    const formData = new FormData();
+    formData.append("image", file); 
+    formData.append("title", title); 
+    moveImage(formData, "post")
+      .then((res) => {
+        console.log("Uploaded successfully:", res);
+        alert(res.message || "File uploaded successfully!");
+        closeForm();
+      })
+      .catch((err) => {
+        console.error("Upload failed:", err);
+        alert("Upload failed!");
+      });
+  }
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     setStartDate(today);
@@ -125,8 +154,58 @@ const DashboardComponent = () => {
                 <FaUserGraduate className="me-2" /> Add Testimonials
               </button>
             </li>
+            <li className="mb-2">
+              <button
+                className="btn btn-outline-primary w-100 d-flex align-items-center"
+                onClick={uploadPosts}
+              >
+                <FaUpload className="me-2" /> Upload Posts
+              </button>
+            </li>
           </ul>
         </div>
+        {/* Modal Form */}
+        {showForm && (
+          <div className="upload-modal">
+            <div className="upload-card p-4">
+              <h5 className="text-center mb-3">Upload Post</h5>
+
+              <form onSubmit={handleSubmit}>
+                {/* Title */}
+                <div className="mb-3">
+                  <label className="form-label">Post Title</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  />
+                </div>
+
+                {/* File Upload */}
+                <div className="mb-3">
+                  <label className="form-label">Upload File</label>
+                  <input
+                    type="file"
+                    className="form-control"
+                    onChange={(e) => setFile(e.target.files[0])}
+                    required
+                  />
+                </div>
+
+                <div className="d-flex justify-content-between">
+                  <button type="button" className="btn btn-secondary" onClick={closeForm}>
+                    Close
+                  </button>
+                  <button type="submit" className="btn btn-primary">
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
         {/* Main Content */}
         <div className="col-12 col-md-9 p-4">

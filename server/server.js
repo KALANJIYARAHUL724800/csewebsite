@@ -3,11 +3,13 @@ import fileUpload from 'express-fileupload';
 import path from 'path';
 import fs from 'fs';
 import cors from 'cors';
+
 const app = express();
 app.use(cors({
     origin: 'http://localhost:5173',
     methods: ['GET', 'POST'],
 }));
+
 app.use(fileUpload());
 let drives = ['C:', 'D:', 'E:'];
 let projectRoot;
@@ -19,30 +21,40 @@ for (let drive of drives) {
   }
 }
 if (!projectRoot) {
+  console.error("Project folder not found!");
   process.exit(1);
 }
-const uploadFolder = path.join(projectRoot, 'front-end', 'public', 'uploads');
-if (!fs.existsSync(uploadFolder)) {
-  fs.mkdirSync(uploadFolder, { recursive: true });
-}
-app.use('/uploads', express.static(uploadFolder));
+const uploadsFolder = path.join(projectRoot, 'front-end', 'public', 'uploads');
+if (!fs.existsSync(uploadsFolder)) fs.mkdirSync(uploadsFolder, { recursive: true });
+
+const postsFolder = path.join(projectRoot, 'front-end', 'public', 'posts');
+if (!fs.existsSync(postsFolder)) fs.mkdirSync(postsFolder, { recursive: true });
+app.use('/uploads', express.static(uploadsFolder));
+app.use('/posts', express.static(postsFolder));
 app.post('/upload', (req, res) => {
-  if (!req.files || !req.files.image) {
-    return res.status(400).send('No file uploaded.');
-  }
+  if (!req.files || !req.files.image) return res.status(400).send('No file uploaded.');
   const file = req.files.image;
-  const fileName = file.name.includes('_')
-    ? file.name.split('_').slice(1).join('_')
-    : file.name;
-  const savePath = path.join(uploadFolder, fileName);
-  file.mv(savePath, (err) => {
+  const savePath = path.join(uploadsFolder, file.name);
+  file.mv(savePath, err => {
     if (err) return res.status(500).send('Failed to move file.');
+
     res.send({
-      url: `/uploads/${fileName}`,
+      url: `/uploads/${file.name}`,
       message: 'File uploaded successfully!'
     });
   });
 });
-app.listen(3001, () => {
-  console.log("Server running on port 3001");
+app.post('/upload-post', (req, res) => {
+  if (!req.files || !req.files.image) return res.status(400).send('No file uploaded.');
+  const file = req.files.image;
+  const fileName = file.name.includes('_') ? file.name.split('_').slice(1).join('_') : file.name;
+  const savePath = path.join(postsFolder, fileName);
+  file.mv(savePath, err => {
+    if (err) return res.status(500).send('Failed to move file.');
+    res.send({
+      url: `/posts/${fileName}`,
+      message: 'Post uploaded successfully!'
+    });
+  });
 });
+app.listen(3001, () => console.log("Server running on port 3001"));

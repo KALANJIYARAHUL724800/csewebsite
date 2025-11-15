@@ -683,3 +683,38 @@ body {
   }
 }
 
+/* Blur background */
+.upload-blur {
+  filter: blur(3px);
+  pointer-events: none;
+}
+
+/* Modal background overlay */
+.upload-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Modal box */
+.upload-card {
+  width: 90%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile improvement */
+@media (max-width: 480px) {
+  .upload-card {
+    width: 95%;
+  }
+}

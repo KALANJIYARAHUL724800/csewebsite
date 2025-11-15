@@ -1,10 +1,6 @@
 import axios from "axios";
 
 const API_BASE = "http://localhost:8080/api";
-const url = new URL(API_BASE);
-url.port = "3001";
-url.pathname = "/upload";
-const NODE_API = url.toString();
 
 export const logout = () => {
   localStorage.removeItem("token");
@@ -151,7 +147,11 @@ export const insertTestimonials = async (formData) => {
   return response.data;
 };
 
-export const moveImage = async (formData) => {
+export const moveImage = async (formData, type = "upload") => {
+  const url = new URL(API_BASE);
+  url.port = "3001";
+  url.pathname = type === "post" ? "/upload-post" : "/upload";
+  const NODE_API = url.toString();
   const response = await axios.post(NODE_API, formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   });
