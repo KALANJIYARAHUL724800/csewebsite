@@ -143,10 +143,16 @@ const TestiMonialsComponent = () => {
                         id="enrollno"
                         name="enrollno"
                         value={formData.enrollno}
-                        onChange={handleChange}
-                        className={`form-control ${errors.enrollno ? 'is-invalid' : ''}`}
+                        onInput={(e) => {
+                            if (e.target.value.length > 6) {
+                                e.target.value = e.target.value.slice(0, 6);
+                            }
+                            handleChange(e);
+                        }}
+                        className={`form-control ${errors.enrollno ? "is-invalid" : ""}`}
                         placeholder="Enter enroll no"
                     />
+
                     {errors.enrollno && <div className="invalid-feedback">{errors.enrollno}</div>}
                 </div>
 

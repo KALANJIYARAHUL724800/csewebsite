@@ -1,35 +1,40 @@
-// Modern Student Dashboard (Full Responsive + Attractive UI)
 import React, { useState, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
+import { showAllPosts } from "../index";
 export default function StudentDashBoard() {
   const [activeMenu, setActiveMenu] = useState("Dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const [posts, setPosts] = useState(null);
+  const [commentText, setCommentText] = useState({});
   useEffect(() => {
+    showAllPosts()
+      .then((res) => {
+        const updated = res.data.map(p => ({ ...p, liked: false, likes: 0 }));
+        setPosts(updated);
+      })
+      .catch((err) => console.log(err));
     AOS.init({ duration: 800, once: true });
   }, []);
+  const toggleLike = (id) => {
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === id
+          ? {
+            ...p,
+            liked: !p.liked,
+            likes: p.liked ? p.likes - 1 : p.likes + 1,
+          }
+          : p
+      )
+    );
 
-  const posts = [
-    {
-      id: 1,
-      image: "https://images.pexels.com/photos/4145190/pexels-photo-4145190.jpeg",
-      text: "Today's class summary for Physics!",
-    },
-    {
-      id: 2,
-      image: "https://images.pexels.com/photos/4145355/pexels-photo-4145355.jpeg",
-      text: "Important formulas for Mathematics.",
-    },
-    {
-      id: 3,
-      image: "https://images.pexels.com/photos/4144093/pexels-photo-4144093.jpeg",
-      text: "Chemistry reactions explained!",
-    },
-  ];
+    // console output
+    const post = posts.find((p) => p.id === id);
+    console.log(post.liked ? 0 : 1);
+  };
 
   return (
     <div className="container-fluid p-0 bg-light">
@@ -59,15 +64,14 @@ export default function StudentDashBoard() {
             window.innerWidth >= 768
               ? "translateX(0)" // Desktop - always visible
               : sidebarOpen
-              ? "translateX(0)"
-              : "translateX(-100%)",
+                ? "translateX(0)"
+                : "translateX(-100%)",
           transition: "0.4s ease",
         }}
       >
         <h3 className="text-success mb-4 fw-bold">
           <i className="fas fa-graduation-cap me-2"></i>Dashboard
         </h3>
-
         {[
           { name: "Dashboard", icon: "fa-home" },
           { name: "Courses", icon: "fa-book" },
@@ -110,7 +114,6 @@ export default function StudentDashBoard() {
                 <p className="text-muted">You are enrolled in 4 active courses</p>
               </div>
             </div>
-
             <div className="col-md-4">
               <div className="card shadow p-4 text-center border-0 rounded-4 bg-white">
                 <i className="fas fa-bell fa-3x text-warning mb-3"></i>
@@ -118,7 +121,6 @@ export default function StudentDashBoard() {
                 <p className="text-muted">2 new announcements</p>
               </div>
             </div>
-
             <div className="col-md-4">
               <div className="card shadow p-4 text-center border-0 rounded-4 bg-white">
                 <i className="fas fa-calendar fa-3x text-success mb-3"></i>
@@ -135,59 +137,75 @@ export default function StudentDashBoard() {
             className="w-100"
             style={{ height: "100vh", overflowY: "scroll", scrollSnapType: "y mandatory" }}
           >
-            {posts.map((post) => (
-              <div
-                key={post.id}
-                className="card border-0 shadow-lg"
-                style={{ height: "100vh", scrollSnapAlign: "start", borderRadius: "0" }}
-              >
-                {/* IMAGE */}
-                <div style={{ height: "60vh" }}>
-                  <img
-                    src={post.image}
-                    className="w-100 h-100"
-                    alt="post"
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
-
-                {/* CONTENT */}
-                <div className="p-4 bg-white" style={{ height: "25vh" }}>
-                  <h5 className="fw-bold mb-2">{post.text}</h5>
-
-                  <div className="d-flex align-items-center gap-3 mb-3">
-                    <i
-                      className="far fa-heart fs-4 like-btn"
-                      onClick={(e) => {
-                        e.target.classList.toggle("fas");
-                        e.target.classList.toggle("far");
-                        e.target.classList.toggle("text-danger");
-                      }}
-                    ></i>
-
-                    <i
-                      className="far fa-comment fs-4 text-primary comment-btn"
-                      data-bs-toggle="collapse"
-                      data-bs-target={`#commentBox${post.id}`}
-                    ></i>
-
-                    <i className="fas fa-share fs-4 text-success"></i>
-                  </div>
-
-                  {/* COMMENT INPUT */}
-                  <div id={`commentBox${post.id}`} className="collapse">
-                    <input
-                      type="text"
-                      placeholder="Write a comment..."
-                      className="form-control mb-2"
+            {!posts ? (
+              <h3 className="text-center mt-5">Loading posts...</h3>
+            ) : (
+              posts.map((post) => (
+                <div
+                  key={post.id}
+                  className="card border-0 shadow-lg"
+                  style={{ height: "100vh", scrollSnapAlign: "start", borderRadius: "0" }}
+                >
+                  <div style={{ height: "60vh" }}>
+                    <img
+                      src={post.imageUrl}
+                      className="w-100 h-100"
+                      alt="post"
+                      style={{ objectFit: "cover" }}
                     />
-                    <button className="btn btn-primary w-100">Post Comment</button>
                   </div>
 
-                  <p className="text-muted small">Swipe up for more posts</p>
+                  <div className="p-4 bg-white" style={{ height: "25vh" }}>
+                    <h5 className="fw-bold mb-2">{post.title}</h5>
+
+                    <div className="d-flex align-items-center gap-3 mb-3">
+
+                      <i
+                        className={`fs-4 like-btn ${post.liked ? "fas text-danger" : "far"} fa-heart`}
+                        onClick={() => toggleLike(post.id)}
+                      ></i>
+
+                      <span>{post.likes}</span>
+
+                      <i
+                        className="far fa-comment fs-4 text-primary comment-btn"
+                        data-bs-toggle="collapse"
+                        data-bs-target={`#commentBox${post.id}`}
+                      ></i>
+
+                      <i className="fas fa-share fs-4 text-success"></i>
+                    </div>
+
+                    <div id={`commentBox${post.id}`} className="collapse">
+                      <input
+                        type="text"
+                        placeholder="Write a comment..."
+                        className="form-control mb-2"
+                        value={commentText[post.id] || ""}
+                        onChange={(e) =>
+                          setCommentText({
+                            ...commentText,
+                            [post.id]: e.target.value,
+                          })
+                        }
+                      />
+
+                      <button
+                        className="btn btn-primary w-100"
+                        onClick={() => {
+                          console.log("Comment:", commentText[post.id] || "");
+                          setCommentText({ ...commentText, [post.id]: "" });
+                        }}
+                      >
+                        Post Comment
+                      </button>
+                    </div>
+
+                    <p className="text-muted small">Swipe up for more posts</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
       </div>

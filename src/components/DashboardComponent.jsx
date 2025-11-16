@@ -5,7 +5,8 @@ import {
   courseCount,
   countAdmin,
   countStudents,
-  moveImage
+  moveImage,
+  insertPost
 } from "../index";
 import {
   AiOutlinePlus,
@@ -37,28 +38,45 @@ const DashboardComponent = () => {
   }
   function handleSubmit(e) {
     e.preventDefault();
+
     if (!file) return alert("Please select a file!");
+
     const formData = new FormData();
-    formData.append("image", file); 
-    formData.append("title", title); 
+    formData.append("image", file);
     moveImage(formData, "post")
       .then((res) => {
-        console.log("Uploaded successfully:", res);
-        alert(res.message || "File uploaded successfully!");
+        console.log("Image Uploaded:", res);
+        const imageUrl = res.filename || res.data || file.name;
+        const postData = {
+          title: title,
+          imageUrl: imageUrl
+        };
+
+        return insertPost(postData);
+      })
+      .then((res) => {
+        console.log("Post Inserted:", res.data);
+        alert("Post added successfully!");
         closeForm();
       })
       .catch((err) => {
-        console.error("Upload failed:", err);
-        alert("Upload failed!");
+        console.error("Error:", err);
+        alert("Failed!");
       });
   }
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     setStartDate(today);
     setEndDate(today);
-
     countStudents()
-      .then((res) => SetStudentsCount(res.data))
+      .then((res) => {
+        if (res.data == 0) {
+          SetStudentsCount(null)
+        } else if (res.data == null) {
+          SetStudentsCount(null)
+        }
+        SetStudentsCount(res.data)
+      })
       .catch((err) => console.error(err));
 
     countAdmin()

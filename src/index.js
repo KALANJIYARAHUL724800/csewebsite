@@ -178,3 +178,11 @@ export const showAllTestimonials = () => {
 export const findTestimonials = (id) => {
   return axios.get(`${API_BASE}/testimonials/${id}`);
 };
+
+export const insertPost = (value) => {
+  return axios.post(`${API_BASE}/posts/insert`, value);
+};
+
+export const showAllPosts = () => {
+  return axios.get(`${API_BASE}/posts/all`);
+};

@@ -51,7 +51,7 @@ const HomeComponent = () => {
         setFormData({ name: "", phone: "", course: "" });
         closePopup();
       }, 3000);
-  
+
     } catch (err) {
       setShowSuccess(false);
     }
@@ -377,107 +377,161 @@ const HomeComponent = () => {
           </div>
         </div>
 
-        {/* Testimonials */}
-        {testimonials && (
-          <div className="container py-5">
-            <h2 className="text-center mb-5 fw-bold">Testimonials</h2>
+        {/* Testimonials Section */}
+        {testimonials && testimonials.length > 0 && (
+          <div className="container mt-5">
+
+            <h2
+              className="text-center mb-4"
+              style={{ color: "#007bff", fontWeight: "bold" }}
+            >
+              Student Testimonials
+            </h2>
+
+            <style>
+              {`
+        @keyframes rotateBorder {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}
+            </style>
 
             <div className="row g-4">
-              {testimonials.map((t, i) => (
-                <div
-                  key={t.id}
-                  className="col-12 col-md-6 animate__animated animate__fadeInUp"
-                  style={{ animationDelay: `${i * 0.2}s` }}
-                >
-                  {/* BORDER ANIMATION */}
+              {testimonials.map((t, index) => (
+                <div key={index} className="col-12 col-md-4">
+
+                  {/* OUTER BORDER EFFECT BOX */}
                   <div
                     style={{
-                      borderRadius: "20px",
+                      position: "relative",
                       padding: "3px",
-                      background: "linear-gradient(90deg, #0d6efd, #6f42c1, #0d6efd)",
-                      backgroundSize: "200% 200%",
-                      animation: "gradientMove 3s linear infinite",
+                      borderRadius: "20px",
+                      overflow: "hidden",
+                      marginBottom: "20px",
                     }}
                   >
+                    {/* Animated Border Layer */}
+                    <div
+                      style={{
+                        content: "''",
+                        position: "absolute",
+                        top: "-50%",
+                        left: "-50%",
+                        width: "200%",
+                        height: "200%",
+                        background:
+                          "linear-gradient(45deg, #ff0000, green, #0000ff, yellow)",
+                        animation: "rotateBorder 6s linear infinite",
+                        zIndex: 1,
+                      }}
+                    ></div>
+
                     {/* INNER CARD */}
                     <div
-                      className="shadow-lg d-flex flex-column flex-md-row p-3 align-items-start"
                       style={{
+                        position: "relative",
+                        zIndex: 2,
                         background: "#fff",
-                        borderRadius: "16px",
-                        transition: "transform 0.3s",
-                        width: "100%",
+                        borderRadius: "18px",
+                        padding: "20px",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
                       }}
-                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
                     >
-                      {/* LEFT SIDE: IMAGE + DETAILS */}
-                      <div
-                        className="d-flex flex-column align-items-center mb-3 mb-md-0 me-md-4 text-center"
-                        style={{ minWidth: "120px", flexShrink: 0 }}
-                      >
+                      {/* IMAGE */}
+                      <div style={{ textAlign: "center", marginBottom: "15px" }}>
                         <img
                           src={t.imageUrl ? `/uploads/${t.imageUrl}` : "/default-user.png"}
-                          className="rounded-circle shadow mb-3"
-                          width="90"
-                          height="90"
-                          alt={t.name}
-                          style={{ objectFit: "cover" }}
+                          style={{
+                            width: "90px",
+                            height: "90px",
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                            boxShadow: "0 3px 6px rgba(0,0,0,0.3)",
+                          }}
                         />
-
-                        {/* Inline table for smaller cards */}
-                        <div style={{ fontSize: "0.9rem", textAlign: "center" }}>
-                          <table className="table table-sm table-bordered mb-0" style={{ width: '100%' }}>
-                            <tbody>
-                              <tr>
-                                <th style={{ width: '50%', textAlign: 'left' }}>Name:</th>
-                                <td style={{ width: '60%', textAlign: 'left' }}>{t.name}</td>
-                              </tr>
-                              <tr>
-                                <th style={{ textAlign: 'left' }}>Enroll No:</th>
-                                <td style={{ textAlign: 'left' }}>{t.enrollno}</td>
-                              </tr>
-                              <tr>
-                                <th style={{ textAlign: 'left' }}>Course:</th>
-                                <td style={{ textAlign: 'left' }}>{t.courseName}</td>
-                              </tr>
-                            </tbody>
-                          </table>
-
-                        </div>
                       </div>
 
-                      {/* DIVIDER */}
-                      <div className="d-none d-md-block border-end mx-3"></div>
+                      {/* BASIC DETAILS */}
+                      <table
+                        style={{
+                          width: "100%",
+                          borderCollapse: "collapse",
+                          marginBottom: "15px",
+                          fontSize: "14px",
+                        }}
+                      >
+                        <tbody>
+                          <tr>
+                            <th
+                              style={{
+                                border: "1px solid #ddd",
+                                padding: "5px",
+                                width: "40%",
+                                background: "#f8f9fa",
+                              }}
+                            >
+                              Name
+                            </th>
+                            <td style={{ border: "1px solid #ddd", padding: "5px" }}>
+                              {t.name}
+                            </td>
+                          </tr>
 
-                      {/* RIGHT SIDE: TEXT INFO */}
-                      <div className="flex-grow-1 d-flex flex-column justify-content-start">
-                        <h5 className="fw-bold mb-2 text-center text-md-start">Information</h5>
-                        <p
-                          className="fst-italic mb-0"
-                          style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
-                        >
-                          “{t.text}”
-                        </p>
-                      </div>
+                          <tr>
+                            <th
+                              style={{
+                                border: "1px solid #ddd",
+                                padding: "5px",
+                                background: "#f8f9fa",
+                              }}
+                            >
+                              E No
+                            </th>
+                            <td style={{ border: "1px solid #ddd", padding: "5px" }}>
+                              {t.enrollno}
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <th
+                              style={{
+                                border: "1px solid #ddd",
+                                padding: "5px",
+                                background: "#f8f9fa",
+                              }}
+                            >
+                              Course
+                            </th>
+                            <td style={{ border: "1px solid #ddd", padding: "5px" }}>
+                              {t.courseName}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      {/* TESTIMONIAL */}
+                      <p
+                        style={{
+                          fontStyle: "italic",
+                          whiteSpace: "pre-wrap",
+                          wordBreak: "break-word",
+                          flexGrow: 1,
+                          color: "#555",
+                        }}
+                      >
+                        “{t.text}”
+                      </p>
                     </div>
                   </div>
-
-                  {/* INLINE KEYFRAMES */}
-                  <style>
-                    {`
-              @keyframes gradientMove {
-                0% {background-position: 0% 50%;}
-                50% {background-position: 100% 50%;}
-                100% {background-position: 0% 50%;}
-              }
-            `}
-                  </style>
                 </div>
               ))}
             </div>
           </div>
         )}
+
         {/* Show Form */}
         {showForm && (
           <div
@@ -584,6 +638,7 @@ const HomeComponent = () => {
             </div>
           </div>
         )}
+        <br /><br /><br />
       </div>
     </div>
   );
