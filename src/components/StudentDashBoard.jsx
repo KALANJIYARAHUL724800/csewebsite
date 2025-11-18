@@ -13,6 +13,7 @@ export default function StudentDashBoard() {
     showAllPosts()
       .then((res) => {
         const updated = res.data.map(p => ({ ...p, liked: false, likes: 0 }));
+        console.log(updated);
         setPosts(updated);
       })
       .catch((err) => console.log(err));
@@ -148,7 +149,7 @@ export default function StudentDashBoard() {
                 >
                   <div style={{ height: "60vh" }}>
                     <img
-                      src={post.imageUrl}
+                      src={`/posts/${post.imageUrl}`}
                       className="w-100 h-100"
                       alt="post"
                       style={{ objectFit: "cover" }}
