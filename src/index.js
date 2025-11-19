@@ -75,6 +75,11 @@ export const insertFeesEnquiry = (value) => {
   return axios.post(`${API_BASE}/enquiry/insert`, value);
 };
 
+export const insertFeesEnquiryTemp = (value) => {
+  return axios.post(`${API_BASE}/enquiry/insert-enquiry`, value);
+};
+
+
 export const showAllFeesEnquiry = () => {
   return axios.get(`${API_BASE}/enquiry/show`);
 };

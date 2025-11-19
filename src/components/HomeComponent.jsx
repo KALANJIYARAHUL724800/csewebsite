@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { search, showAllBatches, showAllTestimonials, findBatch, insertFeesEnquiry } from "../index";
+import { search, showAllBatches, showAllTestimonials, findBatch, insertFeesEnquiry, insertFeesEnquiryTemp } from "../index";
 import { FaCheckCircle } from 'react-icons/fa';
 
 const HomeComponent = () => {
+  const [errors, setErrors] = useState({});
   const [showForm, setShowForm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState({
@@ -20,8 +21,12 @@ const HomeComponent = () => {
       }));
       setShowForm(true);
     } catch (error) {
+      setErrors(err.response.data);
     }
   };
+  function openFormTemp() {
+    setShowForm(true);
+  }
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
@@ -37,13 +42,29 @@ const HomeComponent = () => {
     return `${hours}:${minutes}:${seconds}`;
   };
   const handleSubmit = async () => {
+    setErrors({});
+    const newErrors = {};
+    if (!formData.name) newErrors.name = "Name is required";
+    if (!formData.phone) newErrors.phone = "Phone is required";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return; 
+    }
+
     const dataToSubmit = {
       name: formData.name,
       phone: formData.phone,
       courseTitle: formData.course,
     };
+
     try {
-      await insertFeesEnquiry(dataToSubmit);
+      if (!dataToSubmit.courseTitle) {
+        await insertFeesEnquiryTemp(dataToSubmit);
+      } else {
+        await insertFeesEnquiry(dataToSubmit);
+      }
+
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
@@ -51,11 +72,17 @@ const HomeComponent = () => {
         setFormData({ name: "", phone: "", course: "" });
         closePopup();
       }, 3000);
-
     } catch (err) {
+      const apiErrors = err.response?.data || {};
+      setErrors({
+        name: apiErrors.name || "",
+        phone: apiErrors.phone || "",
+      });
       setShowSuccess(false);
     }
   };
+
+
   const navigate = useNavigate();
   const [searchData, setSearchData] = useState("");
   const [courses, setCourses] = useState([]);
@@ -147,9 +174,23 @@ const HomeComponent = () => {
         setSearched(true);
       });
   };
+
   return (
     <div className="cse-main">
       <div className="main-content" id="mainContent">
+
+        <div className="text-end">
+          <button className="btn btn-success me-2 pd-2" onClick={openFormTemp}>
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/1642/1642364.png"
+              alt="enquiry"
+              className="img-fluid"
+              style={{ height: "30px", width: "30px" }}
+            />
+            Enquiry
+          </button>
+        </div>
+
         {/* Gift box or Batch popup */}
         {hasBatches && (
           <div
@@ -566,55 +607,108 @@ const HomeComponent = () => {
             >
               <h3 className="text-center mb-3">Fees Form</h3>
               <form>
+                {/* Name Field */}
                 <label>Name:</label>
-                <input
-                  type="text"
-                  className="form-control mb-2"
-                  placeholder="Enter your name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                />
+                <div style={{ position: "relative" }}>
+                  <input
+                    type="text"
+                    placeholder="Enter your name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    style={{
+                      border: errors.name ? "2px solid red" : "1px solid #ced4da",
+                      borderRadius: "4px",
+                      padding: "0.375rem 0.75rem",
+                      paddingRight: errors.name ? "30px" : "0.75rem",
+                      width: "100%",
+                      marginBottom: "0.25rem",
+                    }}
+                  />
+                  {errors.name && (
+                    <i
+                      className="bi bi-exclamation-circle-fill"
+                      style={{
+                        position: "absolute",
+                        right: "8px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "red",
+                        fontSize: "1.2rem",
+                      }}
+                    ></i>
+                  )}
+                </div>
+                {errors.name && (
+                  <div style={{ color: "red", fontSize: "0.8rem", marginBottom: "0.5rem" }}>
+                    {errors.name}
+                  </div>
+                )}
 
+                {/* Phone Field */}
                 <label>Phone:</label>
-                <input
-                  type="number"
-                  className="form-control mb-2"
-                  placeholder="Enter your phone"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                />
+                <div style={{ position: "relative" }}>
+                  <input
+                    type="text"
+                    placeholder="Enter your phone"
+                    value={formData.phone}
+                    maxLength={10}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "");
+                      setFormData({ ...formData, phone: value });
+                    }}
+                    style={{
+                      border: errors.phone ? "2px solid red" : "1px solid #ced4da",
+                      borderRadius: "4px",
+                      padding: "0.375rem 0.75rem",
+                      paddingRight: errors.phone ? "30px" : "0.75rem",
+                      width: "100%",
+                      marginBottom: "0.25rem",
+                    }}
+                  />
+                  {errors.phone && (
+                    <i
+                      className="bi bi-exclamation-circle-fill"
+                      style={{
+                        position: "absolute",
+                        right: "8px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "red",
+                        fontSize: "1.2rem",
+                      }}
+                    ></i>
+                  )}
+                </div>
+                {errors.phone && (
+                  <div style={{ color: "red", fontSize: "0.8rem", marginBottom: "0.5rem" }}>
+                    {errors.phone}
+                  </div>
+                )}
 
-                {/* Hidden fields for current date and time */}
-                <input
-                  type="hidden"
-                  name="currentDate"
-                  value={new Date().toLocaleDateString()}
-                />
-                <input
-                  type="hidden"
-                  name="currentTime"
-                  value={new Date().toLocaleTimeString()}
-                />
+                {/* Hidden Date & Time */}
+                <input type="hidden" name="currentDate" value={new Date().toLocaleDateString()} />
+                <input type="hidden" name="currentTime" value={new Date().toLocaleTimeString()} />
 
+                {/* Submit Button */}
                 <button
                   type="button"
-                  className="btn btn-primary mt-2 w-100"
-                  onClick={() =>
-                    handleSubmit({
-                      ...formData,
-                      currentDate: new Date().toLocaleDateString(),
-                      currentTime: new Date().toLocaleTimeString(),
-                    })
-                  }
+                  style={{
+                    backgroundColor: "#0d6efd",
+                    color: "white",
+                    padding: "0.5rem",
+                    width: "100%",
+                    border: "none",
+                    borderRadius: "4px",
+                    marginTop: "0.5rem",
+                    cursor: "pointer",
+                  }}
+                  onClick={handleSubmit}
                 >
                   Submit
                 </button>
               </form>
 
+              {/* Cancel Button */}
               <button
                 type="button"
                 className="btn btn-light mt-2 w-100"
