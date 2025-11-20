@@ -97,7 +97,14 @@ const AboutComponent = () => {
       {data?.about && (
         <section className="container py-5" data-aos="fade-up">
           <div className="row align-items-center gy-4">
-            <div className="col-md-6">
+
+            {/* Say Image — Desktop: left, Mobile: top */}
+            <div className="col-md-4 order-1 order-md-1 text-center text-md-start">
+              <img src="public/about/say.png" alt="Say" className="img-fluid" />
+            </div>
+
+            {/* Content — Desktop: center, Mobile: after image */}
+            <div className="col-md-4 order-3 order-md-2">
               <h2 className="fw-bold mb-3 text-dark">{data.about.title}</h2>
               <p className="text-muted lh-lg">{data.about.description}</p>
 
@@ -111,7 +118,8 @@ const AboutComponent = () => {
               </ul>
             </div>
 
-            <div className="col-md-6 text-center">
+            {/* Right Image */}
+            <div className="col-md-4 order-2 order-md-3 text-center">
               <img
                 src={data.about.image}
                 alt="About"
@@ -119,17 +127,19 @@ const AboutComponent = () => {
                 style={{ maxHeight: "350px", objectFit: "cover" }}
               />
             </div>
+
           </div>
         </section>
       )}
-
 
       {/* SERVICES */}
       {data.features && (
         <section id="services" className="py-5 bg-white" data-aos="fade-up">
           {/* Otherwise, you can add a heading manually */}
           <h3 className="text-center fw-bold mb-5">Our Features</h3>
-
+          <div className="col-md-12 text-center">
+            <img src="public\about\service.png" alt="" srcset="" style={{ height: "200px", width: "150px" }} className="img-fluid" />
+          </div>
           <div className="container">
             <div className="row g-4">
               {data.features.map((f, i) => (
@@ -155,53 +165,53 @@ const AboutComponent = () => {
       )}
 
 
-{/* TESTIMONIALS */}
-{data.testimonials && (
-  <section className="py-5" data-aos="fade-up">
-    <h3 className="text-center fw-bold mb-5">Testimonials</h3>
-    <div className="container">
-      <div className="row g-4">
-        {data.testimonials.map((t, i) => (
-          <div
-            key={i}
-            className="col-md-6"
-            data-aos="flip-left"
-            data-aos-delay={i * 150}
-          >
-            <div className="testimonial-card p-4 h-100 position-relative d-flex align-items-center justify-content-between">
-              <div className="border-animate"></div>
+      {/* TESTIMONIALS */}
+      {data.testimonials && (
+        <section className="py-5" data-aos="fade-up">
+          <h3 className="text-center fw-bold mb-5">Testimonials</h3>
+          <div className="container">
+            <div className="row g-4">
+              {data.testimonials.map((t, i) => (
+                <div
+                  key={i}
+                  className="col-md-6"
+                  data-aos="flip-left"
+                  data-aos-delay={i * 150}
+                >
+                  <div className="testimonial-card p-4 h-100 position-relative d-flex align-items-center justify-content-between">
+                    <div className="border-animate"></div>
 
-              {/* LEFT SIDE */}
-              <div className="text-center me-3 flex-shrink-0">
-                <img
-                  src={t.img}
-                  alt={t.name}
-                  className="rounded-circle mb-3 shadow-lg"
-                  width="90"
-                  height="90"
-                  style={{ objectFit: "cover" }}
-                />
-                <h6 className="fw-bold mb-0">Name : {t.name}</h6>
-                <p className="text-muted small mb-0">{t.role}</p>
-              </div>
+                    {/* LEFT SIDE */}
+                    <div className="text-center me-3 flex-shrink-0">
+                      <img
+                        src={t.img}
+                        alt={t.name}
+                        className="rounded-circle mb-3 shadow-lg"
+                        width="90"
+                        height="90"
+                        style={{ objectFit: "cover" }}
+                      />
+                      <h6 className="fw-bold mb-0">Name : {t.name}</h6>
+                      <p className="text-muted small mb-0">{t.role}</p>
+                    </div>
 
-              {/* MIDDLE LINE */}
-              <div className="divider mx-3"></div>
+                    {/* MIDDLE LINE */}
+                    <div className="divider mx-3"></div>
 
-              {/* RIGHT SIDE */}
-              <div className="flex-grow-1">
-                <h3>Information</h3>
-                <p className="fst-italic text-muted mb-0">“{t.text}”</p>
-              </div>
+                    {/* RIGHT SIDE */}
+                    <div className="flex-grow-1">
+                      <h3>Information</h3>
+                      <p className="fst-italic text-muted mb-0">“{t.text}”</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        ))}
-      </div>
-    </div>
 
-    {/* CSS STYLING */}
-    <style>
-      {`
+          {/* CSS STYLING */}
+          <style>
+            {`
         .testimonial-card {
           background: #fff;
           border-radius: 15px;
@@ -246,9 +256,9 @@ const AboutComponent = () => {
           transition: all 0.4s ease;
         }
       `}
-    </style>
-  </section>
-)}
+          </style>
+        </section>
+      )}
 
 
 

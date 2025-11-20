@@ -191,3 +191,13 @@ export const insertPost = (value) => {
 export const showAllPosts = () => {
   return axios.get(`${API_BASE}/posts/all`);
 };
+
+export const updateLikes = (id, payload) => {
+  return axios.put(`${API_BASE}/comments/likes/update`, payload, {
+    params: { id }
+  });
+};
+
+export const getTotalLikes = (postId) => {
+  return axios.get(`${API_BASE}/comments/${postId}/likes/total`);
+};

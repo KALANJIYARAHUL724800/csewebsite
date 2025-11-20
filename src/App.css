@@ -40,3 +40,21 @@
 .read-the-docs {
   color: #888;
 }
+
+.post-image {
+  width: 100%;
+  height: 60vh; 
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .post-image {
+    height: 40vh; 
+  }
+}
+
+@media (min-width: 1200px) {
+  .post-image {
+    height: 50vh;
+  }
+}
