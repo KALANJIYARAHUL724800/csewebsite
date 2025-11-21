@@ -7,6 +7,8 @@ const HomeComponent = () => {
   const [errors, setErrors] = useState({});
   const [showForm, setShowForm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const token = localStorage.getItem("token");
+  const [userLogin, setUserLogin] = useState(!token);
   const [formData, setFormData] = useState({
     name: "",
     phone: ""
@@ -49,7 +51,7 @@ const HomeComponent = () => {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      return; 
+      return;
     }
 
     const dataToSubmit = {
@@ -94,6 +96,8 @@ const HomeComponent = () => {
   const [hasBatches, setHasBatches] = useState(false);
   const confettiInterval = useRef(null);
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    setUserLogin(!token);
     showAllBatches()
       .then((response) => {
         if (response.data && response.data.length > 0) {
@@ -394,16 +398,17 @@ const HomeComponent = () => {
             No courses found for your search.
           </p>
         )}
-
         {/* Authentication buttons */}
         <div className="auth-container mt-5 text-center">
-          <button
-            id="studentLoginBtn"
-            className="auth-btn primary"
-            onClick={studentLogin}
-          >
-            Student Login
-          </button>
+          {userLogin && (
+            <button
+              id="studentLoginBtn"
+              className="auth-btn primary"
+              onClick={studentLogin}
+            >
+              Student Login
+            </button>
+          )}
         </div>
         <div className="container-fluid dflex mb-5 marquee-container">
           <div className="marquee-track">
@@ -416,7 +421,7 @@ const HomeComponent = () => {
             <img src="/gallery/entrance2.jpg" alt="Entrance 2" />
             <img src="/gallery/Lab.png" alt="Lab" />
           </div>
-        </div>
+        </div><br />
 
         {/* Testimonials Section */}
         {testimonials && testimonials.length > 0 && (

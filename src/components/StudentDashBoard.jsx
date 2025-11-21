@@ -3,7 +3,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { showAllPosts, updateLikes, getTotalLikes, getAllCourses } from "../index";
+import { showAllPosts, updateLikes, getTotalLikes, getAllCourses, downloadCoursePdf } from "../index";
 import { useNavigate } from "react-router-dom";
 
 export default function StudentDashBoard() {
@@ -78,6 +78,23 @@ export default function StudentDashBoard() {
       });
   };
 
+  const downloadPdf = async (e, id) => {
+    e.preventDefault();
+    try {
+      const response = await downloadCoursePdf(id);
+      const url = window.URL.createObjectURL(
+        new Blob([response.data], { type: "application/pdf" })
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `course_${id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
+  };
   return (
     <div className="container-fluid p-0 bg-light">
       {/* Mobile Navbar */}
@@ -215,9 +232,13 @@ export default function StudentDashBoard() {
                             <span className="text-muted">
                               <i className="fas fa-clock"></i> {course.month}
                             </span>
-                            <a href={`/course/${course.id}`} className="btn btn-primary btn-sm">
-                              Learn More and Fees
-                            </a>
+                            <button
+                              onClick={(e) => downloadPdf(e, course.id)}
+                              className="btn btn-success btn-sm"
+                            >
+                              <i className="bi bi-download"></i> Download Syllabus
+                            </button>
+
                           </div>
                         </div>
                       </div>

@@ -1,8 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { getAllCourses, addCourse, updateCourse, searchCourse } from "../index";
+import { getAllCourses, addCourse, updateCourse, searchCourse, uploadCoursePdf } from "../index";
 import { useNavigate } from "react-router-dom";
 
 const AddCourseComponent = () => {
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const handleUpload = async (e, courseId) => {
+    const file = e.target.files[0];
+    if (!file) {
+      setErrorMessage("Please select a file first!");
+      setTimeout(() => setErrorMessage(""), 3000);
+      return;
+    }
+    try {
+      const res = await uploadCoursePdf(courseId, file);
+      setSuccessMessage("PDF uploaded successfully!");
+    } catch (err) {
+      setErrorMessage("Upload failed!");
+      setTimeout(() => setErrorMessage(""), 3000);
+    }
+  };
+
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [formType, setFormType] = useState(null);
@@ -119,9 +137,43 @@ const AddCourseComponent = () => {
       {errors[name] && <div className="invalid-feedback">{errors[name]}</div>}
     </div>
   );
+
   return (
     <div className="container mt-4">
       <h3 className="text-center mb-4">Course Details</h3>
+      {successMessage && (
+        <div
+          style={{
+            position: "fixed",
+            top: "20px",
+            right: "20px",
+            backgroundColor: "green",
+            color: "white",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            zIndex: 1000,
+          }}
+        >
+          {successMessage}
+        </div>
+      )}
+
+      {errorMessage && (
+        <div
+          style={{
+            position: "fixed",
+            top: "20px",
+            right: "20px",
+            backgroundColor: "red",
+            color: "white",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            zIndex: 1000,
+          }}
+        >
+          {errorMessage}
+        </div>
+      )}
       {!formType && (
         <>
           <div className="table-responsive d-flex justify-content-center">
@@ -144,6 +196,7 @@ const AddCourseComponent = () => {
                   <th>Month</th>
                   <th>Actions</th>
                   <th>Update Content</th>
+                  <th>Upload Pdf</th>
                 </tr>
               </thead>
               <tbody>
@@ -208,8 +261,23 @@ const AddCourseComponent = () => {
                       </div>
                     </td>
                     <td>
-                      <button className="btn btn-success" onClick={() => handleUpdateContent(course.id)}>Update</button>
+                      <button className="btn btn-success" onClick={() => handleUpdateContent(course.id)}>Update Content</button>
                     </td>
+                    <td>
+                      <input
+                        type="file"
+                        style={{ display: "none" }}
+                        id={`fileInput-${course.id}`}
+                        onChange={(e) => handleUpload(e, course.id)}
+                      />
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => document.getElementById(`fileInput-${course.id}`).click()}
+                      >
+                        <i className="bi bi-upload"></i> Upload PDF
+                      </button>
+                    </td>
+
                   </tr>
                 ))}
               </tbody>
@@ -220,6 +288,7 @@ const AddCourseComponent = () => {
               + Add New Course
             </button>
           </div>
+          <br />
         </>
       )}
 

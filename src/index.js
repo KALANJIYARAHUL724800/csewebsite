@@ -201,3 +201,18 @@ export const updateLikes = (id, payload) => {
 export const getTotalLikes = (postId) => {
   return axios.get(`${API_BASE}/comments/${postId}/likes/total`);
 };
+
+export const uploadCoursePdf = (courseId, file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return axios.put(`${API_BASE}/courses/${courseId}/upload-pdf`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
+export const downloadCoursePdf = (courseId) => {
+  return axios.get(`${API_BASE}/courses/${courseId}/pdf`, {
+    responseType: "blob", 
+  });
+};

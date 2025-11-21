@@ -2,7 +2,7 @@ import React from 'react'
 const footerComponent = () => {
   return (
     <div className='bg-dark footer'>
-      <div className="container">
+      <div className="container py-3">
         <div className="row">
           <div className="col-md-4 mb-4">
             <h5 className="footer-title">About CSE Ramnad</h5>

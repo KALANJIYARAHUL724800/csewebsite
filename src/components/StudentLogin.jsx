@@ -8,7 +8,7 @@ const StudentLogin = () => {
   };
 
   const [serverError, setServerError] = useState("");
-  const [successMessage, setSuccessMessage] = useState(""); // <-- success message state
+  const [successMessage, setSuccessMessage] = useState("");
   const [errors, setErrors] = useState({
     email: "",
     password: "",
@@ -141,12 +141,17 @@ const StudentLogin = () => {
           {errors.password && (
             <div className="text-danger mb-2">{errors.password}</div>
           )}
-
+          <a
+            href="/signup"
+            className="d-block text-end mb-3 text-decoration-none small text-muted"
+          >
+             <i class="bi bi-person-plus"></i> Sign Up Signup Here
+          </a>
           <a
             href="/forgot-password"
             className="d-block text-end mb-3 text-decoration-none small text-muted"
           >
-            Forgot Password?
+            <i class="bi bi-key"></i> Forgot Password?
           </a>
 
           <button type="submit" className="btn btn-primary w-100 mb-3">
