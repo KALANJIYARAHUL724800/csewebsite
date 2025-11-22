@@ -36,6 +36,7 @@ const StudentLogin = () => {
       const res = await loginUser(formData);
       const expiryTime = new Date().getTime() + 60 * 60 * 1000;
       localStorage.setItem("token", expiryTime);
+      localStorage.setItem("userType",res.data.userType);
       setSuccessMessage("Login successful! Redirecting...");
       setTimeout(() => {
         navigate("/student-dashboard", { state: { user: res.data } });
@@ -46,7 +47,6 @@ const StudentLogin = () => {
       if (err.response) {
         const { data, status } = err.response;
         if (status === 400) {
-          // Convert data to string if it's an object
           const errorText = typeof data === "string" ? data : Object.values(data).join("; ");
           errorText.split(";").forEach((msg) => {
             msg = msg.trim().toLowerCase();

@@ -5,12 +5,21 @@ import { logout } from "../index";
 import { useState } from 'react';
 const HeaderComponent = () => {
   const [login, setLogin] = useState(() => localStorage.getItem("token"));
-
+  const [userType, setUserType] = useState(() => localStorage.getItem("userType") === "true");
   useEffect(() => {
-    if (!login) {
-      console.log("User not logged in");
-    }
-  }, [login]);
+    const interval = setInterval(() => {
+      const token = localStorage.getItem("token");
+      const user = localStorage.getItem("userType") === "true";
+      setUserType(user);
+      setLogin(token);
+
+
+      if (!token) {
+        console.log("User not logged in");
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
   return (
     <nav className="navbar navbar-expand-lg header sticky-top">
       <div className="container-fluid">
@@ -46,11 +55,6 @@ const HeaderComponent = () => {
                 <i className="bi bi-book-fill me-1"></i> Courses
               </a>
             </li>
-            {/* <li className="nav-item">
-              <a className="nav-link" href="/progress">
-                <i className="bi bi-graph-up me-1"></i> Progress
-              </a>
-            </li> */}
             <li className="nav-item">
               <a className="nav-link" href="#">
                 <i className="bi bi-calendar-event-fill me-1"></i> Event
@@ -66,11 +70,17 @@ const HeaderComponent = () => {
                 <i className="bi bi-image-fill me-1"></i> Gallery
               </a>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                <i className="bi bi-gear-fill me-1"></i> Settings
-              </a>
-            </li>
+            {login && (
+              <li className="nav-item">
+                <a
+                  className="nav-link"
+                  href={userType ? "/dashboard" : "/student-dashboard"} 
+                >
+                  <i className="bi bi-speedometer2 me-1"></i> Dashboard
+                </a>
+              </li>
+            )}
+
             {login && (
               <li className="nav-item" onClick={logout}>
                 <a className="nav-link text-danger" href="#">

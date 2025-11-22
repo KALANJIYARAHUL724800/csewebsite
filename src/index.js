@@ -4,6 +4,7 @@ const API_BASE = "http://localhost:8080/api";
 
 export const logout = () => {
   localStorage.removeItem("token");
+  localStorage.removeItem("userType");
   window.location.href = "/home";
 };
 

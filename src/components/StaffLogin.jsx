@@ -6,7 +6,7 @@ const StaffLogin = ({ onClose }) => {
   const navigate = useNavigate();
 
   const [serverError, setServerError] = useState("");
-  const [successMessage, setSuccessMessage] = useState(""); // <-- success message state
+  const [successMessage, setSuccessMessage] = useState(""); 
   const [errors, setErrors] = useState({
     email: "",
     password: "",
@@ -34,6 +34,7 @@ const StaffLogin = ({ onClose }) => {
       const res = await loginAdmin(formData);
       const expiryTime = new Date().getTime() + 60 * 60 * 1000;
       localStorage.setItem("token", expiryTime);
+      localStorage.setItem("userType",res.data.userType);
       setSuccessMessage("Login successful! Redirecting...");
       setTimeout(() => {
         navigate("/dashboard", { state: { user: res.data } });
