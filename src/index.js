@@ -217,3 +217,7 @@ export const downloadCoursePdf = (courseId) => {
     responseType: "blob", 
   });
 };
+
+export const insertComment = (id,value) => {
+  return axios.post(`${API_BASE}/comments/insert/${id}`, value);
+};

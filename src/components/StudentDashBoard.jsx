@@ -3,10 +3,42 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { showAllPosts, updateLikes, getTotalLikes, getAllCourses, downloadCoursePdf } from "../index";
+import { showAllPosts, updateLikes, getTotalLikes, getAllCourses, downloadCoursePdf, insertComment } from "../index";
 import { useNavigate } from "react-router-dom";
 
 export default function StudentDashBoard() {
+
+  const [profileImage, setProfileImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [gender, setGender] = useState("");
+  const [bio, setBio] = useState("");
+  const [dob, setDob] = useState("");
+  const [address, setAddress] = useState("");
+  const saveProfile = async () => {
+    try {
+      const formData = new FormData();
+
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("phone", phone);
+      formData.append("gender", gender);
+      formData.append("bio", bio);
+      formData.append("dob", dob);
+      formData.append("address", address);
+      const res = await axios.post("http://localhost:8080/api/profile/save", formData);
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update profile");
+    }
+  };
   const [activeMenu, setActiveMenu] = useState("Dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [posts, setPosts] = useState([]);
@@ -23,21 +55,21 @@ export default function StudentDashBoard() {
   );
   const handleNext = () => { if (currentPage < totalPages) setCurrentPage(currentPage + 1); };
   const handlePrev = () => { if (currentPage > 1) setCurrentPage(currentPage - 1); };
+  const fetchPosts = async () => {
+    try {
+      const res = await showAllPosts();
+      const postsWithLikes = await Promise.all(
+        res.data.map(async (p) => {
+          const likesRes = await getTotalLikes(p.id);
+          return { ...p, liked: false, likes: likesRes.data };
+        })
+      );
+      setPosts(postsWithLikes);
+    } catch (err) {
+      console.error(err);
+    }
+  };
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await showAllPosts();
-        const postsWithLikes = await Promise.all(
-          res.data.map(async (p) => {
-            const likesRes = await getTotalLikes(p.id);
-            return { ...p, liked: false, likes: likesRes.data };
-          })
-        );
-        setPosts(postsWithLikes);
-      } catch (err) {
-        console.log("Error fetching posts:", err);
-      }
-    };
     fetchPosts();
     AOS.init({ duration: 800, once: true });
     getAllCourses()
@@ -50,13 +82,30 @@ export default function StudentDashBoard() {
         }
         setCourses(fetchedCourses);
       })
-      .catch((error) => {
-        console.error("Error fetching courses:", error);
-        navigate("/home");
-      })
+      .catch(() => navigate("/home"))
       .finally(() => setLoading(false));
+    const interval = setInterval(fetchPosts, 5000);
+    return () => clearInterval(interval);
   }, []);
-
+  const handleCommentPost = async (postId) => {
+    try {
+      const payload = {
+        comments: commentText[postId],
+        likes: 0
+      };
+      const res = await insertComment(postId, payload);
+      setPosts(prevPosts =>
+        prevPosts.map(p =>
+          p.id === postId
+            ? { ...p, comments: [...(p.comments || []), res.data] }
+            : p
+        )
+      );
+      setCommentText({ ...commentText, [postId]: "" });
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const toggleLike = (id) => {
     const post = posts.find(p => p.id === id);
     if (!post) return;
@@ -328,7 +377,7 @@ export default function StudentDashBoard() {
 
                       <button
                         className="btn btn-primary w-100"
-                        onClick={() => setCommentText({ ...commentText, [post.id]: "" })}
+                        onClick={() => handleCommentPost(post.id)}
                       >
                         Post Comment
                       </button>
@@ -341,6 +390,139 @@ export default function StudentDashBoard() {
             )}
           </div>
         )}
+        {/* PROFILE */}
+        {activeMenu === "Profile" && (
+          <div className="container mt-4">
+
+            <div className="row justify-content-center">
+
+              {/* LEFT SIDE – PROFILE IMAGE UPLOAD */}
+              <div className="col-md-4">
+                <div className="card shadow-sm text-center p-3">
+
+                  <img
+                    src={profileImage || "https://via.placeholder.com/150"}
+                    alt="Profile"
+                    className="rounded-circle mb-3"
+                    style={{ width: "150px", height: "150px", objectFit: "cover" }}
+                  />
+
+                  <input
+                    type="file"
+                    className="form-control"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      setProfileImage(URL.createObjectURL(file)); // Preview
+                      setImageFile(file); // Store file for API
+                    }}
+                  />
+
+                  <small className="text-muted">Upload Profile Picture</small>
+
+                </div>
+              </div>
+
+              {/* RIGHT SIDE – PROFILE FIELDS */}
+              <div className="col-md-8">
+                <div className="card shadow-sm p-4">
+
+                  <h4 className="mb-3">Profile Details</h4>
+
+                  <div className="row">
+
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Full Name</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Email</label>
+                      <input
+                        type="email"
+                        className="form-control"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Phone</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Gender</label>
+                      <select
+                        className="form-select"
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                      >
+                        <option value="">Choose</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Others">Others</option>
+                      </select>
+                    </div>
+
+                    <div className="col-md-12 mb-3">
+                      <label className="form-label">Bio</label>
+                      <textarea
+                        className="form-control"
+                        rows="3"
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
+                        placeholder="Write something about yourself..."
+                      />
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Date of Birth</label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        value={dob}
+                        onChange={(e) => setDob(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Address</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                      />
+                    </div>
+
+                  </div>
+
+                  {/* SAVE BUTTON */}
+                  <button
+                    className="btn btn-primary w-100"
+                    onClick={saveProfile}
+                  >
+                    Save Profile
+                  </button>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );

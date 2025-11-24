@@ -12,11 +12,12 @@ import {
   AiOutlinePlus,
   AiOutlineUnorderedList,
   AiOutlineLineChart,
-  AiOutlineCalendar,
+  AiOutlineCalendar
 } from "react-icons/ai";
-import { FaUserGraduate, FaBook, FaChalkboardTeacher, FaUpload } from "react-icons/fa";
+import { FaUserGraduate, FaBook, FaChalkboardTeacher, FaUpload, FaCheckCircle } from "react-icons/fa";
 
 const DashboardComponent = () => {
+  const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -27,7 +28,7 @@ const DashboardComponent = () => {
   const [showForm, setShowForm] = useState(false);
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState("");
-
+  const [showSuccess, setShowSuccess] = useState(false);
   function uploadPosts() {
     setShowForm(true);
   }
@@ -55,13 +56,23 @@ const DashboardComponent = () => {
         return insertPost(postData);
       })
       .then((res) => {
-        console.log("Post Inserted:", res.data);
-        alert("Post added successfully!");
+        setPosts(prevPosts => [
+          {
+            ...res.data,
+            liked: false,
+            likes: 0,
+            comments: []
+          },
+          ...prevPosts
+        ]);
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+        }, 2000);
         closeForm();
       })
       .catch((err) => {
-        console.error("Error:", err);
-        alert("Failed!");
+        setShowSuccess(false);
       });
   }
   useEffect(() => {
@@ -257,6 +268,17 @@ const DashboardComponent = () => {
             </div>
           </div>
         </div>
+        {showSuccess && (
+          <div
+            className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+            style={{ background: "rgba(0,0,0,0.5)", zIndex: 9999 }}
+          >
+            <div className="bg-white p-4 rounded shadow text-center" style={{ minWidth: "300px", maxWidth: "400px" }}>
+              <FaCheckCircle size={50} style={{ color: 'green', marginBottom: '15px' }} />
+              <h5 className="mb-2">Successfully Post Uploaded!</h5>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
