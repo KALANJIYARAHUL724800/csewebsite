@@ -3,7 +3,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { showAllPosts, updateLikes, getTotalLikes, getAllCourses, downloadCoursePdf, insertComment } from "../index";
+import { showAllPosts, updateLikes, getTotalLikes, getAllCourses, downloadCoursePdf, insertComment, moveImage } from "../index";
 import { useNavigate } from "react-router-dom";
 
 export default function StudentDashBoard() {
@@ -18,27 +18,23 @@ export default function StudentDashBoard() {
   const [bio, setBio] = useState("");
   const [dob, setDob] = useState("");
   const [address, setAddress] = useState("");
-  const saveProfile = async () => {
-    try {
-      const formData = new FormData();
 
-      if (imageFile) {
-        formData.append("image", imageFile);
-      }
-      formData.append("name", name);
-      formData.append("email", email);
-      formData.append("phone", phone);
-      formData.append("gender", gender);
-      formData.append("bio", bio);
-      formData.append("dob", dob);
-      formData.append("address", address);
-      const res = await axios.post("http://localhost:8080/api/profile/save", formData);
-      alert("Profile updated successfully!");
-    } catch (error) {
-      console.error(error);
-      alert("Failed to update profile");
+  const saveProfile = async () => {
+    if (!imageFile) return;
+  
+    const formData = new FormData();
+    formData.append("image", imageFile); // key must be "image" to match backend
+  
+    try {
+      const res = await moveImage(formData, "profile");
+      alert("Profile uploaded! Local path: "); // backend returns local path
+      setProfileImage(URL.createObjectURL(imageFile)); // preview
+    } catch (err) {
+      console.error("Image upload failed:", err);
+      alert("Image upload failed");
     }
-  };
+  };  
+  
   const [activeMenu, setActiveMenu] = useState("Dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [posts, setPosts] = useState([]);
@@ -409,15 +405,12 @@ export default function StudentDashBoard() {
 
                   <input
                     type="file"
-                    className="form-control"
-                    accept="image/*"
                     onChange={(e) => {
                       const file = e.target.files[0];
                       setProfileImage(URL.createObjectURL(file)); // Preview
-                      setImageFile(file); // Store file for API
+                      setImageFile(file); // Store for API
                     }}
                   />
-
                   <small className="text-muted">Upload Profile Picture</small>
 
                 </div>

@@ -153,16 +153,29 @@ export const insertTestimonials = async (formData) => {
   return response.data;
 };
 
-export const moveImage = async (formData, type = "upload") => {
-  const url = new URL(API_BASE);
-  url.port = "3001";
-  url.pathname = type === "post" ? "/upload-post" : "/upload";
-  const NODE_API = url.toString();
-  const response = await axios.post(NODE_API, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-  });
-  return response.data;
-};
+// export const moveImage = async (formData, type = "upload") => {
+//   const url = new URL(API_BASE);
+//   url.port = "3001";
+//   url.pathname = type === "post" ? "/upload-post" : "/upload";
+//   const NODE_API = url.toString();
+//   const response = await axios.post(NODE_API, formData, {
+//     headers: { 'Content-Type': 'multipart/form-data' }
+//   });
+//   return response.data;
+// };
+
+  export const moveImage = async (formData, type = "upload") => {
+    const url = new URL(API_BASE);
+    url.port = "3001";
+    if (type === "post") url.pathname = "/upload-post";
+    else if (type === "profile") url.pathname = "/upload-profile";
+    else url.pathname = "/upload";
+  
+    const response = await axios.post(url.toString(), formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  };
 
 export const updateTestimonial = (id, formData) => {
   const data = new FormData();

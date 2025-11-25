@@ -27,14 +27,17 @@ if (!projectRoot) {
 const publicFolder = path.join(projectRoot, 'public');
 const uploadsFolder = path.join(publicFolder, 'uploads');
 const postsFolder = path.join(publicFolder, 'posts');
+const profileFolder = path.join(publicFolder, 'profile');
 
-[uploadsFolder, postsFolder].forEach(folder => {
+[uploadsFolder, postsFolder, profileFolder].forEach(folder => {
     if (!fs.existsSync(folder)) {
         fs.mkdirSync(folder, { recursive: true });
     }
 });
 app.use('/uploads', express.static(uploadsFolder));
 app.use('/posts', express.static(postsFolder));
+app.use('/profile', express.static(profileFolder));
+
 app.post('/upload', (req, res) => {
     if (!req.files || !req.files.image) return res.status(400).send('No file uploaded.');
 
@@ -66,4 +69,27 @@ app.post('/upload-post', (req, res) => {
         });
     });
 });
+
+// profile folder 
+app.post('/upload-profile', (req, res) => {
+    if (!req.files || !req.files.image) 
+        return res.status(400).send('No file uploaded.');
+
+    const file = req.files.image;
+
+    // Keep original file name without any prefix
+    const originalName = file.name; 
+    const savePath = path.join(profileFolder, originalName);
+
+    file.mv(savePath, err => {
+        if (err) return res.status(500).send('Failed to move file.');
+
+        res.send({
+            imageName: originalName,
+            url: `/profile/${originalName}`, // matches your static folder setup
+            message: 'Profile uploaded successfully!'
+        });
+    });
+});
+
 app.listen(3001, () => console.log("✔ Server running on port 3001"));
