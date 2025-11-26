@@ -57,9 +57,10 @@ const TestiMonialsComponent = () => {
     const handleSelectChange = (selectedOption) => {
         setFormData(prev => ({
             ...prev,
-            courseName: selectedOption ? selectedOption.value : '',
+            courseName: selectedOption ? selectedOption.label : '',  
         }));
     };
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isSubmitting) return;
@@ -181,7 +182,7 @@ const TestiMonialsComponent = () => {
                     <Select
                         id="courseName"
                         options={course}
-                        value={course?.find(c => c.value === formData.courseName) || null}
+                        value={course?.find(c => c.label === formData.courseName) || null}
                         onChange={handleSelectChange}
                         placeholder="Select a course"
                         isClearable

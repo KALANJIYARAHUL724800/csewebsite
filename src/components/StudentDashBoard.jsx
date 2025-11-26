@@ -3,11 +3,13 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { showAllPosts, updateLikes, getTotalLikes, getAllCourses, downloadCoursePdf, insertComment, moveImage } from "../index";
+import { showAllPosts, updateLikes, getTotalLikes, getAllCourses, downloadCoursePdf, insertComment, moveImage, insertProfile } from "../index";
 import { useNavigate } from "react-router-dom";
+import { FaCheckCircle } from "react-icons/fa";
 
 export default function StudentDashBoard() {
-
+  const [errors, setErrors] = useState({});
+  const [showSuccess, setShowSuccess] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const [imageFile, setImageFile] = useState(null);
 
@@ -21,20 +23,41 @@ export default function StudentDashBoard() {
 
   const saveProfile = async () => {
     if (!imageFile) return;
-  
+    const data = new FormData();
+    data.append("name", name);
+    data.append("email", email);
+    data.append("phone", phone);
+    data.append("gender", gender);
+    data.append("bio", bio);
+    data.append("dob", dob);
+    data.append("address", address);
+    data.append("image", imageFile);
+    const formObject = Object.fromEntries(data.entries());
+    formObject.imageUrl = imageFile.name;
+    console.log(formObject);
     const formData = new FormData();
-    formData.append("image", imageFile); // key must be "image" to match backend
-  
+    formData.append("image", imageFile);
+
     try {
       const res = await moveImage(formData, "profile");
-      alert("Profile uploaded! Local path: "); // backend returns local path
-      setProfileImage(URL.createObjectURL(imageFile)); // preview
+      await insertProfile(formObject).then((res) => {
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+        }, 2000);
+      }).catch((err) => {
+        setErrors(err)
+      })
+      setProfileImage(URL.createObjectURL(imageFile));
     } catch (err) {
-      console.error("Image upload failed:", err);
-      alert("Image upload failed");
+      if (err.response && err.response.data) {
+        setErrors(err.response.data);
+      } else {
+        setErrors({ general: "Something went wrong" });
+      }
     }
-  };  
-  
+  };
+
   const [activeMenu, setActiveMenu] = useState("Dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [posts, setPosts] = useState([]);
@@ -389,75 +412,77 @@ export default function StudentDashBoard() {
         {/* PROFILE */}
         {activeMenu === "Profile" && (
           <div className="container mt-4">
-
             <div className="row justify-content-center">
 
               {/* LEFT SIDE – PROFILE IMAGE UPLOAD */}
               <div className="col-md-4">
                 <div className="card shadow-sm text-center p-3">
-
                   <img
                     src={profileImage || "https://via.placeholder.com/150"}
                     alt="Profile"
                     className="rounded-circle mb-3"
                     style={{ width: "150px", height: "150px", objectFit: "cover" }}
                   />
-
                   <input
                     type="file"
                     onChange={(e) => {
                       const file = e.target.files[0];
-                      setProfileImage(URL.createObjectURL(file)); // Preview
-                      setImageFile(file); // Store for API
+                      setProfileImage(URL.createObjectURL(file));
+                      setImageFile(file);
                     }}
                   />
                   <small className="text-muted">Upload Profile Picture</small>
-
+                  {errors.image && <div className="text-danger mt-1">{errors.image}</div>}
                 </div>
               </div>
 
               {/* RIGHT SIDE – PROFILE FIELDS */}
               <div className="col-md-8">
                 <div className="card shadow-sm p-4">
-
                   <h4 className="mb-3">Profile Details</h4>
-
                   <div className="row">
 
+                    {/* Full Name */}
                     <div className="col-md-6 mb-3">
                       <label className="form-label">Full Name</label>
                       <input
                         type="text"
-                        className="form-control"
+                        className={`form-control ${errors.name ? "is-invalid" : ""}`}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                       />
+                      {errors.name && <div className="invalid-feedback">{errors.name}</div>}
                     </div>
 
+                    {/* Email */}
                     <div className="col-md-6 mb-3">
                       <label className="form-label">Email</label>
                       <input
                         type="email"
-                        className="form-control"
+                        className={`form-control ${errors.email ? "is-invalid" : ""}`}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
+                      {errors.email && <div className="invalid-feedback">{errors.email}</div>}
                     </div>
 
+                    {/* Phone */}
                     <div className="col-md-6 mb-3">
                       <label className="form-label">Phone</label>
                       <input
                         type="number"
-                        className="form-control"
+                        className={`form-control ${errors.phone ? "is-invalid" : ""}`}
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                       />
+                      {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
                     </div>
 
+                    {/* Gender */}
                     <div className="col-md-6 mb-3">
                       <label className="form-label">Gender</label>
                       <select
-                        className="form-select"
+                        className={`form-select ${errors.gender ? "is-invalid" : ""}`}
                         value={gender}
                         onChange={(e) => setGender(e.target.value)}
                       >
@@ -466,49 +491,52 @@ export default function StudentDashBoard() {
                         <option value="Female">Female</option>
                         <option value="Others">Others</option>
                       </select>
+                      {errors.gender && <div className="invalid-feedback">{errors.gender}</div>}
                     </div>
 
+                    {/* Bio */}
                     <div className="col-md-12 mb-3">
                       <label className="form-label">Bio</label>
                       <textarea
-                        className="form-control"
+                        className={`form-control ${errors.bio ? "is-invalid" : ""}`}
                         rows="3"
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
                         placeholder="Write something about yourself..."
                       />
+                      {errors.bio && <div className="invalid-feedback">{errors.bio}</div>}
                     </div>
 
+                    {/* Date of Birth */}
                     <div className="col-md-6 mb-3">
                       <label className="form-label">Date of Birth</label>
                       <input
                         type="date"
-                        className="form-control"
+                        className={`form-control ${errors.dob ? "is-invalid" : ""}`}
                         value={dob}
                         onChange={(e) => setDob(e.target.value)}
                       />
+                      {errors.dob && <div className="invalid-feedback">{errors.dob}</div>}
                     </div>
 
+                    {/* Address */}
                     <div className="col-md-6 mb-3">
                       <label className="form-label">Address</label>
                       <input
                         type="text"
-                        className="form-control"
+                        className={`form-control ${errors.address ? "is-invalid" : ""}`}
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                       />
+                      {errors.address && <div className="invalid-feedback">{errors.address}</div>}
                     </div>
 
                   </div>
 
                   {/* SAVE BUTTON */}
-                  <button
-                    className="btn btn-primary w-100"
-                    onClick={saveProfile}
-                  >
+                  <button className="btn btn-primary w-100" onClick={saveProfile}>
                     Save Profile
                   </button>
-
                 </div>
               </div>
 
@@ -516,6 +544,17 @@ export default function StudentDashBoard() {
           </div>
         )}
 
+        {showSuccess && (
+          <div
+            className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+            style={{ background: "rgba(0,0,0,0.5)", zIndex: 9999 }}
+          >
+            <div className="bg-white p-4 rounded shadow text-center" style={{ minWidth: "300px", maxWidth: "400px" }}>
+              <FaCheckCircle size={50} style={{ color: 'green', marginBottom: '15px' }} />
+              <h5 className="mb-2">Successfully Profile Updated!</h5>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

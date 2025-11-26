@@ -84,7 +84,6 @@ const HomeComponent = () => {
     }
   };
 
-
   const navigate = useNavigate();
   const [searchData, setSearchData] = useState("");
   const [courses, setCourses] = useState([]);
@@ -114,6 +113,7 @@ const HomeComponent = () => {
       .then((response) => {
         if (response.data && response.data.length > 0) {
           setTestimonials(response.data)
+          console.log(response.data);
         } else {
           setTestimonials(false)
         }

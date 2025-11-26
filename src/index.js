@@ -153,29 +153,18 @@ export const insertTestimonials = async (formData) => {
   return response.data;
 };
 
-// export const moveImage = async (formData, type = "upload") => {
-//   const url = new URL(API_BASE);
-//   url.port = "3001";
-//   url.pathname = type === "post" ? "/upload-post" : "/upload";
-//   const NODE_API = url.toString();
-//   const response = await axios.post(NODE_API, formData, {
-//     headers: { 'Content-Type': 'multipart/form-data' }
-//   });
-//   return response.data;
-// };
+export const moveImage = async (formData, type = "upload") => {
+  const url = new URL(API_BASE);
+  url.port = "3001";
+  if (type === "post") url.pathname = "/upload-post";
+  else if (type === "profile") url.pathname = "/upload-profile";
+  else url.pathname = "/upload";
 
-  export const moveImage = async (formData, type = "upload") => {
-    const url = new URL(API_BASE);
-    url.port = "3001";
-    if (type === "post") url.pathname = "/upload-post";
-    else if (type === "profile") url.pathname = "/upload-profile";
-    else url.pathname = "/upload";
-  
-    const response = await axios.post(url.toString(), formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    return response.data;
-  };
+  const response = await axios.post(url.toString(), formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return response.data;
+};
 
 export const updateTestimonial = (id, formData) => {
   const data = new FormData();
@@ -227,10 +216,14 @@ export const uploadCoursePdf = (courseId, file) => {
 
 export const downloadCoursePdf = (courseId) => {
   return axios.get(`${API_BASE}/courses/${courseId}/pdf`, {
-    responseType: "blob", 
+    responseType: "blob",
   });
 };
 
-export const insertComment = (id,value) => {
+export const insertComment = (id, value) => {
   return axios.post(`${API_BASE}/comments/insert/${id}`, value);
+};
+
+export const insertProfile = (value) => {
+  return axios.post(`${API_BASE}/profile/insert`, value);
 };
