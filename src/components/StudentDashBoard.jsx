@@ -3,7 +3,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { showAllPosts, updateLikes, getTotalLikes, getAllCourses, downloadCoursePdf, insertComment, moveImage, insertProfile } from "../index";
+import { showAllPosts, updateLikes, getTotalLikes, getAllCourses, downloadCoursePdf, insertComment, moveImage, updateUserRecord, getEmailData } from "../index";
 import { useNavigate } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
 
@@ -20,7 +20,7 @@ export default function StudentDashBoard() {
   const [bio, setBio] = useState("");
   const [dob, setDob] = useState("");
   const [address, setAddress] = useState("");
-
+  const [userData, setUserData] = useState({});
   const saveProfile = async () => {
     if (!imageFile) return;
     const data = new FormData();
@@ -31,7 +31,7 @@ export default function StudentDashBoard() {
     data.append("bio", bio);
     data.append("dob", dob);
     data.append("address", address);
-    data.append("image", imageFile);
+    data.append("profile", imageFile);
     const formObject = Object.fromEntries(data.entries());
     formObject.imageUrl = imageFile.name;
     console.log(formObject);
@@ -40,7 +40,7 @@ export default function StudentDashBoard() {
 
     try {
       const res = await moveImage(formData, "profile");
-      await insertProfile(formObject).then((res) => {
+      await updateUserRecord(localStorage.getItem("email"), formObject).then((res) => {
         setShowSuccess(true);
         setTimeout(() => {
           setShowSuccess(false);
@@ -89,6 +89,19 @@ export default function StudentDashBoard() {
     }
   };
   useEffect(() => {
+    const email = localStorage.getItem("email");
+    getEmailData(email).then((res) => {
+      console.log(res.data);
+      const data = res.data;
+      setName(data.name);
+      setEmail(data.email);
+      setPhone(data.mobile);
+      setGender(data.gender);
+      setBio(data.bio);
+      setDob(data.dob);
+      setAddress(data.address);
+      setImageFile(data.profile);
+    })
     fetchPosts();
     AOS.init({ duration: 800, once: true });
     getAllCourses()
@@ -418,11 +431,18 @@ export default function StudentDashBoard() {
               <div className="col-md-4">
                 <div className="card shadow-sm text-center p-3">
                   <img
-                    src={profileImage || "https://via.placeholder.com/150"}
+                    src={
+                      profileImage
+                        ? profileImage
+                        : userData.profile
+                          ? `http://localhost:5000/uploads/${userData.profile}`
+                          : "https://via.placeholder.com/150"
+                    }
                     alt="Profile"
                     className="rounded-circle mb-3"
                     style={{ width: "150px", height: "150px", objectFit: "cover" }}
                   />
+
                   <input
                     type="file"
                     onChange={(e) => {
@@ -431,9 +451,11 @@ export default function StudentDashBoard() {
                       setImageFile(file);
                     }}
                   />
+
                   <small className="text-muted">Upload Profile Picture</small>
                   {errors.image && <div className="text-danger mt-1">{errors.image}</div>}
                 </div>
+
               </div>
 
               {/* RIGHT SIDE – PROFILE FIELDS */}

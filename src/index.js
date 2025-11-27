@@ -5,6 +5,7 @@ const API_BASE = "http://localhost:8080/api";
 export const logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("userType");
+  localStorage.removeItem("email");
   window.location.href = "/home";
 };
 
@@ -226,4 +227,12 @@ export const insertComment = (id, value) => {
 
 export const insertProfile = (value) => {
   return axios.post(`${API_BASE}/profile/insert`, value);
+};
+
+export const getEmailData = (email) => {
+  return axios.get(`${API_BASE}/getdata/${email}`);
+};
+
+export const updateUserRecord = (email, data) => {
+  return axios.put(`${API_BASE}/update-record/${email}`, data);
 };

@@ -113,7 +113,6 @@ const HomeComponent = () => {
       .then((response) => {
         if (response.data && response.data.length > 0) {
           setTestimonials(response.data)
-          console.log(response.data);
         } else {
           setTestimonials(false)
         }

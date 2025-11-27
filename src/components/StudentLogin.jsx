@@ -37,6 +37,7 @@ const StudentLogin = () => {
       const expiryTime = new Date().getTime() + 60 * 60 * 1000;
       localStorage.setItem("token", expiryTime);
       localStorage.setItem("userType",res.data.userType);
+      localStorage.setItem("email", res.data.email);
       setSuccessMessage("Login successful! Redirecting...");
       setTimeout(() => {
         navigate("/student-dashboard", { state: { user: res.data } });
