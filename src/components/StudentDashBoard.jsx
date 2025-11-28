@@ -241,42 +241,50 @@ export default function StudentDashBoard() {
         }}
       >
         <h1 className="fw-bold mb-4">{activeMenu}</h1>
-
         {/* DASHBOARD */}
         {activeMenu === "Dashboard" && (
+          <div className="position-relative bg-white p-4 rounded-4 shadow-sm">
 
-          <div className="row g-4" data-aos="fade-up">
-            <div className="col-md-4">
-              <img
-                src={
-                  profileImage
-                    ? profileImage
-                    : imageFile
-                      ? `/profile/${imageFile}`
-                      : "https://via.placeholder.com/150"
-                }
-                alt="profile"
-                className="rounded-circle mb-3"
-                style={{ width: "100px", height: "100px", objectFit: "cover" }}
-              />
-              <div className="card shadow p-4 text-center border-0 rounded-4 bg-white">
-                <i className="fas fa-book fa-3x text-primary mb-3"></i>
-                <h4>Enrolled Courses</h4>
-                <p className="text-muted">You are enrolled in 4 active courses</p>
+            {/* Profile image positioned absolute at top-left */}
+            <img
+              src={
+                profileImage
+                  ? profileImage
+                  : imageFile
+                    ? `/profile/${imageFile}`
+                    : "https://via.placeholder.com/150"
+              }
+              alt="profile"
+              className="rounded-circle position-absolute top-0 start-0 m-3"
+              style={{ width: "60px", height: "60px", objectFit: "cover", zIndex: 10 }}
+            />  {name && (
+              <h3 className="ms-5" style={{ position: "relative", left: "10px", marginTop: "3px", color: "grey" }}>
+                <i> Welcome {name} </i>
+              </h3>
+            )}
+
+            {/* Add margin-top to move row down below image */}
+            <div className="row g-4 mt-5">
+              <div className="col-md-4">
+                <div className="card shadow p-4 text-center border-0 rounded-4">
+                  <i className="fas fa-book fa-3x text-primary mb-3"></i>
+                  <h4>Enrolled Courses</h4>
+                  <p className="text-muted">You are enrolled in 4 active courses</p>
+                </div>
               </div>
-            </div>
-            <div className="col-md-4">
-              <div className="card shadow p-4 text-center border-0 rounded-4 bg-white">
-                <i className="fas fa-bell fa-3x text-warning mb-3"></i>
-                <h4>Notifications</h4>
-                <p className="text-muted">2 new announcements</p>
+              <div className="col-md-4">
+                <div className="card shadow p-4 text-center border-0 rounded-4">
+                  <i className="fas fa-bell fa-3x text-warning mb-3"></i>
+                  <h4>Notifications</h4>
+                  <p className="text-muted">2 new announcements</p>
+                </div>
               </div>
-            </div>
-            <div className="col-md-4">
-              <div className="card shadow p-4 text-center border-0 rounded-4 bg-white">
-                <i className="fas fa-calendar fa-3x text-success mb-3"></i>
-                <h4>Upcoming Exams</h4>
-                <p className="text-muted">3 Exams this month</p>
+              <div className="col-md-4">
+                <div className="card shadow p-4 text-center border-0 rounded-4">
+                  <i className="fas fa-calendar fa-3x text-success mb-3"></i>
+                  <h4>Upcoming Exams</h4>
+                  <p className="text-muted">3 Exams this month</p>
+                </div>
               </div>
             </div>
           </div>
