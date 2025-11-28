@@ -20,7 +20,6 @@ export default function StudentDashBoard() {
   const [bio, setBio] = useState("");
   const [dob, setDob] = useState("");
   const [address, setAddress] = useState("");
-  const [userData, setUserData] = useState({});
   const saveProfile = async () => {
     if (!imageFile) return;
     const data = new FormData();
@@ -216,7 +215,7 @@ export default function StudentDashBoard() {
           { name: "Courses", icon: "fa-book" },
           { name: "Posts", icon: "fa-image" },
           { name: "Profile", icon: "fa-user" },
-          { name: "Settings", icon: "fa-cog" },
+          { name: "Settings", icon: "fas fa-cog me-2" },
         ].map((menu) => (
           <button
             key={menu.name}
@@ -245,8 +244,21 @@ export default function StudentDashBoard() {
 
         {/* DASHBOARD */}
         {activeMenu === "Dashboard" && (
+
           <div className="row g-4" data-aos="fade-up">
             <div className="col-md-4">
+              <img
+                src={
+                  profileImage
+                    ? profileImage
+                    : imageFile
+                      ? `/profile/${imageFile}`
+                      : "https://via.placeholder.com/150"
+                }
+                alt="profile"
+                className="rounded-circle mb-3"
+                style={{ width: "100px", height: "100px", objectFit: "cover" }}
+              />
               <div className="card shadow p-4 text-center border-0 rounded-4 bg-white">
                 <i className="fas fa-book fa-3x text-primary mb-3"></i>
                 <h4>Enrolled Courses</h4>
@@ -434,28 +446,27 @@ export default function StudentDashBoard() {
                     src={
                       profileImage
                         ? profileImage
-                        : userData.profile
-                          ? `http://localhost:5000/uploads/${userData.profile}`
+                        : imageFile
+                          ? `/profile/${imageFile}`
                           : "https://via.placeholder.com/150"
                     }
-                    alt="Profile"
+                    alt="profile"
                     className="rounded-circle mb-3"
                     style={{ width: "150px", height: "150px", objectFit: "cover" }}
                   />
-
                   <input
                     type="file"
                     onChange={(e) => {
                       const file = e.target.files[0];
+                      if (!file) return;
+
                       setProfileImage(URL.createObjectURL(file));
                       setImageFile(file);
                     }}
                   />
-
                   <small className="text-muted">Upload Profile Picture</small>
                   {errors.image && <div className="text-danger mt-1">{errors.image}</div>}
                 </div>
-
               </div>
 
               {/* RIGHT SIDE – PROFILE FIELDS */}
@@ -505,7 +516,7 @@ export default function StudentDashBoard() {
                       <label className="form-label">Gender</label>
                       <select
                         className={`form-select ${errors.gender ? "is-invalid" : ""}`}
-                        value={gender}
+                        value={gender ?? ""}
                         onChange={(e) => setGender(e.target.value)}
                       >
                         <option value="">Choose</option>
@@ -562,6 +573,58 @@ export default function StudentDashBoard() {
                 </div>
               </div>
 
+            </div>
+          </div>
+        )}
+        {activeMenu === "Settings" && (
+          <div className="container mt-4">
+            {/* Profile Settings */}
+            <div className="card mb-4 p-3 shadow-sm">
+              <h5 className="mb-3"><i className="fas fa-user me-2"></i>Profile Settings</h5>
+              <div className="d-flex flex-column flex-md-row gap-2">
+                <button className="btn btn-primary flex-fill">
+                  <i className="fas fa-key me-2"></i>Change Password
+                </button>
+                <button className="btn btn-secondary flex-fill">
+                  <i className="fas fa-user-edit me-2"></i>Update Profile Info
+                </button>
+              </div>
+            </div>
+
+            {/* Notification Settings */}
+            <div className="card mb-4 p-3 shadow-sm">
+              <h5 className="mb-3"><i className="fas fa-bell me-2"></i>Notification Settings</h5>
+              <div className="form-check form-switch mb-2">
+                <input className="form-check-input" type="checkbox" id="emailNotif" />
+                <label className="form-check-label" htmlFor="emailNotif">
+                  <i className="fas fa-envelope me-2"></i>Email Notifications
+                </label>
+              </div>
+              <div className="form-check form-switch">
+                <input className="form-check-input" type="checkbox" id="pushNotif" />
+                <label className="form-check-label" htmlFor="pushNotif">
+                  <i className="fas fa-bell-on me-2"></i>Push Notifications
+                </label>
+              </div>
+            </div>
+
+            {/* Privacy Settings */}
+            <div className="card mb-4 p-3 shadow-sm">
+              <h5 className="mb-3"><i className="fas fa-user-shield me-2"></i>Privacy Settings</h5>
+              <div className="form-check form-switch">
+                <input className="form-check-input" type="checkbox" id="profileVisibility" />
+                <label className="form-check-label" htmlFor="profileVisibility">
+                  <i className="fas fa-eye-slash me-2"></i>Make Profile Private
+                </label>
+              </div>
+            </div>
+
+            {/* Account Settings */}
+            <div className="card p-3 shadow-sm">
+              <h5 className="mb-3"><i className="fas fa-user-cog me-2"></i>Account</h5>
+              <button className="btn btn-danger w-100">
+                <i className="fas fa-sign-out-alt me-2"></i>Logout Account
+              </button>
             </div>
           </div>
         )}
