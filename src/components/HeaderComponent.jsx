@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { logout } from "../index";
 import { useState } from 'react';
 const HeaderComponent = () => {
   const [login, setLogin] = useState(() => localStorage.getItem("token"));
@@ -12,11 +11,6 @@ const HeaderComponent = () => {
       const user = localStorage.getItem("userType") === "true";
       setUserType(user);
       setLogin(token);
-
-
-      if (!token) {
-        console.log("User not logged in");
-      }
     }, 1000);
     return () => clearInterval(interval);
   }, []);
@@ -82,7 +76,12 @@ const HeaderComponent = () => {
             )}
 
             {login && (
-              <li className="nav-item" onClick={logout}>
+              <li className="nav-item" onClick={()=>{
+                localStorage.removeItem("token");
+                localStorage.removeItem("userType");
+                localStorage.removeItem("email");
+                window.location.href = "/home";
+              }}>
                 <a className="nav-link text-danger" href="#">
                   <i className="bi bi-box-arrow-right me-1"></i> Logout
                 </a>

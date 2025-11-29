@@ -46,7 +46,6 @@ const DashboardComponent = () => {
     formData.append("image", file);
     moveImage(formData, "post")
       .then((res) => {
-        console.log("Image Uploaded:", res);
         const imageUrl = res.filename || res.data || file.name;
         const postData = {
           title: title,
@@ -88,23 +87,25 @@ const DashboardComponent = () => {
         }
         SetStudentsCount(res.data)
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {});
 
     countAdmin()
       .then((res) => SetAdminCount(res.data))
-      .catch((err) => console.error(err));
+      .catch((err) => {});
 
     courseCount()
       .then((res) => SetCourseCount(res.data))
-      .catch((err) => console.error(err));
+      .catch((err) => {});
 
     enquiryCountNotification(today, today)
       .then((res) => setNotificationCount(res.data))
-      .catch((err) => console.error(err));
+      .catch((err) => {});
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userType");
+    localStorage.removeItem("email");
     navigate("/home");
   };
 

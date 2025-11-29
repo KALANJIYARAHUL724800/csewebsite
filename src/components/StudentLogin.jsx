@@ -6,7 +6,7 @@ const StudentLogin = () => {
   const handleClose = () => {
     navigate("/home")
   };
-
+  const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errors, setErrors] = useState({
@@ -36,7 +36,7 @@ const StudentLogin = () => {
       const res = await loginUser(formData);
       const expiryTime = new Date().getTime() + 60 * 60 * 1000;
       localStorage.setItem("token", expiryTime);
-      localStorage.setItem("userType",res.data.userType);
+      localStorage.setItem("userType", res.data.userType);
       localStorage.setItem("email", res.data.email);
       setSuccessMessage("Login successful! Redirecting...");
       setTimeout(() => {
@@ -123,22 +123,40 @@ const StudentLogin = () => {
             onChange={handleChange}
             style={errors.email ? { border: "1.5px solid red", boxShadow: "0 0 5px rgba(255,0,0,0.5)" } : {}}
           />
-
           {errors.email && <div className="text-danger mb-2">{errors.email}</div>}
-
           {/* Password input */}
-          <input
-            type="password"
-            className="form-control mb-2"
-            placeholder="Enter Password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            minLength={8}
-            maxLength={16}
-            style={errors.password ? { border: "1.5px solid red", boxShadow: "0 0 5px rgba(255,0,0,0.5)" } : {}}
-          />
+          <div className="position-relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              className="form-control mb-2"
+              placeholder="Enter Password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              minLength={8}
+              maxLength={16}
+              style={errors.password ? {
+                border: "1.5px solid red",
+                boxShadow: "0 0 5px rgba(255,0,0,0.5)"
+              } : {}}
+            />
 
+            {/* Eye Icon */}
+            <i
+              className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                color: "#555",
+                fontSize: "1.2rem"
+              }}
+            ></i>
+          </div>
+          {/* Error Message */}
           {errors.password && (
             <div className="text-danger mb-2">{errors.password}</div>
           )}
@@ -146,7 +164,7 @@ const StudentLogin = () => {
             href="/signup"
             className="d-block text-end mb-3 text-decoration-none small text-muted"
           >
-             <i class="bi bi-person-plus"></i> Sign Up Signup Here
+            <i class="bi bi-person-plus"></i> Sign Up Signup Here
           </a>
           <a
             href="/forgot-password"

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { updatePassword } from "../index"; 
+import { updatePassword } from "../index";
 
 const UpdatePassword = () => {
   const navigate = useNavigate();
@@ -13,7 +13,15 @@ const UpdatePassword = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const handleClose = () => {
-    navigate("/home");
+    const userType = localStorage.getItem("userType") === "true"; 
+    const email = localStorage.getItem("email");
+    if (email && !userType) {
+      navigate("/student-dashboard");
+    } else if (email && userType) {
+      navigate("/dashboard");
+    } else {
+      navigate("/home");
+    }
   };
   const handleChange = (e) => {
     const { name, value } = e.target;

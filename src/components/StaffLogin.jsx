@@ -4,9 +4,9 @@ import { loginAdmin } from "../index";
 
 const StaffLogin = ({ onClose }) => {
   const navigate = useNavigate();
-
+  const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState("");
-  const [successMessage, setSuccessMessage] = useState(""); 
+  const [successMessage, setSuccessMessage] = useState("");
   const [errors, setErrors] = useState({
     email: "",
     password: "",
@@ -33,9 +33,8 @@ const StaffLogin = ({ onClose }) => {
     try {
       const res = await loginAdmin(formData);
       const expiryTime = new Date().getTime() + 60 * 60 * 1000;
-      console.log(res.data);
       localStorage.setItem("token", expiryTime);
-      localStorage.setItem("userType",res.data.userType);
+      localStorage.setItem("userType", res.data.userType);
       setSuccessMessage("Login successful! Redirecting...");
       setTimeout(() => {
         navigate("/dashboard", { state: { user: res.data } });
@@ -129,17 +128,36 @@ const StaffLogin = ({ onClose }) => {
           {errors.email && <div className="text-danger mb-2">{errors.email}</div>}
 
           {/* Password input */}
-          <input
-            type="password"
-            className="form-control mb-2"
-            placeholder="Enter Password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            minLength={8}
-            maxLength={16}
-            style={errors.password ? { border: "1.5px solid red", boxShadow: "0 0 5px rgba(255,0,0,0.5)" } : {}}
-          />
+          <div className="position-relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              className="form-control mb-2"
+              placeholder="Enter Password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              minLength={8}
+              maxLength={16}
+              style={errors.password ? {
+                border: "1.5px solid red",
+                boxShadow: "0 0 5px rgba(255,0,0,0.5)"
+              } : {}}
+            />
+            {/* Eye Icon */}
+            <i
+              className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                color: "#555",
+                fontSize: "1.2rem"
+              }}
+            ></i>
+          </div>
 
           {errors.password && (
             <div className="text-danger mb-2">{errors.password}</div>

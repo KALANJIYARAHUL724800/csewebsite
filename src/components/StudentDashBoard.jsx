@@ -3,7 +3,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { showAllPosts, updateLikes, getTotalLikes, getAllCourses, downloadCoursePdf, insertComment, moveImage, updateUserRecord, getEmailData } from "../index";
+import { logout, showAllPosts, updateLikes, getTotalLikes, getAllCourses, downloadCoursePdf, insertComment, moveImage, updateUserRecord, getEmailData } from "../index";
 import { useNavigate } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
 
@@ -33,7 +33,6 @@ export default function StudentDashBoard() {
     data.append("profile", imageFile);
     const formObject = Object.fromEntries(data.entries());
     formObject.imageUrl = imageFile.name;
-    console.log(formObject);
     const formData = new FormData();
     formData.append("image", imageFile);
 
@@ -84,13 +83,11 @@ export default function StudentDashBoard() {
       );
       setPosts(postsWithLikes);
     } catch (err) {
-      console.error(err);
     }
   };
   useEffect(() => {
     const email = localStorage.getItem("email");
     getEmailData(email).then((res) => {
-      console.log(res.data);
       const data = res.data;
       setName(data.name);
       setEmail(data.email);
@@ -134,7 +131,6 @@ export default function StudentDashBoard() {
       );
       setCommentText({ ...commentText, [postId]: "" });
     } catch (error) {
-      console.error(error);
     }
   };
   const toggleLike = (id) => {
@@ -172,7 +168,6 @@ export default function StudentDashBoard() {
       link.click();
       link.remove();
     } catch (error) {
-      console.error("Download failed:", error);
     }
   };
   return (
@@ -590,10 +585,10 @@ export default function StudentDashBoard() {
             <div className="card mb-4 p-3 shadow-sm">
               <h5 className="mb-3"><i className="fas fa-user me-2"></i>Profile Settings</h5>
               <div className="d-flex flex-column flex-md-row gap-2">
-                <button className="btn btn-primary flex-fill">
+                <button className="btn btn-primary flex-fill" onClick={() => navigate("/update-password")}>
                   <i className="fas fa-key me-2"></i>Change Password
                 </button>
-                <button className="btn btn-secondary flex-fill">
+                <button className="btn btn-secondary flex-fill" onClick={() => setActiveMenu("Profile")}>
                   <i className="fas fa-user-edit me-2"></i>Update Profile Info
                 </button>
               </div>
@@ -630,7 +625,7 @@ export default function StudentDashBoard() {
             {/* Account Settings */}
             <div className="card p-3 shadow-sm">
               <h5 className="mb-3"><i className="fas fa-user-cog me-2"></i>Account</h5>
-              <button className="btn btn-danger w-100">
+              <button className="btn btn-danger w-100" onClick={logout}>
                 <i className="fas fa-sign-out-alt me-2"></i>Logout Account
               </button>
             </div>

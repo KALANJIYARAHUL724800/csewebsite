@@ -17,9 +17,7 @@ const AboutComponent = () => {
         const res = await showAllAbout();
         const aboutContent = JSON.parse(res.data[0].content);
         setData(aboutContent);
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     };
 
     fetchData();
@@ -135,12 +133,10 @@ const AboutComponent = () => {
       {/* SERVICES */}
       {data.features && (
         <section id="services" className="py-5 bg-white" data-aos="fade-up">
-          {/* Otherwise, you can add a heading manually */}
           <h3 className="text-center fw-bold mb-5">Our Features</h3>
-          <div className="col-md-12 text-center">
-            <img src="public\about\service.png" alt="" srcset="" style={{ height: "200px", width: "150px" }} className="img-fluid" />
-          </div>
           <div className="container">
+
+            {/* FEATURES LOOP */}
             <div className="row g-4">
               {data.features.map((f, i) => (
                 <div
@@ -151,117 +147,23 @@ const AboutComponent = () => {
                 >
                   <div className="card p-4 text-center shadow-sm border-0 h-100 hover-card">
                     <div className="mb-3">
-                      {/* FontAwesome icon class */}
                       <i className={`fas ${f.icon} fa-3x text-warning`}></i>
                     </div>
+                    {f.image && (<img
+                      src={f.image ?? ""}
+                      style={{ height: "250px", width: "200px",position:"relative",left:"40px" }}
+                      className="img-fluid ms-5"
+                    />)}
                     <h5 className="fw-bold">{f.title}</h5>
                     <p className="text-muted">{f.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
+
           </div>
         </section>
       )}
-
-
-      {/* TESTIMONIALS */}
-      {data.testimonials && (
-        <section className="py-5" data-aos="fade-up">
-          <h3 className="text-center fw-bold mb-5">Testimonials</h3>
-          <div className="container">
-            <div className="row g-4">
-              {data.testimonials.map((t, i) => (
-                <div
-                  key={i}
-                  className="col-md-6"
-                  data-aos="flip-left"
-                  data-aos-delay={i * 150}
-                >
-                  <div className="testimonial-card p-4 h-100 position-relative d-flex align-items-center justify-content-between">
-                    <div className="border-animate"></div>
-
-                    {/* LEFT SIDE */}
-                    <div className="text-center me-3 flex-shrink-0">
-                      <img
-                        src={t.img}
-                        alt={t.name}
-                        className="rounded-circle mb-3 shadow-lg"
-                        width="90"
-                        height="90"
-                        style={{ objectFit: "cover" }}
-                      />
-                      <h6 className="fw-bold mb-0">Name : {t.name}</h6>
-                      <p className="text-muted small mb-0">{t.role}</p>
-                    </div>
-
-                    {/* MIDDLE LINE */}
-                    <div className="divider mx-3"></div>
-
-                    {/* RIGHT SIDE */}
-                    <div className="flex-grow-1">
-                      <h3>Information</h3>
-                      <p className="fst-italic text-muted mb-0">“{t.text}”</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* CSS STYLING */}
-          <style>
-            {`
-        .testimonial-card {
-          background: #fff;
-          border-radius: 15px;
-          box-shadow: 0 6px 25px rgba(0,0,0,0.1);
-          overflow: hidden;
-          position: relative;
-        }
-
-        .testimonial-card .border-animate {
-          content: "";
-          position: absolute;
-          inset: 0;
-          border-radius: 15px;
-          padding: 2px;
-          background: linear-gradient(270deg, #ff6ec4, #7873f5, #42a5f5, #ff6ec4);
-          background-size: 600% 600%;
-          animation: borderMove 6s linear infinite;
-          -webkit-mask: 
-            linear-gradient(#fff 0 0) content-box, 
-            linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-                  mask-composite: exclude;
-        }
-
-        @keyframes borderMove {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-
-        .divider {
-          width: 2px;
-          height: 100%;
-          background: linear-gradient(180deg, #ff6ec4, #7873f5, #42a5f5);
-          border-radius: 5px;
-          opacity: 0.8;
-        }
-
-        .testimonial-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-          transition: all 0.4s ease;
-        }
-      `}
-          </style>
-        </section>
-      )}
-
-
-
       {/* GALLERY */}
       <section className="py-5 bg-white" data-aos="fade-up">
         <h3 className="text-center fw-bold mb-4">Gallery</h3>

@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { search, showAllBatches, showAllTestimonials, findBatch, insertFeesEnquiry, insertFeesEnquiryTemp } from "../index";
 import { FaCheckCircle } from 'react-icons/fa';
-
+import AOS from "aos";
+import "aos/dist/aos.css";
 const HomeComponent = () => {
   const [errors, setErrors] = useState({});
   const [showForm, setShowForm] = useState(false);
@@ -95,6 +96,8 @@ const HomeComponent = () => {
   const [hasBatches, setHasBatches] = useState(false);
   const confettiInterval = useRef(null);
   useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+    AOS.refresh();
     const token = localStorage.getItem("token");
     setUserLogin(!token);
     showAllBatches()
@@ -121,6 +124,7 @@ const HomeComponent = () => {
         setHasBatches(false);
       });
   }, []);
+  if (!testimonials || testimonials.length === 0) return null;
   const studentLogin = () => navigate("/login");
   const startConfetti = () => {
     if (confettiInterval.current) return;
@@ -423,159 +427,128 @@ const HomeComponent = () => {
         </div><br />
 
         {/* Testimonials Section */}
-        {testimonials && testimonials.length > 0 && (
-          <div className="container mt-5">
+        <section className="py-5" data-aos="fade-up">
+          <h3 className="text-center fw-bold mb-5">Testimonials</h3>
+          <div className="container">
+            <div className="row g-3">
+              {testimonials.map((t, i) => (
+                <div
+                  key={i}
+                  className="col-md-4"
+                  data-aos="flip-left"
+                  data-aos-delay={i * 150}
+                >
+                  <div className="testimonial-card p-4 h-100 position-relative d-flex">
+                    <div className="border-animate"></div>
 
-            <h2
-              className="text-center mb-4"
-              style={{ color: "#007bff", fontWeight: "bold" }}
-            >
-              Student Testimonials
-            </h2>
+                    {/* LEFT SIDE */}
+                    <div className="text-center me-3 flex-shrink-0">
+                      <img
+                        src={`public/uploads/${t.imageUrl}`}
+                        alt={t.name}
+                        className="rounded-circle mb-3 shadow-lg"
+                        width="90"
+                        height="90"
+                        style={{ objectFit: "cover" }}
+                      />
 
-            <style>
-              {`
-        @keyframes rotateBorder {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}
-            </style>
-
-            <div className="row g-4">
-              {testimonials.map((t, index) => (
-                <div key={index} className="col-12 col-md-4">
-
-                  {/* OUTER BORDER EFFECT BOX */}
-                  <div
-                    style={{
-                      position: "relative",
-                      padding: "3px",
-                      borderRadius: "20px",
-                      overflow: "hidden",
-                      marginBottom: "20px",
-                    }}
-                  >
-                    {/* Animated Border Layer */}
-                    <div
-                      style={{
-                        content: "''",
-                        position: "absolute",
-                        top: "-50%",
-                        left: "-50%",
-                        width: "200%",
-                        height: "200%",
-                        background:
-                          "linear-gradient(45deg, #ff0000, green, #0000ff, yellow)",
-                        animation: "rotateBorder 6s linear infinite",
-                        zIndex: 1,
-                      }}
-                    ></div>
-
-                    {/* INNER CARD */}
-                    <div
-                      style={{
-                        position: "relative",
-                        zIndex: 2,
-                        background: "#fff",
-                        borderRadius: "18px",
-                        padding: "20px",
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
-                    >
-                      {/* IMAGE */}
-                      <div style={{ textAlign: "center", marginBottom: "15px" }}>
-                        <img
-                          src={t.imageUrl ? `/uploads/${t.imageUrl}` : "/default-user.png"}
-                          style={{
-                            width: "90px",
-                            height: "90px",
-                            borderRadius: "50%",
-                            objectFit: "cover",
-                            boxShadow: "0 3px 6px rgba(0,0,0,0.3)",
-                          }}
-                        />
-                      </div>
-
-                      {/* BASIC DETAILS */}
-                      <table
-                        style={{
-                          width: "100%",
-                          borderCollapse: "collapse",
-                          marginBottom: "15px",
-                          fontSize: "14px",
-                        }}
-                      >
+                      {/* Table-like details */}
+                      <table className="testimonial-table mx-auto text-start">
                         <tbody>
                           <tr>
-                            <th
-                              style={{
-                                border: "1px solid #ddd",
-                                padding: "5px",
-                                width: "40%",
-                                background: "#f8f9fa",
-                              }}
-                            >
-                              Name
-                            </th>
-                            <td style={{ border: "1px solid #ddd", padding: "5px" }}>
-                              {t.name}
-                            </td>
+                            <td className="fw-bold">Name:</td>
+                            <td>{t.name}</td>
                           </tr>
-
                           <tr>
-                            <th
-                              style={{
-                                border: "1px solid #ddd",
-                                padding: "5px",
-                                background: "#f8f9fa",
-                              }}
-                            >
-                              E No
-                            </th>
-                            <td style={{ border: "1px solid #ddd", padding: "5px" }}>
-                              {t.enrollno}
-                            </td>
+                            <td className="fw-bold">Enroll No:</td>
+                            <td>{t.enrollno}</td>
                           </tr>
-
                           <tr>
-                            <th
-                              style={{
-                                border: "1px solid #ddd",
-                                padding: "5px",
-                                background: "#f8f9fa",
-                              }}
-                            >
-                              Course
-                            </th>
-                            <td style={{ border: "1px solid #ddd", padding: "5px" }}>
-                              {t.courseName}
-                            </td>
+                            <td className="fw-bold">Course:</td>
+                            <td>{t.courseName}</td>
                           </tr>
                         </tbody>
                       </table>
+                    </div>
 
-                      {/* TESTIMONIAL */}
-                      <p
-                        style={{
-                          fontStyle: "italic",
-                          whiteSpace: "pre-wrap",
-                          wordBreak: "break-word",
-                          flexGrow: 1,
-                          color: "#555",
-                        }}
-                      >
-                        “{t.text}”
-                      </p>
+                    {/* MIDDLE LINE */}
+                    <div className="divider mx-3"></div>
+
+                    {/* RIGHT SIDE */}
+                    <div className="flex-grow-1">
+                      <h3>Information</h3>
+                      <p className="fst-italic text-muted mb-0">“{t.text}”</p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        )}
+
+          {/* CSS Styling */}
+          <style>{`
+    .testimonial-card {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .testimonial-card .border-animate {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 15px;
+      padding: 2px;
+      background: linear-gradient(270deg, #ff6ec4, #7873f5, #42a5f5, #ff6ec4);
+      background-size: 600% 600%;
+      animation: borderMove 6s linear infinite;
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+    }
+
+    @keyframes borderMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .divider {
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(180deg, #ff6ec4, #7873f5, #42a5f5);
+      border-radius: 5px;
+      opacity: 0.8;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      transition: all 0.4s ease;
+    }
+
+    .testimonial-table {
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      width: auto;
+    }
+
+    .testimonial-table td {
+      padding: 2px 8px;
+    }
+
+    .testimonial-table td.fw-bold {
+      font-weight: 600;
+    }
+  `}</style>
+        </section>
+
 
         {/* Show Form */}
         {showForm && (

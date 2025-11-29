@@ -22,6 +22,7 @@ import ShowFeesEnquiryComponent from './components/ShowFeesEnquiryComponent';
 import EventComponent from './components/EventComponent';
 import BatchComponent from './components/BatchComponent';
 import ProtectedRoute from './components/ProtectedRoute';
+import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
 import StudentDashBoard from './components/StudentDashBoard';
 import TestiMonialsComponent from './components/TestiMonialsComponent';
@@ -97,16 +98,22 @@ function App() {
               <AddCourseComponent />
             </ProtectedRoute>
           } />
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <DashboardComponent />
-            </ProtectedRoute>
-          } />
-          <Route path="/student-dashboard" element={
-            <ProtectedRoute>
-              <StudentDashBoard />
-            </ProtectedRoute>
-          } />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute allowedUserType="true">
+                <DashboardComponent />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/student-dashboard"
+            element={
+              <PrivateRoute allowedUserType="false">
+                <StudentDashBoard />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Router>
       <FooterComponent />

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createUser } from "../index";
 const StudentSignup = ({ onClose }) => {
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const handleClose = () => {
     navigate("/home");
@@ -30,6 +31,13 @@ const StudentSignup = ({ onClose }) => {
     setServerError("");
     setSuccessMessage("");
     try {
+      if (formData.password !== formData.confirmPassword) {
+        setErrors((prev) => ({
+          ...prev,
+          confirmPassword: "Passwords do not match.",
+        }));
+        return; 
+      }
       const res = await createUser(formData);
       setSuccessMessage("Signup successful! Redirecting...");
       setTimeout(() => {
@@ -125,28 +133,70 @@ const StudentSignup = ({ onClose }) => {
           />
           {errors.email && <div className="text-danger mb-2">{errors.email}</div>}
 
-          <input
-            type="password"
-            className={`form-control mb-1 ${errors.password ? "is-invalid" : ""}`}
-            placeholder="Password"
-            name="password"
-            minLength={8}
-            maxLength={16}
-            value={formData.password}
-            onChange={handleChange}
-          />
+          <div className="position-relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              className="form-control mb-2"
+              placeholder="Enter Password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              minLength={8}
+              maxLength={16}
+              style={errors.password ? {
+                border: "1.5px solid red",
+                boxShadow: "0 0 5px rgba(255,0,0,0.5)"
+              } : {}}
+            />
+
+            {/* Eye Icon */}
+            <i
+              className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                color: "#555",
+                fontSize: "1.2rem"
+              }}
+            ></i>
+          </div>
           {errors.password && <div className="text-danger mb-2">{errors.password}</div>}
 
-          <input
-            type="password"
-            className={`form-control mb-1 ${errors.confirmPassword ? "is-invalid" : ""}`}
-            placeholder="Confirm Password"
-            name="confirmPassword"
-            minLength={8}
-            maxLength={16}
-            value={formData.confirmPassword}
-            onChange={handleChange}
-          />
+          <div className="position-relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              className="form-control mb-2"
+              placeholder="Enter Password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              minLength={8}
+              maxLength={16}
+              style={errors.confirmPassword ? {
+                border: "1.5px solid red",
+                boxShadow: "0 0 5px rgba(255,0,0,0.5)"
+              } : {}}
+            />
+
+            {/* Eye Icon */}
+            <i
+              className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                color: "#555",
+                fontSize: "1.2rem"
+              }}
+            ></i>
+          </div>
           {errors.confirmPassword && (
             <div className="text-danger mb-2">{errors.confirmPassword}</div>
           )}
