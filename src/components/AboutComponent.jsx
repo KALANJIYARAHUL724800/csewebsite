@@ -248,7 +248,7 @@ const AboutComponent = () => {
                   ></textarea>
                   {errors.message && <div className="invalid-feedback">{errors.message}</div>}
                 </div>
-                <button type="submit" className="btn btn-primary"><i class="bi bi-send"></i>
+                <button type="submit" className="btn btn-primary"><i className="bi bi-send"></i>
                   {sent ? "Sent!" : "Send Message"}
                 </button>
               </form>

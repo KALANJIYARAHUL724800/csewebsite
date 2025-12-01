@@ -34,6 +34,7 @@ const StaffLogin = ({ onClose }) => {
       const res = await loginAdmin(formData);
       const expiryTime = new Date().getTime() + 60 * 60 * 1000;
       localStorage.setItem("token", expiryTime);
+      localStorage.setItem("email",formData.email);
       localStorage.setItem("userType", res.data.userType);
       setSuccessMessage("Login successful! Redirecting...");
       setTimeout(() => {

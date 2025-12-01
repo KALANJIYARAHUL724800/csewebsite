@@ -5,6 +5,12 @@ import { FaCheckCircle } from 'react-icons/fa';
 import AOS from "aos";
 import "aos/dist/aos.css";
 const HomeComponent = () => {
+  const galleryImages = [
+    "public/gallery/entrance2.jpg",
+    "public/gallery/Entrance.jpg",
+    "public/gallery/Counselling-2.jpg"
+  ];
+  const [currentImage, setCurrentImage] = useState(0);
   const [errors, setErrors] = useState({});
   const [showForm, setShowForm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -84,7 +90,6 @@ const HomeComponent = () => {
       setShowSuccess(false);
     }
   };
-
   const navigate = useNavigate();
   const [searchData, setSearchData] = useState("");
   const [courses, setCourses] = useState([]);
@@ -123,6 +128,11 @@ const HomeComponent = () => {
       .catch((err) => {
         setHasBatches(false);
       });
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % galleryImages.length);
+    }, 2000);
+
+    return () => clearInterval(interval);
   }, []);
   if (!testimonials || testimonials.length === 0) return null;
   const studentLogin = () => navigate("/login");
@@ -181,22 +191,37 @@ const HomeComponent = () => {
         setSearched(true);
       });
   };
-
   return (
     <div className="cse-main">
       <div className="main-content" id="mainContent">
+        {/* image scroll */}
+        <section
+          className="hero-section text-center d-flex align-items-center justify-content-center position-relative"
+          style={{
+            background: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${galleryImages[currentImage]}) center/cover no-repeat`,
+            minHeight: "100vh",
+            marginBottom: 0,
+            padding: 0,
+          }}
+        >
+          {/* Enquiry button top-right */}
+          <div style={{ position: "absolute", top: "20px", right: "20px", zIndex: 10 }}>
+            <button className="btn btn-success me-2 pd-2" onClick={openFormTemp}>
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/1642/1642364.png"
+                alt="enquiry"
+                style={{ height: "30px", width: "30px" }}
+              />
+              Enquiry
+            </button>
+          </div>
 
-        <div className="text-end">
-          <button className="btn btn-success me-2 pd-2" onClick={openFormTemp}>
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/1642/1642364.png"
-              alt="enquiry"
-              className="img-fluid"
-              style={{ height: "30px", width: "30px" }}
-            />
-            Enquiry
-          </button>
-        </div>
+          <div data-aos="fade-down">
+            <img src="public/cselogo.png" alt="CSE Logo" style={{ height: "180px" }} />
+            <h1 className="display-5 fw-bold text-white mt-4">Welcome to Cse</h1>
+            <p className="lead text-light">Empowering Minds, Shaping Futures</p>
+          </div>
+        </section>
 
         {/* Gift box or Batch popup */}
         {hasBatches && (
