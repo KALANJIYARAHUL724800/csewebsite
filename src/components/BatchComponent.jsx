@@ -75,7 +75,7 @@ const BatchComponent = () => {
         <div className="container mt-4" style={{ fontFamily: "'Roboto', sans-serif" }}>
             {/* Page Heading */}
             <div className="text-center mb-4">
-                <h1 className="d-flex justify-content-center align-items-center gap-2">
+                <h1 className="d-flex justify-content-center align-items-center gap-2 heading" style={{color:"#004aad"}}>
                     <FaClock style={{ color: '#00BFFF' }} /> Batch Schedule
                 </h1>
             </div>
@@ -83,7 +83,7 @@ const BatchComponent = () => {
             {/* Success Message */}
             {successMsg && (
                 <div
-                    className="alert alert-success text-center fw-bold"
+                    className="alert alert-success text-center fw-bold heading"
                     style={{ borderRadius: '10px' }}
                 >
                     {successMsg}
@@ -93,7 +93,7 @@ const BatchComponent = () => {
             <div className="row">
                 {/* Left Side: Table */}
                 <div className="col-12 col-md-7 mb-4">
-                    <h3 className="text-white mb-3">Batches</h3>
+                    <h3 className="text-white mb-3 heading">Batches</h3>
                     <div className="table-responsive">
                         <table
                             className="table text-white table-bordered rounded shadow"
@@ -105,7 +105,7 @@ const BatchComponent = () => {
                             }}
                         >
                             <thead style={{ fontWeight: 700 }}>
-                                <tr>
+                                <tr className='para'>
                                     <th><FaHashtag style={{ color: '#FFD700', marginRight: '5px' }} />ID</th>
                                     <th><FaBook style={{ color: '#00FFFF', marginRight: '5px' }} />Course</th>
                                     <th><FaCalendarAlt style={{ color: '#FFA500', marginRight: '5px' }} />Date</th>
@@ -146,46 +146,46 @@ const BatchComponent = () => {
                     <h3 className="text-white mb-3">{editIndex !== null ? 'Edit Batch' : 'Add Batch'}</h3>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
-                            <label className="form-label text-white fw-bold">Course</label>
+                            <label className="form-label text-white fw-bold heading">Course</label>
                             <input
                                 type="text"
                                 name="course"
-                                className={`form-control ${errors.course ? 'is-invalid' : ''}`}
+                                className={`form-control para ${errors.course ? 'is-invalid' : ''}`}
                                 value={formData.course}
                                 onChange={handleChange}
                                 placeholder="Enter course name"
                             />
-                            {errors.course && <div className="text-danger mt-1">{errors.course}</div>}
+                            {errors.course && <div className="text-danger mt-1 para">{errors.course}</div>}
                         </div>
 
                         <div className="mb-3">
-                            <label className="form-label text-white fw-bold">Date</label>
+                            <label className="form-label text-white fw-bold heading">Date</label>
                             <input
                                 type="date"
                                 name="date"
-                                className={`form-control ${errors.date ? 'is-invalid' : ''}`}
+                                className={`form-control para ${errors.date ? 'is-invalid' : ''}`}
                                 value={formData.date}
                                 onChange={handleChange}
                             />
-                            {errors.date && <div className="text-danger mt-1">{errors.date}</div>}
+                            {errors.date && <div className="text-danger mt-1 para">{errors.date}</div>}
                         </div>
 
                         <div className="mb-3">
-                            <label className="form-label text-white fw-bold">Time</label>
+                            <label className="form-label text-white fw-bold heading">Time</label>
                             <input
                                 type="time"
                                 name="time"
-                                className={`form-control ${errors.time ? 'is-invalid' : ''}`}
+                                className={`form-control para ${errors.time ? 'is-invalid' : ''}`}
                                 value={formData.time}
                                 onChange={handleChange}
                             />
-                            {errors.time && <div className="text-danger mt-1">{errors.time}</div>}
+                            {errors.time && <div className="text-danger mt-1 para">{errors.time}</div>}
                         </div>
 
                         <button type="submit" className="btn btn-primary w-100 fw-bold">
                             {editIndex !== null ? 'Update Batch' : 'Add Batch'}
                         </button>
-                    </form>
+                    </form><br />
                 </div>
             </div>
         </div>

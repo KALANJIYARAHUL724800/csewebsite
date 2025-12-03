@@ -116,12 +116,12 @@ const TestiMonialsComponent = () => {
     };
     return (
         <div className="container my-5">
-            <h2 className="mb-4 text-center">Testimonial Form</h2>
+            <h2 className="mb-4 text-center heading" style={{color:"#004aad"}}>Testimonial Form</h2>
 
             <form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: '600px' }}>
                 {/* Name input */}
                 <div className="mb-3">
-                    <label htmlFor="name" className="form-label">
+                    <label htmlFor="name" className="form-label heading">
                         Name <i className="bi bi-person-fill ms-2"></i>
                     </label>
                     <input
@@ -130,13 +130,13 @@ const TestiMonialsComponent = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                        className={`form-control para ${errors.name ? 'is-invalid' : ''}`}
                         placeholder="Enter your name"
                     />
-                    {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+                    {errors.name && <div className="invalid-feedback para">{errors.name}</div>}
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="enrollno" className="form-label">
+                    <label htmlFor="enrollno" className="form-label heading">
                         Enroll No <i className="bi bi-person-fill ms-2"></i>
                     </label>
                     <input
@@ -150,16 +150,16 @@ const TestiMonialsComponent = () => {
                             }
                             handleChange(e);
                         }}
-                        className={`form-control ${errors.enrollno ? "is-invalid" : ""}`}
+                        className={`form-control para ${errors.enrollno ? "is-invalid" : ""}`}
                         placeholder="Enter enroll no"
                     />
 
-                    {errors.enrollno && <div className="invalid-feedback">{errors.enrollno}</div>}
+                    {errors.enrollno && <div className="invalid-feedback para">{errors.enrollno}</div>}
                 </div>
 
                 {/* Image input */}
                 <div className="mb-3">
-                    <label htmlFor="image" className="form-label">
+                    <label htmlFor="image" className="form-label heading">
                         Image <i className="bi bi-image-fill ms-2"></i>
                     </label>
                     <input
@@ -167,16 +167,16 @@ const TestiMonialsComponent = () => {
                         id="image"
                         name="image"
                         onChange={handleChange}
-                        className={`form-control ${errors.image ? 'is-invalid' : ''}`}
+                        className={`form-control para ${errors.image ? 'is-invalid' : ''}`}
                         accept="image/*"
                         ref={fileInputRef}
                     />
-                    {errors.image && <div className="invalid-feedback">{errors.image}</div>}
+                    {errors.image && <div className="invalid-feedback para">{errors.image}</div>}
                 </div>
                 <input type="hidden" name="imageUrl" value={formData.imageUrl || ''} />
                 {/* Course Name select */}
                 <div className="mb-3">
-                    <label htmlFor="courseName" className="form-label">
+                    <label htmlFor="courseName" className="form-label heading">
                         Course Name <i className="bi bi-journal-bookmark-fill ms-2"></i>
                     </label>
                     <Select
@@ -188,12 +188,12 @@ const TestiMonialsComponent = () => {
                         isClearable
                         styles={customSelectStyles}
                     />
-                    {errors.courseName && <div style={{ color: 'red', marginTop: '0.25rem' }}>{errors.courseName}</div>}
+                    {errors.courseName && <div className='para' style={{ color: 'red', marginTop: '0.25rem' }}>{errors.courseName}</div>}
                 </div>
 
                 {/* Place input */}
                 <div className="mb-3">
-                    <label htmlFor="place" className="form-label">
+                    <label htmlFor="place" className="form-label heading">
                         Place <i className="bi bi-geo-alt-fill ms-2"></i>
                     </label>
                     <input
@@ -202,15 +202,15 @@ const TestiMonialsComponent = () => {
                         name="place"
                         value={formData.place}
                         onChange={handleChange}
-                        className={`form-control ${errors.place ? 'is-invalid' : ''}`}
+                        className={`form-control para ${errors.place ? 'is-invalid' : ''}`}
                         placeholder="Enter your place"
                     />
-                    {errors.place && <div className="invalid-feedback">{errors.place}</div>}
+                    {errors.place && <div className="invalid-feedback para">{errors.place}</div>}
                 </div>
 
                 {/* Testimonial textarea */}
                 <div className="mb-4">
-                    <label htmlFor="text" className="form-label">
+                    <label htmlFor="text" className="form-label heading">
                         Testimonial <i className="bi bi-chat-left-text-fill ms-2"></i>
                     </label>
                     <textarea
@@ -218,11 +218,11 @@ const TestiMonialsComponent = () => {
                         name="text"
                         value={formData.text}
                         onChange={handleChange}
-                        className={`form-control ${errors.text ? 'is-invalid' : ''}`}
+                        className={`form-control para ${errors.text ? 'is-invalid' : ''}`}
                         rows="4"
                         placeholder="Write your testimonial here"
                     />
-                    {errors.text && <div className="invalid-feedback">{errors.text}</div>}
+                    {errors.text && <div className="invalid-feedback para">{errors.text}</div>}
                 </div>
 
                 {/* Submit button */}
@@ -235,7 +235,7 @@ const TestiMonialsComponent = () => {
 
             {/* Success message */}
             {successMessage && (
-                <div className="alert alert-success text-center" role="alert">
+                <div className="alert alert-success text-center para" role="alert">
                     {successMessage}
                 </div>
             )}

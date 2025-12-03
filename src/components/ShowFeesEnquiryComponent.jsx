@@ -87,25 +87,25 @@ const ShowFeesEnquiryComponent = () => {
 
   return (
     <div className="container my-5">
-      <h3 className="mb-4 text-center text-primary fw-bold">💰 Fees Enquiry List</h3>
+      <h3 className="mb-4 text-center fw-bold heading" style={{color:"#004aad"}}>Fees Enquiry List</h3>
 
       {/* Filter Section */}
       <div className="row mb-3 g-2 align-items-end">
         {/* Date Inputs */}
         <div className="col-md-3">
-          <label className="form-label fw-bold">Start Date</label>
+          <label className="form-label fw-bold heading" style={{color:"#004aad"}}>Start Date</label>
           <input
             type="date"
-            className="form-control"
+            className="form-control para"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
           />
         </div>
         <div className="col-md-3">
-          <label className="form-label fw-bold">End Date</label>
+          <label className="form-label fw-bold heading" style={{color:"#004aad"}}>End Date</label>
           <input
             type="date"
-            className="form-control"
+            className="form-control para"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
           />
@@ -131,7 +131,7 @@ const ShowFeesEnquiryComponent = () => {
 
       {/* Download Success Toast */}
       {downloadSuccess && (
-        <div className="alert alert-success position-fixed bottom-0 end-0 m-3">
+        <div className="alert alert-success position-fixed bottom-0 end-0 m-3 heading">
           Excel downloaded successfully!
         </div>
       )}
@@ -140,7 +140,7 @@ const ShowFeesEnquiryComponent = () => {
       <div className="table-responsive shadow rounded">
         <table className="table table-striped table-hover align-middle mb-0">
           <thead className="table-secondary text-dark">
-            <tr>
+            <tr className="heading">
               <th>ID</th>
               <th><FaUser className="me-1" /> Name</th>
               <th><FaPhone className="me-1" /> Phone</th>
@@ -149,7 +149,7 @@ const ShowFeesEnquiryComponent = () => {
               <th><FaClock className="me-1" /> Time</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="para">
             {filteredData.length > 0 ? (
               filteredData.map((enquiry, index) => (
                 <tr key={enquiry.id}>
@@ -163,7 +163,7 @@ const ShowFeesEnquiryComponent = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="text-center text-danger fw-bold">
+                <td colSpan="6" className="text-center text-danger fw-bold para">
                   No enquiries found
                 </td>
               </tr>

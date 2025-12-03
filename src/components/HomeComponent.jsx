@@ -218,8 +218,8 @@ const HomeComponent = () => {
 
           <div data-aos="fade-down">
             <img src="public/cselogo.png" alt="CSE Logo" style={{ height: "180px" }} />
-            <h1 className="display-5 fw-bold text-white mt-4">Welcome to Cse</h1>
-            <p className="lead text-light">Empowering Minds, Shaping Futures</p>
+            <h1 className="display-5 fw-bold mt-4 welcome-home">Welcome to Cse</h1>
+            <p className="lead text-light para">Empowering Minds, Shaping Futures</p>
           </div>
         </section>
 
@@ -258,7 +258,7 @@ const HomeComponent = () => {
                     textAlign: "center",
                   }}
                 >
-                  <h3>Available Batches</h3>
+                  <h3 className="heading">Available Batches</h3>
                   <ul style={{ listStyle: "none", padding: 0, marginTop: "10px" }}>
                     {batches.map((batch) => (
                       <li
@@ -273,13 +273,13 @@ const HomeComponent = () => {
                         }}
                       >
                         <div style={{ textAlign: "left" }}>
-                          <strong>{batch.course}</strong> <br />
+                          <strong className="heading">{batch.course}</strong> <br />
                           Date: {batch.date} <br />
                           Time: {batch.time}
                         </div>
                         <a
                           onClick={() => openForm(batch.id)}
-                          className="btn btn-success"
+                          className="btn btn-success heading"
                           style={{
                             marginTop: "5px",
                             textDecoration: "none",
@@ -339,8 +339,8 @@ const HomeComponent = () => {
             </div>
           </div>
           <div className="welcome-text" style={{ textAlign: "left", position: "relative" }}>
-            <h1>Welcome to CSE</h1>
-            <p>Let's start your learning journey here</p>
+            <h1 className="welcome-home">Welcome to CSE</h1>
+            <p className="para">Let's start your learning journey here</p>
           </div>
         </div>
 
@@ -353,6 +353,7 @@ const HomeComponent = () => {
               placeholder="உங்களுக்கு தேவையான கம்ப்யூட்டர் பயிற்சியை இங்கே Type செய்யவும்"
               value={searchData}
               id="search"
+              style={{ fontFamily: 'Catamaran, sans-serif' }}
               onChange={(e) => setSearchData(e.target.value)}
             />
             <button type="button" onClick={handleSearch}>
@@ -374,7 +375,7 @@ const HomeComponent = () => {
             >
               ✖ close all
             </button>
-            <h1 className="text-center mb-5 text-primary">Available Courses</h1>
+            <h1 className="text-center mb-5 text-primary heading">Available Courses</h1>
             <div
               className="courses-grid"
               style={{
@@ -399,10 +400,10 @@ const HomeComponent = () => {
                     }}
                   />
                   <div className="card-body d-flex flex-column">
-                    <h5 className="card-title text-primary">
+                    <h5 className="card-title text-primary heading">
                       {course.courseName}
                     </h5>
-                    <p className="card-text">{course.courseContent}</p>
+                    <p className="card-text para">{course.courseContent}</p>
                     <div className="mt-auto d-flex justify-content-between align-items-center">
                       <span className="text-muted">
                         <i className="fas fa-clock"></i> {course.month}
@@ -453,7 +454,7 @@ const HomeComponent = () => {
 
         {/* Testimonials Section */}
         <section className="py-5" data-aos="fade-up">
-          <h3 className="text-center fw-bold mb-5">Testimonials</h3>
+          <h3 className="text-center fw-bold mb-5 heading" style={{color:"#004aad"}}>Testimonials</h3>
           <div className="container">
             <div className="row g-3">
               {testimonials.map((t, i) => (
@@ -481,16 +482,16 @@ const HomeComponent = () => {
                       <table className="testimonial-table mx-auto text-start">
                         <tbody>
                           <tr>
-                            <td className="fw-bold">Name:</td>
-                            <td>{t.name}</td>
+                            <td className="fw-bold heading">Name:</td>
+                            <td className="para">{t.name}</td>
                           </tr>
                           <tr>
-                            <td className="fw-bold">Enroll No:</td>
-                            <td>{t.enrollno}</td>
+                            <td className="fw-bold heading">Enroll No:</td>
+                            <td className="para">{t.enrollno}</td>
                           </tr>
                           <tr>
-                            <td className="fw-bold">Course:</td>
-                            <td>{t.courseName}</td>
+                            <td className="fw-bold heading">Course:</td>
+                            <td className="para">{t.courseName}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -501,8 +502,8 @@ const HomeComponent = () => {
 
                     {/* RIGHT SIDE */}
                     <div className="flex-grow-1">
-                      <h3>Information</h3>
-                      <p className="fst-italic text-muted mb-0">“{t.text}”</p>
+                      <h3 className="heading">Information</h3>
+                      <p className="fst-italic text-muted mb-0 para">“{t.text}”</p>
                     </div>
                   </div>
                 </div>
@@ -607,10 +608,10 @@ const HomeComponent = () => {
                 margin: "auto 0",
               }}
             >
-              <h3 className="text-center mb-3">Fees Form</h3>
+              <h3 className="text-center mb-3 heading">Fees Form</h3>
               <form>
                 {/* Name Field */}
-                <label>Name:</label>
+                <label className="heading">Name:</label>
                 <div style={{ position: "relative" }}>
                   <input
                     type="text"
@@ -625,10 +626,11 @@ const HomeComponent = () => {
                       width: "100%",
                       marginBottom: "0.25rem",
                     }}
+                    className="para"
                   />
                   {errors.name && (
                     <i
-                      className="bi bi-exclamation-circle-fill"
+                      className="bi bi-exclamation-circle-fill para"
                       style={{
                         position: "absolute",
                         right: "8px",
@@ -641,13 +643,13 @@ const HomeComponent = () => {
                   )}
                 </div>
                 {errors.name && (
-                  <div style={{ color: "red", fontSize: "0.8rem", marginBottom: "0.5rem" }}>
+                  <div className="para" style={{ color: "red", fontSize: "0.8rem", marginBottom: "0.5rem" }}>
                     {errors.name}
                   </div>
                 )}
 
                 {/* Phone Field */}
-                <label>Phone:</label>
+                <label className="heading">Phone:</label>
                 <div style={{ position: "relative" }}>
                   <input
                     type="text"
@@ -666,10 +668,11 @@ const HomeComponent = () => {
                       width: "100%",
                       marginBottom: "0.25rem",
                     }}
+                    className="para"
                   />
                   {errors.phone && (
                     <i
-                      className="bi bi-exclamation-circle-fill"
+                      className="bi bi-exclamation-circle-fill para"
                       style={{
                         position: "absolute",
                         right: "8px",
@@ -682,7 +685,7 @@ const HomeComponent = () => {
                   )}
                 </div>
                 {errors.phone && (
-                  <div style={{ color: "red", fontSize: "0.8rem", marginBottom: "0.5rem" }}>
+                  <div className="para" style={{ color: "red", fontSize: "0.8rem", marginBottom: "0.5rem" }}>
                     {errors.phone}
                   </div>
                 )}

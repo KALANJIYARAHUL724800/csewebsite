@@ -2,7 +2,20 @@ body {
   margin: 0;
   padding: 0;
 }
-
+.welcome-home{
+  font-family: 'Righteous', sans-serif;
+  background: linear-gradient(90deg, #ff0055, #0ab3ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 3px 3px 0px #d6cece,
+  6px 6px 0px #333;
+}
+.heading{
+  font-family: 'Righteous', sans-serif;
+}
+.para{
+  font-family: 'Lora', serif;
+}
 .header {
   background-color: #0D47A1;
   position: sticky;

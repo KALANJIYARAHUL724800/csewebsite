@@ -85,7 +85,7 @@ const StaffLogin = ({ onClose }) => {
         style={{ width: "350px", position: "relative", borderRadius: "15px" }}
       >
         <div className="panel-header d-flex justify-content-between align-items-center mb-3">
-          <h2 className="m-0 text-success">Admin Login</h2>
+          <h2 className="m-0 text-success heading">Admin Login</h2>
           <span
             className="close-btn"
             style={{
@@ -103,14 +103,14 @@ const StaffLogin = ({ onClose }) => {
         <form onSubmit={handleSubmit}>
           {/* Server error */}
           {serverError && (
-            <div className="alert alert-danger text-center py-2 mb-2">
+            <div className="alert alert-danger text-center py-2 mb-2 para">
               {serverError}
             </div>
           )}
 
           {/* Success message */}
           {successMessage && (
-            <div className="alert alert-success text-center py-2 mb-2">
+            <div className="alert alert-success text-center py-2 mb-2 heading">
               {successMessage}
             </div>
           )}
@@ -118,7 +118,7 @@ const StaffLogin = ({ onClose }) => {
           {/* Email input */}
           <input
             type="email"
-            className="form-control mb-2"
+            className="form-control mb-2 para"
             placeholder="Enter Email"
             name="email"
             value={formData.email}
@@ -126,13 +126,13 @@ const StaffLogin = ({ onClose }) => {
             style={errors.email ? { border: "1.5px solid red", boxShadow: "0 0 5px rgba(255,0,0,0.5)" } : {}}
           />
 
-          {errors.email && <div className="text-danger mb-2">{errors.email}</div>}
+          {errors.email && <div className="text-danger mb-2 para">{errors.email}</div>}
 
           {/* Password input */}
           <div className="position-relative">
             <input
               type={showPassword ? "text" : "password"}
-              className="form-control mb-2"
+              className="form-control mb-2 para"
               placeholder="Enter Password"
               name="password"
               value={formData.password}
@@ -161,12 +161,12 @@ const StaffLogin = ({ onClose }) => {
           </div>
 
           {errors.password && (
-            <div className="text-danger mb-2">{errors.password}</div>
+            <div className="text-danger mb-2 para">{errors.password}</div>
           )}
 
           <a
             href="/forgot-password"
-            className="d-block text-end mb-3 text-decoration-none small text-muted"
+            className="d-block text-end mb-3 text-decoration-none small text-muted para"
           >
             Forgot Password?
           </a>

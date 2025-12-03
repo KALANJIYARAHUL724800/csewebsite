@@ -78,7 +78,7 @@ const UpdatePassword = () => {
           WebkitBackdropFilter: "blur(8px)",
         }}
       >
-        <h2 className="text-primary mb-3 text-center">Update Password</h2>
+        <h2 className="mb-3 text-center heading" style={{color:"#004aad"}}>Update Password</h2>
 
         <span
           className="close-btn"
@@ -98,10 +98,10 @@ const UpdatePassword = () => {
 
         <form onSubmit={handleSubmit}>
           {error && (
-            <div className="alert alert-danger text-center py-2 mb-3">{error}</div>
+            <div className="alert alert-danger text-center py-2 mb-3 para">{error}</div>
           )}
           {success && (
-            <div className="alert alert-success text-center py-2 mb-3">{success}</div>
+            <div className="alert alert-success text-center py-2 mb-3 para">{success}</div>
           )}
 
           {/* Email Field */}
@@ -111,7 +111,7 @@ const UpdatePassword = () => {
             </span>
             <input
               type="email"
-              className="form-control"
+              className="form-control para"
               placeholder="Enter your Email"
               name="email"
               value={formData.email}
@@ -126,7 +126,7 @@ const UpdatePassword = () => {
             </span>
             <input
               type="password"
-              className="form-control"
+              className="form-control para"
               placeholder="New Password"
               name="password"
               value={formData.password}
@@ -141,7 +141,7 @@ const UpdatePassword = () => {
             </span>
             <input
               type="password"
-              className="form-control"
+              className="form-control para"
               placeholder="Confirm Password"
               name="confirmPassword"
               value={formData.confirmPassword}

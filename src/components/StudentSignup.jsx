@@ -85,7 +85,7 @@ const StudentSignup = ({ onClose }) => {
         className="panel bg-white p-4 rounded shadow-lg"
         style={{ width: "380px", position: "relative", borderRadius: "15px" }}
       >
-        <h2 className="text-primary mb-3">Student Sign Up</h2>
+        <h2 className="text-primary mb-3 heading">Student Sign Up</h2>
         <span
           className="close-btn"
           style={{
@@ -109,34 +109,34 @@ const StudentSignup = ({ onClose }) => {
           )}
           {/* Success message */}
           {successMessage && (
-            <div className="alert alert-success text-center py-2 mb-2">
+            <div className="alert alert-success text-center py-2 mb-2 heading">
               {successMessage}
             </div>
           )}
           <input
             type="text"
-            className={`form-control mb-1 ${errors.name ? "is-invalid" : ""}`}
+            className={`form-control mb-1 para ${errors.name ? "is-invalid" : ""}`}
             placeholder="Full Name"
             name="name"
             value={formData.name}
             onChange={handleChange}
           />
-          {errors.name && <div className="text-danger mb-2">{errors.name}</div>}
+          {errors.name && <div className="text-danger mb-2 para">{errors.name}</div>}
 
           <input
             type="email"
-            className={`form-control mb-1 ${errors.email ? "is-invalid" : ""}`}
+            className={`form-control mb-1 para ${errors.email ? "is-invalid" : ""}`}
             placeholder="Email Address"
             name="email"
             value={formData.email}
             onChange={handleChange}
           />
-          {errors.email && <div className="text-danger mb-2">{errors.email}</div>}
+          {errors.email && <div className="text-danger mb-2 para">{errors.email}</div>}
 
           <div className="position-relative">
             <input
               type={showPassword ? "text" : "password"}
-              className="form-control mb-2"
+              className="form-control mb-2 para"
               placeholder="Enter Password"
               name="password"
               value={formData.password}
@@ -164,12 +164,12 @@ const StudentSignup = ({ onClose }) => {
               }}
             ></i>
           </div>
-          {errors.password && <div className="text-danger mb-2">{errors.password}</div>}
+          {errors.password && <div className="text-danger mb-2 para">{errors.password}</div>}
 
           <div className="position-relative">
             <input
               type={showPassword ? "text" : "password"}
-              className="form-control mb-2"
+              className="form-control mb-2 para"
               placeholder="Enter Password"
               name="confirmPassword"
               value={formData.confirmPassword}
@@ -198,7 +198,7 @@ const StudentSignup = ({ onClose }) => {
             ></i>
           </div>
           {errors.confirmPassword && (
-            <div className="text-danger mb-2">{errors.confirmPassword}</div>
+            <div className="text-danger mb-2 para">{errors.confirmPassword}</div>
           )}
           <button type="submit" className="btn btn-primary w-100 mt-2">
             Sign Up

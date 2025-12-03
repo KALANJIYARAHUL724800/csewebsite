@@ -116,7 +116,7 @@ const CourseContent = () => {
       {/* Heading with Fees Button */}
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
         <h1
-          className="text-center flex-grow-1 mb-3 mb-md-0"
+          className="text-center flex-grow-1 mb-3 mb-md-0 heading"
           style={{ fontWeight: 700, color: "#007bff", fontFamily: "Poppins, sans-serif" }}
         >
           {courseData.courseName || "Course"}
@@ -163,8 +163,8 @@ const CourseContent = () => {
               }}
             >
               <div className="mb-3" style={{ color: "#007bff" }}>{section.icon}</div>
-              <h5 className="mb-2 fw-bold">{section.title}</h5>
-              <p className="mb-0" style={{ fontFamily: "Roboto, sans-serif", fontSize: "16px", lineHeight: "1.6" }}>
+              <h5 className="mb-2 fw-bold heading">{section.title}</h5>
+              <p className="mb-0 para">
                 {section.text || "N/A"}
               </p>
             </div>
@@ -179,7 +179,7 @@ const CourseContent = () => {
           style={{ background: "rgba(0,0,0,0.5)", zIndex: 9999 }}
         >
           <div className="bg-white p-4 rounded shadow" style={{ minWidth: "300px", maxWidth: "400px" }}>
-            <h5 className="mb-3">Enter Your Details</h5>
+            <h5 className="mb-3 heading">Enter Your Details</h5>
             <form onSubmit={handleFormSubmit}>
               <input type="hidden" name="currentDate" value={formData.currentDate} />
               <input type="hidden" name="currentTime" value={formData.currentTime} />
@@ -188,7 +188,7 @@ const CourseContent = () => {
                 <input
                   type="text"
                   name="name"
-                  className="form-control"
+                  className="form-control para"
                   placeholder="Name"
                   value={formData.name}
                   onChange={handleFormChange}
@@ -200,7 +200,7 @@ const CourseContent = () => {
                 <input
                   type="tel"
                   name="phone"
-                  className="form-control"
+                  className="form-control para"
                   placeholder="Phone Number"
                   value={formData.phone}
                   maxLength={10}
@@ -226,8 +226,8 @@ const CourseContent = () => {
         >
           <div className="bg-white p-4 rounded shadow text-center" style={{ minWidth: "300px", maxWidth: "400px" }}>
             <FaCheckCircle size={50} style={{ color: 'green', marginBottom: '15px' }} />
-            <h5 className="mb-2">Thank you so much!</h5>
-            <p>Our staff will contact you shortly regarding the fees.</p>
+            <h5 className="mb-2 heading">Thank you so much!</h5>
+            <p className="para">Our staff will contact you shortly regarding the fees.</p>
           </div>
         </div>
       )}

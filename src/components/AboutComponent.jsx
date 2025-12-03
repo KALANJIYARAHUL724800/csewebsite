@@ -72,9 +72,9 @@ const AboutComponent = () => {
               alt="CSE Logo"
               style={{ height: "180px" }}
             />
-            <h1 className="display-5 fw-bold text-white mt-4">{data.hero.title}</h1>
-            <p className="lead text-light">{data.hero.subtitle}</p>
-            <p className="text-white-50">{data.hero.description}</p>
+            <h1 className="display-5 fw-bold text-white mt-4 heading">{data.hero.title}</h1>
+            <p className="lead text-light para">{data.hero.subtitle}</p>
+            <p className="text-white-50 para">{data.hero.description}</p>
 
             <div className="mt-3">
               {data.hero.buttons.map((btn, i) => (
@@ -103,11 +103,11 @@ const AboutComponent = () => {
 
             {/* Content — Desktop: center, Mobile: after image */}
             <div className="col-md-4 order-3 order-md-2">
-              <h2 className="fw-bold mb-3 text-dark">{data.about.title}</h2>
-              <p className="text-muted lh-lg">{data.about.description}</p>
+              <h2 className="fw-bold mb-3 heading" style={{color:"#004aad"}}>{data.about.title}</h2>
+              <p className="text-muted lh-lg para">{data.about.description}</p>
 
-              <h5 className="mt-4 text-primary fw-semibold">{data.about.reasonsTitle}</h5>
-              <ul className="list-unstyled text-muted ps-2">
+              <h5 className="mt-4 fw-semibold heading" style={{color:"#004aad"}}>{data.about.reasonsTitle}</h5>
+              <ul className="list-unstyled text-muted ps-2 para">
                 {data.about.reasons?.map((reason, index) => (
                   <li key={index} className="mb-2">
                     ✅ {reason}
@@ -133,7 +133,7 @@ const AboutComponent = () => {
       {/* SERVICES */}
       {data.features && (
         <section id="services" className="py-5 bg-white" data-aos="fade-up">
-          <h3 className="text-center fw-bold mb-5">Our Features</h3>
+          <h3 className="text-center fw-bold mb-5 heading" style={{color:"#004aad"}}>Our Features</h3>
           <div className="container">
 
             {/* FEATURES LOOP */}
@@ -154,8 +154,8 @@ const AboutComponent = () => {
                       style={{ height: "250px", width: "200px",position:"relative",left:"40px" }}
                       className="img-fluid ms-5"
                     />)}
-                    <h5 className="fw-bold">{f.title}</h5>
-                    <p className="text-muted">{f.desc}</p>
+                    <h5 className="fw-bold heading">{f.title}</h5>
+                    <p className="text-muted para">{f.desc}</p>
                   </div>
                 </div>
               ))}
@@ -166,7 +166,7 @@ const AboutComponent = () => {
       )}
       {/* GALLERY */}
       <section className="py-5 bg-white" data-aos="fade-up">
-        <h3 className="text-center fw-bold mb-4">Gallery</h3>
+        <h3 className="text-center fw-bold mb-4 heading" style={{color:"#004aad"}}>Gallery</h3>
         <div className="container">
           <div
             id="galleryCarousel"
@@ -212,33 +212,33 @@ const AboutComponent = () => {
 
       {/* CONTACT FORM */}
       {data.contactForm && (<section id="contact" className="py-5" data-aos="fade-up">
-        <h3 className="text-center fw-bold mb-4">Contact Us</h3>
+        <h3 className="text-center fw-bold mb-4 heading" style={{color:"#004aad"}}>Contact Us</h3>
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-md-8">
               <form onSubmit={handleSubmit} className="card p-4 shadow border-0">
                 <div className="mb-3">
-                  <label className="form-label">Name</label>
+                  <label className="form-label heading">Name</label>
                   <input
                     name="name"
                     value={contact.name}
                     onChange={handleChange}
-                    className={`form-control ${errors.name ? "is-invalid" : ""}`}
+                    className={`form-control para ${errors.name ? "is-invalid" : ""}`}
                   />
-                  {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+                  {errors.name && <div className="invalid-feedback para">{errors.name}</div>}
                 </div>
                 <div className="mb-3">
-                  <label className="form-label">Email</label>
+                  <label className="form-label heading">Email</label>
                   <input
                     name="email"
                     value={contact.email}
                     onChange={handleChange}
                     className={`form-control ${errors.email ? "is-invalid" : ""}`}
                   />
-                  {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                  {errors.email && <div className="invalid-feedback para">{errors.email}</div>}
                 </div>
                 <div className="mb-3">
-                  <label className="form-label">Message</label>
+                  <label className="form-label heading">Message</label>
                   <textarea
                     name="message"
                     value={contact.message}
@@ -246,9 +246,9 @@ const AboutComponent = () => {
                     rows="4"
                     className={`form-control ${errors.message ? "is-invalid" : ""}`}
                   ></textarea>
-                  {errors.message && <div className="invalid-feedback">{errors.message}</div>}
+                  {errors.message && <div className="invalid-feedback para">{errors.message}</div>}
                 </div>
-                <button type="submit" className="btn btn-primary"><i className="bi bi-send"></i>
+                <button type="submit" className="btn btn-primary"><i className="bi bi-send heading"></i>
                   {sent ? "Sent!" : "Send Message"}
                 </button>
               </form>

@@ -57,7 +57,7 @@ const ForgotPassword = ({ onClose }) => {
         style={{ width: "350px", position: "relative", borderRadius: "15px" }}
       >
         <div className="panel-header d-flex justify-content-between align-items-center mb-3">
-          <h2 className="m-0 text-warning">Forgot Password</h2>
+          <h2 className="m-0 text-warning heading">Forgot Password</h2>
           <span
             className="close-btn"
             style={{
@@ -72,24 +72,24 @@ const ForgotPassword = ({ onClose }) => {
           </span>
         </div>
         <form onSubmit={handleSubmit}>
-          <p className="text-muted small mb-3">
+          <p className="text-muted small mb-3 para">
             Enter your registered email to receive a password reset link.
           </p>
           <input
             type="email"
-            className="form-control mb-3"
+            className="form-control mb-3 para"
             placeholder="Enter your email"
             name="email"
             value={formData.email}
             onChange={handleChange}
           />
           {errors.email && (
-            <div className="text-danger small mb-2">{errors.email}</div>
+            <div className="text-danger small mb-2 para">{errors.email}</div>
           )}
           {serverError && (
             <div className="text-danger small mb-2">{serverError}</div>
           )}
-          <button type="submit" className="btn btn-warning w-100 mb-3">
+          <button type="submit" className="btn btn-warning w-100 mb-3 bi bi-key-fill">
             Send Reset Link
           </button>
         </form>

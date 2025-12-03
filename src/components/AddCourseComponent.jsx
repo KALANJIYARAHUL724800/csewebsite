@@ -140,7 +140,7 @@ const AddCourseComponent = () => {
 
   return (
     <div className="container mt-4">
-      <h3 className="text-center mb-4">Course Details</h3>
+      <h3 className="text-center mb-4 heading" style={{color:"#004aad"}}>Course Details</h3>
       {successMessage && (
         <div
           style={{
@@ -188,7 +188,7 @@ const AddCourseComponent = () => {
               }}
             >
               <thead className="table-dark">
-                <tr>
+                <tr className="para">
                   <th>ID</th>
                   <th>Course Name</th>
                   <th>Logo URL</th>
@@ -201,7 +201,7 @@ const AddCourseComponent = () => {
               </thead>
               <tbody>
                 {courses.map((course) => (
-                  <tr key={course.id}>
+                  <tr className="para" key={course.id}>
                     <td>{course.id}</td>
                     <td>{course.courseName}</td>
                     <td>
@@ -283,7 +283,7 @@ const AddCourseComponent = () => {
               </tbody>
             </table>
           </div>
-          <div className="text-center mt-4">
+          <div className="text-center mt-4 heading">
             <button className="btn btn-success" onClick={() => setFormType("insert")}>
               + Add New Course
             </button>
@@ -307,8 +307,8 @@ const AddCourseComponent = () => {
 
             {formType === "insert" ? (
               <>
-                <h5 className="text-center mb-3">Insert Course</h5>
-                <form onSubmit={handleInsertSubmit}>
+                <h5 className="text-center mb-3 heading">Insert Course</h5>
+                <form onSubmit={handleInsertSubmit} className="para">
                   {renderInput("Course Name", "courseName", insertData.courseName, handleInsertChange)}
                   {renderInput("Logo URL", "logoUrl", insertData.logoUrl, handleInsertChange)}
                   {renderTextarea("Course Content", "courseContent", insertData.courseContent, handleInsertChange)}
@@ -320,8 +320,8 @@ const AddCourseComponent = () => {
               </>
             ) : (
               <>
-                <h5 className="text-center mb-3">Edit Course</h5>
-                <form onSubmit={handleUpdateSubmit}>
+                <h5 className="text-center mb-3 heading">Edit Course</h5>
+                <form onSubmit={handleUpdateSubmit} className="para">
                   {renderInput("Course Name", "courseName", updateData.courseName, handleUpdateChange)}
                   {renderInput("Logo URL", "logoUrl", updateData.logoUrl, handleUpdateChange)}
                   {renderTextarea("Course Content", "courseContent", updateData.courseContent, handleUpdateChange)}

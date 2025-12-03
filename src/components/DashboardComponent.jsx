@@ -117,7 +117,7 @@ const DashboardComponent = () => {
     <div className="container-fluid p-0">
       {/* Header */}
       <div className="d-flex justify-content-between align-items-center p-3 border-bottom flex-wrap bg-white shadow-sm">
-        <h2 className="mb-2 mb-md-0">Admin Dashboard</h2>
+        <h2 className="mb-2 mb-md-0 heading" style={{color:"#004aad"}}>Admin Dashboard</h2>
 
         <div className="d-flex align-items-center">
           {/* Notification */}
@@ -142,7 +142,7 @@ const DashboardComponent = () => {
       <div className="row g-0">
         {/* Sidebar */}
         <div className="col-12 col-md-3 bg-light p-3 border-end vh-100">
-          <h5 className="mb-4">Navigation</h5>
+          <h5 className="mb-4 heading" style={{color:"#004aad"}}>Navigation</h5>
           <ul className="list-unstyled">
             <li className="mb-2">
               <button
@@ -198,15 +198,15 @@ const DashboardComponent = () => {
         {showForm && (
           <div className="upload-modal">
             <div className="upload-card p-4">
-              <h5 className="text-center mb-3">Upload Post</h5>
+              <h5 className="text-center mb-3 heading">Upload Post</h5>
 
               <form onSubmit={handleSubmit}>
                 {/* Title */}
                 <div className="mb-3">
-                  <label className="form-label">Post Title</label>
+                  <label className="form-label heading">Post Title</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control para"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
@@ -215,10 +215,10 @@ const DashboardComponent = () => {
 
                 {/* File Upload */}
                 <div className="mb-3">
-                  <label className="form-label">Upload File</label>
+                  <label className="form-label heading">Upload File</label>
                   <input
                     type="file"
-                    className="form-control"
+                    className="form-control para"
                     onChange={(e) => setFile(e.target.files[0])}
                     required
                   />
@@ -239,16 +239,16 @@ const DashboardComponent = () => {
 
         {/* Main Content */}
         <div className="col-12 col-md-9 p-4">
-          <h4>Welcome, Admin!</h4>
-          <p>Manage courses, view student progress, and monitor notifications.</p>
+          <h4 className="heading" style={{color:"#004aad"}}>Welcome, Admin!</h4>
+          <p className="para">Manage courses, view student progress, and monitor notifications.</p>
 
           {/* Metrics Cards */}
           <div className="row g-3 mt-4">
             <div className="col-12 col-sm-6 col-lg-4">
               <div className="card shadow-sm text-center p-3 h-100">
                 <FaUserGraduate size={30} className="mb-2 text-primary" />
-                <h6>Total Students</h6>
-                <h3>{studentsCount ?? 0}</h3>
+                <h6 className="heading">Total Students</h6>
+                <h3 className="para">{studentsCount ?? 0}</h3>
               </div>
             </div>
 

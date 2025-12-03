@@ -78,7 +78,7 @@ const StaffsignupComponent = () => {
                 style={{ width: "350px", position: "relative", borderRadius: "15px" }}
             >
                 <div className="panel-header d-flex justify-content-between align-items-center mb-3">
-                    <h2 className="m-0 text-success">Staff Sign Up</h2>
+                    <h2 className="m-0 text-success heading">Staff Sign Up</h2>
                     <span
                         className="close-btn"
                         style={{
@@ -95,52 +95,53 @@ const StaffsignupComponent = () => {
 
                 <form onSubmit={handleSubmit}>
                     {serverError && (
-                        <div className="alert alert-danger text-center py-2 mb-2">
+                        <div className="alert alert-danger text-center py-2 mb-2 para">
                             {serverError}
                         </div>
                     )}
                     <input
                         type="text"
-                        className="form-control mb-3"
+                        className="form-control mb-3 para"
                         placeholder="Full Name"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
                     />
-                    {errors.name && <div className="text-danger mb-2">{errors.name}</div>}
+                    {errors.name && <div className="text-danger mb-2 para">{errors.name}</div>}
                     <input
                         type="email"
-                        className="form-control mb-3"
+                        className="form-control mb-3 para"
                         placeholder="Email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
                     />
-                    {errors.email && <div className="text-danger mb-2">{errors.email}</div>}
+                    {errors.email && <div className="text-danger mb-2 para">{errors.email}</div>}
                     <input
                         type="password"
-                        className="form-control mb-3"
+                        className="form-control mb-3 para"
                         placeholder="Password"
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
                     />
-                    {errors.password && <div className="text-danger mb-2">{errors.password}</div>}
+                    {errors.password && <div className="text-danger mb-2 para">{errors.password}</div>}
                     <input
                         type="password"
-                        className="form-control mb-3"
+                        className="form-control mb-3 para"
                         placeholder="Confirm Password"
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleChange}
                     />
-                    {errors.confirmPassword && <div className="text-danger mb-2">{errors.confirmPassword}</div>}
+                    {errors.confirmPassword && <div className="text-danger mb-2 para">{errors.confirmPassword}</div>}
                     <div className="form-check mb-3">
                         <label className="form-check-label small" htmlFor="termsCheck">
                             <input
                                 type="checkbox"
                                 name="type"
                                 id="termsCheck"
+                                className="para"
                                 checked={formData.type}
                                 onChange={handleChange}
                                 style={{ position: "relative", right: "10px" }}
@@ -154,7 +155,7 @@ const StaffsignupComponent = () => {
                     </button>
 
                     <div className="login-link text-center">
-                        <span className="me-1">Already have an account?</span>
+                        <span className="me-1 para">Already have an account?</span>
                         <a
                             href="#"
                             className="text-decoration-none"

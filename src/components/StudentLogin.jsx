@@ -84,7 +84,7 @@ const StudentLogin = () => {
         style={{ width: "350px", position: "relative", borderRadius: "15px" }}
       >
         <div className="panel-header d-flex justify-content-between align-items-center mb-3">
-          <h2 className="m-0 text-primary">Student Login</h2>
+          <h2 className="m-0 text-primary heading">Student Login</h2>
           <span
             className="close-btn"
             style={{
@@ -108,7 +108,7 @@ const StudentLogin = () => {
 
           {/* Success message */}
           {successMessage && (
-            <div className="alert alert-success text-center py-2 mb-2">
+            <div className="alert alert-success text-center py-2 mb-2 heading">
               {successMessage}
             </div>
           )}
@@ -116,19 +116,19 @@ const StudentLogin = () => {
           {/* Email input */}
           <input
             type="email"
-            className="form-control mb-2"
+            className="form-control mb-2 para"
             placeholder="Enter Email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             style={errors.email ? { border: "1.5px solid red", boxShadow: "0 0 5px rgba(255,0,0,0.5)" } : {}}
           />
-          {errors.email && <div className="text-danger mb-2">{errors.email}</div>}
+          {errors.email && <div className="text-danger mb-2 para">{errors.email}</div>}
           {/* Password input */}
           <div className="position-relative">
             <input
               type={showPassword ? "text" : "password"}
-              className="form-control mb-2"
+              className="form-control mb-2 para"
               placeholder="Enter Password"
               name="password"
               value={formData.password}
@@ -158,17 +158,17 @@ const StudentLogin = () => {
           </div>
           {/* Error Message */}
           {errors.password && (
-            <div className="text-danger mb-2">{errors.password}</div>
+            <div className="text-danger mb-2 para">{errors.password}</div>
           )}
           <a
             href="/signup"
-            className="d-block text-end mb-3 text-decoration-none small text-muted"
+            className="d-block text-end mb-3 text-decoration-none small text-muted heading"
           >
             <i class="bi bi-person-plus"></i> Sign Up Signup Here
           </a>
           <a
             href="/forgot-password"
-            className="d-block text-end mb-3 text-decoration-none small text-muted"
+            className="d-block text-end mb-3 text-decoration-none small text-muted heading"
           >
             <i class="bi bi-key"></i> Forgot Password?
           </a>

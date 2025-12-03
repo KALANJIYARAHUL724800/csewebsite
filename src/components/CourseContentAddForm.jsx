@@ -78,7 +78,6 @@ const CourseContentForm = () => {
             }));
           }
         } catch (err) {
-          console.error("Error fetching latest course:", err);
           alert("Failed to fetch latest course.");
         } finally {
           setLoading(false);
@@ -127,7 +126,7 @@ const CourseContentForm = () => {
 
   if (loading) {
     return (
-      <div className="text-center my-5">
+      <div className="text-center my-5 heading">
         <h4>Loading course data...</h4>
       </div>
     );
@@ -140,7 +139,7 @@ const CourseContentForm = () => {
       </label>
       {type === "textarea" ? (
         <textarea
-          className={`form-control ${errors[name] ? "is-invalid" : ""}`}
+          className={`form-control para ${errors[name] ? "is-invalid" : ""}`}
           name={name}
           value={formData[name]}
           onChange={handleChange}
@@ -149,7 +148,7 @@ const CourseContentForm = () => {
       ) : (
         <input
           type={type}
-          className={`form-control ${errors[name] ? "is-invalid" : ""}`}
+          className={`form-control para ${errors[name] ? "is-invalid" : ""}`}
           name={name}
           value={formData[name]}
           onChange={handleChange}
@@ -163,7 +162,7 @@ const CourseContentForm = () => {
   return (
     <div className="container my-5">
       <h2
-        className="text-center mb-5"
+        className="text-center mb-5 heading"
         style={{ color: "#007bff", fontWeight: "700" }}
       >
         {id ? "Update Course Content" : "Add Course Content"}
@@ -178,7 +177,7 @@ const CourseContentForm = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="mx-auto"
+        className="mx-auto para"
         style={{ maxWidth: "800px" }}
       >
         {renderInput("Course ID", "courseId", <FaIdBadge className="me-2" />, "text")}

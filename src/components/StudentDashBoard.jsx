@@ -181,7 +181,7 @@ export default function StudentDashBoard() {
           >
             <i className="fas fa-bars fs-4"></i>
           </button>
-          <span className="navbar-brand ms-2 text-success fw-bold">
+          <span className="navbar-brand ms-2 text-success fw-bold heading">
             Student Portal
           </span>
         </div>
@@ -202,7 +202,7 @@ export default function StudentDashBoard() {
           transition: "0.4s ease",
         }}
       >
-        <h3 className="text-success mb-4 fw-bold">
+        <h3 className="text-success mb-4 fw-bold heading">
           <i className="fas fa-graduation-cap me-2"></i>Dashboard
         </h3>
         {[
@@ -214,7 +214,7 @@ export default function StudentDashBoard() {
         ].map((menu) => (
           <button
             key={menu.name}
-            className={`btn btn-dark text-start mb-2 d-flex align-items-center w-100 rounded ${activeMenu === menu.name ? "bg-secondary fw-bold" : ""
+            className={`btn btn-dark text-start mb-2 d-flex align-items-center w-100 rounded heading ${activeMenu === menu.name ? "bg-secondary fw-bold" : ""
               }`}
             onClick={() => {
               setActiveMenu(menu.name);
@@ -235,7 +235,7 @@ export default function StudentDashBoard() {
           transition: "0.3s",
         }}
       >
-        <h1 className="fw-bold mb-4">{activeMenu}</h1>
+        <h1 className="fw-bold mb-4 heading">{activeMenu}</h1>
         {/* DASHBOARD */}
         {activeMenu === "Dashboard" && (
           <div className="position-relative bg-white p-4 rounded-4 shadow-sm">
@@ -253,7 +253,7 @@ export default function StudentDashBoard() {
               className="rounded-circle position-absolute top-0 start-0 m-3"
               style={{ width: "60px", height: "60px", objectFit: "cover", zIndex: 10 }}
             />  {name && (
-              <h3 className="ms-5" style={{ position: "relative", left: "10px", marginTop: "3px", color: "grey" }}>
+              <h3 className="ms-5 heading" style={{ position: "relative", left: "10px", marginTop: "3px", color: "grey" }}>
                 <i> Welcome {name} </i>
               </h3>
             )}
@@ -263,22 +263,22 @@ export default function StudentDashBoard() {
               <div className="col-md-4">
                 <div className="card shadow p-4 text-center border-0 rounded-4">
                   <i className="fas fa-book fa-3x text-primary mb-3"></i>
-                  <h4>Enrolled Courses</h4>
-                  <p className="text-muted">You are enrolled in 4 active courses</p>
+                  <h4 className="heading">Enrolled Courses</h4>
+                  <p className="text-muted para">You are enrolled in 4 active courses</p>
                 </div>
               </div>
               <div className="col-md-4">
                 <div className="card shadow p-4 text-center border-0 rounded-4">
                   <i className="fas fa-bell fa-3x text-warning mb-3"></i>
-                  <h4>Notifications</h4>
-                  <p className="text-muted">2 new announcements</p>
+                  <h4 className="heading">Notifications</h4>
+                  <p className="text-muted para">2 new announcements</p>
                 </div>
               </div>
               <div className="col-md-4">
                 <div className="card shadow p-4 text-center border-0 rounded-4">
                   <i className="fas fa-calendar fa-3x text-success mb-3"></i>
-                  <h4>Upcoming Exams</h4>
-                  <p className="text-muted">3 Exams this month</p>
+                  <h4 className="heading">Upcoming Exams</h4>
+                  <p className="text-muted para">3 Exams this month</p>
                 </div>
               </div>
             </div>
@@ -288,15 +288,15 @@ export default function StudentDashBoard() {
         {/* Courses */}
         {activeMenu === "Courses" && (
           <div className="container py-5" id="courses">
-            <h1 className="text-center mb-5" style={{ color: "#004aad" }}>
+            <h1 className="text-center mb-5 heading" style={{ color: "#004aad" }}>
               Available Courses
             </h1>
             {loading ? (
               <div className="text-center my-5">
                 <div className="spinner-border text-primary" role="status">
-                  <span className="visually-hidden">Loading...</span>
+                  <span className="visually-hidden heading">Loading...</span>
                 </div>
-                <p className="mt-3">Loading courses...</p>
+                <p className="mt-3 heading">Loading courses...</p>
               </div>
             ) : (
               <>
@@ -322,8 +322,8 @@ export default function StudentDashBoard() {
                           style={{ height: "100px", width: "100px", objectFit: "contain" }}
                         />
                         <div className="card-body d-flex flex-column">
-                          <h5 className="card-title text-primary">{course.courseName}</h5>
-                          <p className="card-text">{course.courseContent}</p>
+                          <h5 className="card-title text-primary heading">{course.courseName}</h5>
+                          <p className="card-text para">{course.courseContent}</p>
                           <div className="mt-auto d-flex justify-content-between align-items-center">
                             <span className="text-muted">
                               <i className="fas fa-clock"></i> {course.month}
@@ -340,7 +340,7 @@ export default function StudentDashBoard() {
                       </div>
                     ))
                   ) : (
-                    <p className="text-center">No courses available.</p>
+                    <p className="text-center heading">No courses available.</p>
                   )}
                 </div>
 
@@ -375,7 +375,7 @@ export default function StudentDashBoard() {
             style={{ height: "100vh", overflowY: "scroll", scrollSnapType: "y mandatory" }}
           >
             {!posts.length ? (
-              <h3 className="text-center mt-5">Loading posts...</h3>
+              <h3 className="text-center mt-5 heading">Loading posts...</h3>
             ) : (
               posts.map((post) => (
                 <div
@@ -393,7 +393,7 @@ export default function StudentDashBoard() {
                   </div>
 
                   <div className="p-4 bg-white" style={{ height: "25vh" }}>
-                    <h5 className="fw-bold mb-2">{post.title}</h5>
+                    <h5 className="fw-bold mb-2 heading">{post.title}</h5>
 
                     <div className="d-flex align-items-center gap-3 mb-3">
                       <i
@@ -415,7 +415,7 @@ export default function StudentDashBoard() {
                       <input
                         type="text"
                         placeholder="Write a comment..."
-                        className="form-control mb-2"
+                        className="form-control mb-2 para"
                         value={commentText[post.id] || ""}
                         onChange={(e) =>
                           setCommentText({ ...commentText, [post.id]: e.target.value })
@@ -430,7 +430,7 @@ export default function StudentDashBoard() {
                       </button>
                     </div>
 
-                    <p className="text-muted small">Swipe up for more posts</p>
+                    <p className="text-muted small para">Swipe up for more posts</p>
                   </div>
                 </div>
               ))
@@ -459,6 +459,7 @@ export default function StudentDashBoard() {
                   />
                   <input
                     type="file"
+                    className="heading"
                     onChange={(e) => {
                       const file = e.target.files[0];
                       if (!file) return;
@@ -467,7 +468,7 @@ export default function StudentDashBoard() {
                       setImageFile(file);
                     }}
                   />
-                  <small className="text-muted">Upload Profile Picture</small>
+                  <small className="text-muted para">Upload Profile Picture</small>
                   {errors.image && <div className="text-danger mt-1">{errors.image}</div>}
                 </div>
               </div>
@@ -475,15 +476,15 @@ export default function StudentDashBoard() {
               {/* RIGHT SIDE – PROFILE FIELDS */}
               <div className="col-md-8">
                 <div className="card shadow-sm p-4">
-                  <h4 className="mb-3">Profile Details</h4>
+                  <h4 className="mb-3 heading">Profile Details</h4>
                   <div className="row">
 
                     {/* Full Name */}
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">Full Name</label>
+                      <label className="form-label heading">Full Name</label>
                       <input
                         type="text"
-                        className={`form-control ${errors.name ? "is-invalid" : ""}`}
+                        className={`form-control para ${errors.name ? "is-invalid" : ""}`}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                       />
@@ -492,10 +493,10 @@ export default function StudentDashBoard() {
 
                     {/* Email */}
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">Email</label>
+                      <label className="form-label heading">Email</label>
                       <input
                         type="email"
-                        className={`form-control ${errors.email ? "is-invalid" : ""}`}
+                        className={`form-control para ${errors.email ? "is-invalid" : ""}`}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
@@ -504,10 +505,10 @@ export default function StudentDashBoard() {
 
                     {/* Phone */}
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">Phone</label>
+                      <label className="form-label heading">Phone</label>
                       <input
                         type="number"
-                        className={`form-control ${errors.phone ? "is-invalid" : ""}`}
+                        className={`form-control para ${errors.phone ? "is-invalid" : ""}`}
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                       />
@@ -516,9 +517,9 @@ export default function StudentDashBoard() {
 
                     {/* Gender */}
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">Gender</label>
+                      <label className="form-label heading">Gender</label>
                       <select
-                        className={`form-select ${errors.gender ? "is-invalid" : ""}`}
+                        className={`form-select para ${errors.gender ? "is-invalid" : ""}`}
                         value={gender ?? ""}
                         onChange={(e) => setGender(e.target.value)}
                       >
@@ -532,9 +533,9 @@ export default function StudentDashBoard() {
 
                     {/* Bio */}
                     <div className="col-md-12 mb-3">
-                      <label className="form-label">Bio</label>
+                      <label className="form-label heading">Bio</label>
                       <textarea
-                        className={`form-control ${errors.bio ? "is-invalid" : ""}`}
+                        className={`form-control para ${errors.bio ? "is-invalid" : ""}`}
                         rows="3"
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
@@ -545,10 +546,10 @@ export default function StudentDashBoard() {
 
                     {/* Date of Birth */}
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">Date of Birth</label>
+                      <label className="form-label heading">Date of Birth</label>
                       <input
                         type="date"
-                        className={`form-control ${errors.dob ? "is-invalid" : ""}`}
+                        className={`form-control para ${errors.dob ? "is-invalid" : ""}`}
                         value={dob}
                         onChange={(e) => setDob(e.target.value)}
                       />
@@ -557,10 +558,10 @@ export default function StudentDashBoard() {
 
                     {/* Address */}
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">Address</label>
+                      <label className="form-label heading">Address</label>
                       <input
                         type="text"
-                        className={`form-control ${errors.address ? "is-invalid" : ""}`}
+                        className={`form-control para ${errors.address ? "is-invalid" : ""}`}
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                       />

@@ -49,15 +49,15 @@ const CoursesComponent = () => {
   };
   return (
     <div className="container py-5" id="courses">
-      <h1 className="text-center mb-5" style={{ color: "#004aad" }}>
+      <h1 className="text-center mb-5 heading" style={{ color: "#004aad" }}>
         Available Courses
       </h1>
       {loading ? (
         <div className="text-center my-5">
           <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
+            <span className="visually-hidden heading">Loading...</span>
           </div>
-          <p className="mt-3">Loading courses...</p>
+          <p className="mt-3 heading">Loading courses...</p>
         </div>
       ) : (
         <>
@@ -83,11 +83,11 @@ const CoursesComponent = () => {
                     style={{ height: "100px", width: "100px", objectFit: "contain" }}
                   />
                   <div className="card-body d-flex flex-column">
-                    <h5 className="card-title text-primary">{course.courseName}</h5>
-                    <p className="card-text">{course.courseContent}</p>
+                    <h5 className="card-title text-primary heading">{course.courseName}</h5>
+                    <p className="card-text para">{course.courseContent}</p>
                     <div className="mt-auto d-flex justify-content-between align-items-center">
                       <span className="text-muted">
-                        <i className="fas fa-clock"></i> {course.month}
+                        <i className="fas fa-clock para"></i> {course.month}
                       </span>
                       <a href={`/course/${course.id}`} className="btn btn-primary btn-sm">
                         Learn More and Fees
@@ -97,7 +97,7 @@ const CoursesComponent = () => {
                 </div>
               ))
             ) : (
-              <p className="text-center">No courses available.</p>
+              <p className="text-center heading">No courses available.</p>
             )}
           </div>
 
