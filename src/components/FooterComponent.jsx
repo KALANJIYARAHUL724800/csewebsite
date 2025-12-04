@@ -25,8 +25,8 @@ const footerComponent = () => {
           </div>
           <div className="col-md-4 mb-4">
             <h5 className="footer-title heading">Contact Us</h5>
-            <p className='para'><i className="bi bi-geo-alt-fill me-2 para"></i>Pallaki Plazza, Ramnadhapuram, Tamil Nadu, India</p>
-            <p className='para'><i className="bi bi-telephone-fill me-2"></i>+91 9443414067</p>
+            <p className='para'><i className="bi bi-geo-alt-fill me-2 para"></i>Pal-Lucky Plazza,<br />   G.H.Road,<br /> Ramnadhapuram, <br />Tamil Nadu, India</p>
+            <p className='para'><i className="bi bi-telephone-fill me-2"></i>+91 7010038188, +91 9965163156</p>
             <a href='#' target="cseramnad@gmail.com" className='text-white text-decoration-none para'><i className="bi bi-envelope-fill me-2"></i>cseramnad@gmail.com</a>
             <div className="footer-social">
               <a href="#" className="me-3"><i className="bi bi-facebook"></i></a>

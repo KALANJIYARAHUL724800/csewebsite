@@ -13,9 +13,7 @@ const TestiMonialsComponent = () => {
                     label: c.courseName
                 }));
                 setCourse(options);
-            } catch (error) {
-                console.error("Error fetching courses:", error);
-            }
+            } catch (error) {}
         };
 
         fetchCourses();
@@ -57,12 +55,13 @@ const TestiMonialsComponent = () => {
     const handleSelectChange = (selectedOption) => {
         setFormData(prev => ({
             ...prev,
-            courseName: selectedOption ? selectedOption.label : '',  
+            courseName: selectedOption ? selectedOption.label : '',
         }));
     };
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const clickedButton = e.nativeEvent.submitter.name;
         if (isSubmitting) return;
         setIsSubmitting(true);
         setErrors({});
@@ -82,17 +81,24 @@ const TestiMonialsComponent = () => {
             payload.append('text', formData.text);
             payload.append('imageUrl', formData.imageUrl || '');
             if (imageUrl) payload.append('image', imageUrl);
-            await insertTestimonials(payload);
-            setSuccessMessage('Thank you! Your testimonial has been submitted successfully.');
-            setFormData({
-                name: '',
-                enrollno: '',
-                image: null,
-                courseName: '',
-                place: '',
-                text: '',
-                imageUrl: '',
-            });
+            if (clickedButton === "insert") {
+                await insertTestimonials(payload);
+                setSuccessMessage('Thank you! Your testimonial has been submitted successfully.');
+                setFormData({
+                    name: '',
+                    enrollno: '',
+                    image: null,
+                    courseName: '',
+                    place: '',
+                    text: '',
+                    imageUrl: '',
+                });
+            } else if (clickedButton === "update") {
+                console.log(formData);
+
+
+                
+            }
             if (fileInputRef.current) fileInputRef.current.value = null;
         } catch (error) {
             if (error.response && error.response.status === 400) {
@@ -116,7 +122,7 @@ const TestiMonialsComponent = () => {
     };
     return (
         <div className="container my-5">
-            <h2 className="mb-4 text-center heading" style={{color:"#004aad"}}>Testimonial Form</h2>
+            <h2 className="mb-4 text-center heading" style={{ color: "#004aad" }}>Testimonial Form</h2>
 
             <form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: '600px' }}>
                 {/* Name input */}
@@ -226,10 +232,15 @@ const TestiMonialsComponent = () => {
                 </div>
 
                 {/* Submit button */}
-                <div className="d-grid mb-3">
-                    <button type="submit" className="btn btn-primary btn-lg">
-                        Submit Testimonial <i className="bi bi-send-fill ms-2"></i>
-                    </button>
+                <div className="row">
+                    <div className="col-md-6 mb-3 d-flex gap-3 form-control">
+                        <button name='insert' type="submit" className="btn btn-primary btn-lg flex-fill">
+                            Submit Testimonial <i className="bi bi-send-fill ms-2"></i>
+                        </button>
+                        <button name='update' type="submit" className="btn btn-success btn-lg flex-fill">
+                            Update Testimonial <i className="bi bi-pencil-square"></i>
+                        </button>
+                    </div>
                 </div>
             </form>
 

@@ -218,7 +218,7 @@ const HomeComponent = () => {
 
           <div data-aos="fade-down">
             <img src="public/cselogo.png" alt="CSE Logo" style={{ height: "180px" }} />
-            <h1 className="display-5 fw-bold mt-4 welcome-home">Welcome to Cse</h1>
+            <h1 className="display-5 fw-bold mt-4 text-white heading">CSE Computer Education</h1>
             <p className="lead text-light para">Empowering Minds, Shaping Futures</p>
           </div>
         </section>
@@ -482,16 +482,16 @@ const HomeComponent = () => {
                       <table className="testimonial-table mx-auto text-start">
                         <tbody>
                           <tr>
-                            <td className="fw-bold heading">Name:</td>
-                            <td className="para">{t.name}</td>
-                          </tr>
-                          <tr>
                             <td className="fw-bold heading">Enroll No:</td>
                             <td className="para">{t.enrollno}</td>
                           </tr>
                           <tr>
                             <td className="fw-bold heading">Course:</td>
                             <td className="para">{t.courseName}</td>
+                          </tr>
+                          <tr>
+                            <td className="fw-bold heading">Place:</td>
+                            <td className="para">{t.place}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -502,7 +502,7 @@ const HomeComponent = () => {
 
                     {/* RIGHT SIDE */}
                     <div className="flex-grow-1">
-                      <h3 className="heading">Information</h3>
+                      <h3 className="heading">{t.name} Says</h3>
                       <p className="fst-italic text-muted mb-0 para">“{t.text}”</p>
                     </div>
                   </div>
