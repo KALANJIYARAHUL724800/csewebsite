@@ -105,7 +105,6 @@ const StudentLogin = () => {
               {serverError}
             </div>
           )}
-
           {/* Success message */}
           {successMessage && (
             <div className="alert alert-success text-center py-2 mb-2 heading">
@@ -161,18 +160,11 @@ const StudentLogin = () => {
             <div className="text-danger mb-2 para">{errors.password}</div>
           )}
           <a
-            href="/signup"
-            className="d-block text-end mb-3 text-decoration-none small text-muted heading"
-          >
-            <i class="bi bi-person-plus"></i> Sign Up Signup Here
-          </a>
-          <a
             href="/forgot-password"
             className="d-block text-end mb-3 text-decoration-none small text-muted heading"
           >
-            <i class="bi bi-key"></i> Forgot Password?
+            <i className="bi bi-key"></i> Forgot Password?
           </a>
-
           <button type="submit" className="btn btn-primary w-100 mb-3">
             Login
           </button>

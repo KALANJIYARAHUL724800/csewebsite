@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createAdmin } from "../index";
 const StaffsignupComponent = () => {
+    const [successMessage, setSuccessMessage] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     const [serverError, setServerError] = useState("");
     const [formData, setFormData] = useState({
@@ -27,14 +29,26 @@ const StaffsignupComponent = () => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setServerError("");
+        if (formData.password !== formData.confirmPassword) {
+            setErrors((prev) => ({
+                ...prev,
+                confirmPassword: "Passwords do not match.",
+            }));
+            return;
+        }
         try {
             const res = await createAdmin(formData);
-            alert("Signup successful!");
-            navigate("/admin");
+            setSuccessMessage("Signup successful! Redirecting...");
+            setTimeout(() => {
+                navigate("/admin");
+            }, 1500);
         } catch (err) {
             const newErrors = { name: "", email: "", password: "", confirmPassword: "", type: "" };
+
             if (err.response) {
                 const { status, data } = err.response;
+
                 if (status === 400) {
                     data.split(";").forEach((msg) => {
                         msg = msg.trim().toLowerCase();
@@ -52,13 +66,16 @@ const StaffsignupComponent = () => {
             } else {
                 setServerError("Network error. Please check your connection.");
             }
+
             setErrors(newErrors);
+            setSuccessMessage("");
         }
     };
+
     const handleClose = () => {
         navigate("/home");
     };
-    
+
     return (
         <div
             className="overlay d-flex justify-content-center align-items-center"
@@ -77,6 +94,12 @@ const StaffsignupComponent = () => {
                 className="panel bg-white p-4 rounded shadow-lg"
                 style={{ width: "350px", position: "relative", borderRadius: "15px" }}
             >
+                {/* Success message */}
+                {successMessage && (
+                    <div className="alert alert-success text-center py-2 mb-2 heading">
+                        {successMessage}
+                    </div>
+                )}
                 <div className="panel-header d-flex justify-content-between align-items-center mb-3">
                     <h2 className="m-0 text-success heading">Staff Sign Up</h2>
                     <span
@@ -117,23 +140,69 @@ const StaffsignupComponent = () => {
                         onChange={handleChange}
                     />
                     {errors.email && <div className="text-danger mb-2 para">{errors.email}</div>}
-                    <input
-                        type="password"
-                        className="form-control mb-3 para"
-                        placeholder="Password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                    />
+                    <div className="position-relative">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            className="form-control mb-2 para"
+                            placeholder="Enter Password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            minLength={8}
+                            maxLength={16}
+                            style={errors.password ? {
+                                border: "1.5px solid red",
+                                boxShadow: "0 0 5px rgba(255,0,0,0.5)"
+                            } : {}}
+                        />
+
+                        {/* Eye Icon */}
+                        <i
+                            className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+                            onClick={() => setShowPassword(!showPassword)}
+                            style={{
+                                position: "absolute",
+                                right: "10px",
+                                top: "50%",
+                                transform: "translateY(-50%)",
+                                cursor: "pointer",
+                                color: "#555",
+                                fontSize: "1.2rem"
+                            }}
+                        ></i>
+                    </div>
                     {errors.password && <div className="text-danger mb-2 para">{errors.password}</div>}
-                    <input
-                        type="password"
-                        className="form-control mb-3 para"
-                        placeholder="Confirm Password"
-                        name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                    />
+                    <div className="position-relative">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            className="form-control mb-2 para"
+                            placeholder="Enter Password"
+                            name="confirmPassword"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            minLength={8}
+                            maxLength={16}
+                            style={errors.confirmPassword ? {
+                                border: "1.5px solid red",
+                                boxShadow: "0 0 5px rgba(255,0,0,0.5)"
+                            } : {}}
+                        />
+
+                        {/* Eye Icon */}
+                        <i
+                            className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+                            onClick={() => setShowPassword(!showPassword)}
+                            style={{
+                                position: "absolute",
+                                right: "10px",
+                                top: "50%",
+                                transform: "translateY(-50%)",
+                                cursor: "pointer",
+                                color: "#555",
+                                fontSize: "1.2rem"
+                            }}
+                        ></i>
+                    </div>
                     {errors.confirmPassword && <div className="text-danger mb-2 para">{errors.confirmPassword}</div>}
                     <div className="form-check mb-3">
                         <label className="form-check-label small" htmlFor="termsCheck">
@@ -145,6 +214,7 @@ const StaffsignupComponent = () => {
                                 checked={formData.type}
                                 onChange={handleChange}
                                 style={{ position: "relative", right: "10px" }}
+                                required
                             />
                             I agree to the admin box
                         </label>

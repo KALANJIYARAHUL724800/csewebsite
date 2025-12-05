@@ -5,7 +5,7 @@ const StudentSignup = ({ onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const handleClose = () => {
-    navigate("/home");
+    navigate("/dashboard");
   };
   const [errors, setErrors] = useState({
     name: "",

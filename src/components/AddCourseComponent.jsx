@@ -140,7 +140,10 @@ const AddCourseComponent = () => {
 
   return (
     <div className="container mt-4">
-      <h3 className="text-center mb-4 heading" style={{color:"#004aad"}}>Course Details</h3>
+      <button class="btn btn-outline-secondary" onClick={()=>{navigate("/dashboard")}}>
+        <i class="bi bi-arrow-left"></i> Go Back
+      </button>
+      <h3 className="text-center mb-4 heading" style={{ color: "#004aad" }}>Course Details</h3>
       {successMessage && (
         <div
           style={{

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { FaTrash, FaEdit, FaHashtag, FaBook, FaCalendarAlt, FaClock } from 'react-icons/fa';
 import { insertBatches, showAllBatches, deletedBatch, updateBatch } from "../index";
+import { useNavigate } from "react-router-dom";
 
 const BatchComponent = () => {
+    const navigate = useNavigate();
     const [batches, setBatches] = useState([]);
     const [formData, setFormData] = useState({ course: '', date: '', time: '' });
     const [editIndex, setEditIndex] = useState(null);
@@ -73,9 +75,12 @@ const BatchComponent = () => {
     };
     return (
         <div className="container mt-4" style={{ fontFamily: "'Roboto', sans-serif" }}>
+            <button class="btn btn-outline-secondary" onClick={() => { navigate("/dashboard") }}>
+                <i class="bi bi-arrow-left"></i> Go Back
+            </button>
             {/* Page Heading */}
             <div className="text-center mb-4">
-                <h1 className="d-flex justify-content-center align-items-center gap-2 heading" style={{color:"#004aad"}}>
+                <h1 className="d-flex justify-content-center align-items-center gap-2 heading" style={{ color: "#004aad" }}>
                     <FaClock style={{ color: '#00BFFF' }} /> Batch Schedule
                 </h1>
             </div>

@@ -607,7 +607,7 @@ export default function StudentDashBoard() {
               <div className="form-check form-switch">
                 <input className="form-check-input" type="checkbox" id="pushNotif" />
                 <label className="form-check-label" htmlFor="pushNotif">
-                  <i className="fas fa-bell-on me-2"></i>Push Notifications
+                <i className="fas fa-bell-slash me-2"></i> Push Notifications
                 </label>
               </div>
             </div>

@@ -43,7 +43,6 @@ function App() {
           <Route path="/gallery" element={<GalleryComponent />} />
           <Route path="/events" element={<EventComponent />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/testimonials" element={<TestiMonialsComponent />} />
           {/* Public Routes only if not logged in */}
           <Route path="/login" element={
@@ -52,8 +51,13 @@ function App() {
             </PublicRoute>
           } />
           <Route path="/signup" element={
-            <PublicRoute>
+            <PrivateRoute allowedUserType="true">
               <StudentSignup />
+            </PrivateRoute>
+          } />
+          <Route path="/update-password" element={
+            <PublicRoute>
+              <UpdatePassword />
             </PublicRoute>
           } />
           <Route path="/admin" element={

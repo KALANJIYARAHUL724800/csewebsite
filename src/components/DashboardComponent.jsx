@@ -144,6 +144,14 @@ const DashboardComponent = () => {
         <div className="col-12 col-md-3 bg-light p-3 border-end vh-100">
           <h5 className="mb-4 heading" style={{color:"#004aad"}}>Navigation</h5>
           <ul className="list-unstyled">
+          <li className="mb-2">
+              <button
+                className="btn btn-outline-primary w-100 d-flex align-items-center"
+                onClick={() => navigate("/signup")}
+              >
+                <FaUserGraduate className="me-2" />Student Register
+              </button>
+            </li>
             <li className="mb-2">
               <button
                 className="btn btn-outline-primary w-100 d-flex align-items-center"

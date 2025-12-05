@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaUser, FaPhone, FaBookOpen, FaCalendarAlt, FaClock, FaFileExcel } from 'react-icons/fa';
 import { showAllFeesEnquiry, searchDateEnquiry, enquiryExportExcel } from "../index";
-import { useLocation } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 
 const ShowFeesEnquiryComponent = () => {
+  const navigate = useNavigate();
   const [enquiries, setEnquiries] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [startDate, setStartDate] = useState("");
@@ -87,13 +88,16 @@ const ShowFeesEnquiryComponent = () => {
 
   return (
     <div className="container my-5">
-      <h3 className="mb-4 text-center fw-bold heading" style={{color:"#004aad"}}>Fees Enquiry List</h3>
+      <button class="btn btn-outline-secondary" onClick={() => { navigate("/dashboard") }}>
+        <i class="bi bi-arrow-left"></i> Go Back
+      </button>
+      <h3 className="mb-4 text-center fw-bold heading" style={{ color: "#004aad" }}>Fees Enquiry List</h3>
 
       {/* Filter Section */}
       <div className="row mb-3 g-2 align-items-end">
         {/* Date Inputs */}
         <div className="col-md-3">
-          <label className="form-label fw-bold heading" style={{color:"#004aad"}}>Start Date</label>
+          <label className="form-label fw-bold heading" style={{ color: "#004aad" }}>Start Date</label>
           <input
             type="date"
             className="form-control para"
@@ -102,7 +106,7 @@ const ShowFeesEnquiryComponent = () => {
           />
         </div>
         <div className="col-md-3">
-          <label className="form-label fw-bold heading" style={{color:"#004aad"}}>End Date</label>
+          <label className="form-label fw-bold heading" style={{ color: "#004aad" }}>End Date</label>
           <input
             type="date"
             className="form-control para"

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { forgotPassword } from "../index";
 const ForgotPassword = ({ onClose }) => {
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
   const [errors, setErrors] = useState({
     email: "",
@@ -22,18 +23,24 @@ const ForgotPassword = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setServerError("");
+    setSuccessMessage("Please wait");
     setErrors({ email: "" });
     try {
-      await forgotPassword(formData);
-      alert("Password reset link sent to your email!");
-      navigate("/home");
+      await forgotPassword(formData).then(()=>{
+        localStorage.setItem("email",formData.email);
+      });
+      setSuccessMessage("Password reset link sent to your email!");
     } catch (err) {
       const message = err.response?.data || "Network error. Please check your connection.";
 
       if (message.toLowerCase().includes("email")) {
         setErrors({ email: message });
+        setSuccessMessage("Email not found try again..");
+        formData.email="";
       } else {
+        setSuccessMessage("Please try again..");
         setServerError(message);
+        formData.email="";
       }
     }
   };
@@ -56,6 +63,12 @@ const ForgotPassword = ({ onClose }) => {
         className="panel bg-white p-4 rounded shadow-lg"
         style={{ width: "350px", position: "relative", borderRadius: "15px" }}
       >
+        {/* Success message */}
+        {successMessage && (
+          <div className="alert alert-success text-center py-2 mb-2 heading">
+            {successMessage}
+          </div>
+        )}
         <div className="panel-header d-flex justify-content-between align-items-center mb-3">
           <h2 className="m-0 text-warning heading">Forgot Password</h2>
           <span

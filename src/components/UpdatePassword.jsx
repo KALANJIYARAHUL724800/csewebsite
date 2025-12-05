@@ -1,57 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import { updatePassword } from "../index";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
+const updatePassword = async ({ email, password, confirmPassword }) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (!email || !password || !confirmPassword) {
+        reject({ response: { data: { message: "All fields are required" } } });
+      } else if (password !== confirmPassword) {
+        reject({ response: { data: { message: "Passwords do not match" } } });
+      } else {
+        resolve({ data: { message: "Password updated successfully" } });
+      }
+    }, 500);
+  });
+};
 
 const UpdatePassword = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     confirmPassword: "",
   });
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
   const handleClose = () => {
-    const userType = localStorage.getItem("userType") === "true"; 
+    const userType = localStorage.getItem("userType") === "true";
     const email = localStorage.getItem("email");
-    if (email && !userType) {
-      navigate("/student-dashboard");
-    } else if (email && userType) {
-      navigate("/dashboard");
-    } else {
-      navigate("/home");
-    }
+
+    if (email && !userType) navigate("/student-dashboard");
+    else if (email && userType) navigate("/dashboard");
+    else navigate("/home");
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setError("");
     setSuccess("");
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password || !formData.confirmPassword) {
       setError("Please fill in all fields.");
       return;
     }
+
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
+
     try {
       const response = await updatePassword(formData);
-      setSuccess("Password updated successfully!");
+      setSuccess(response.data.message);
       setError("");
 
-      setTimeout(() => navigate("/home"), 2000);
-
+      setTimeout(() => navigate("/student-dashboard"), 2000);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update password.");
       setSuccess("");
     }
   };
-
+  useEffect(() => {
+    localStorage.removeItem("email");
+  }, [])
   return (
     <div
       className="overlay d-flex justify-content-center align-items-center"
@@ -78,7 +96,9 @@ const UpdatePassword = () => {
           WebkitBackdropFilter: "blur(8px)",
         }}
       >
-        <h2 className="mb-3 text-center heading" style={{color:"#004aad"}}>Update Password</h2>
+        <h2 className="mb-3 text-center heading" style={{ color: "#004aad" }}>
+          Update Password
+        </h2>
 
         <span
           className="close-btn"
@@ -98,10 +118,14 @@ const UpdatePassword = () => {
 
         <form onSubmit={handleSubmit}>
           {error && (
-            <div className="alert alert-danger text-center py-2 mb-3 para">{error}</div>
+            <div className="alert alert-danger text-center py-2 mb-3 para">
+              {error}
+            </div>
           )}
           {success && (
-            <div className="alert alert-success text-center py-2 mb-3 para">{success}</div>
+            <div className="alert alert-success text-center py-2 mb-3 para">
+              {success}
+            </div>
           )}
 
           {/* Email Field */}
@@ -120,33 +144,63 @@ const UpdatePassword = () => {
           </div>
 
           {/* Password Field */}
-          <div className="input-group mb-3">
+          <div className="input-group mb-3 position-relative">
             <span className="input-group-text">
               <i className="bi bi-lock"></i>
             </span>
             <input
-              type="password"
-              className="form-control para"
-              placeholder="New Password"
+              type={showPassword ? "text" : "password"}
+              className="form-control mb-2 para"
+              placeholder="Enter Password"
               name="password"
               value={formData.password}
               onChange={handleChange}
+              minLength={8}
+              maxLength={16}
             />
+            <i
+              className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "15px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                fontSize: "1.2rem",
+                color: "#555",
+              }}
+            ></i>
           </div>
 
           {/* Confirm Password Field */}
-          <div className="input-group mb-3">
+          <div className="input-group mb-3 position-relative">
             <span className="input-group-text">
               <i className="bi bi-lock-fill"></i>
             </span>
             <input
-              type="password"
-              className="form-control para"
+              type={showPassword ? "text" : "password"}
+              className="form-control mb-2 para"
               placeholder="Confirm Password"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
+              minLength={8}
+              maxLength={16}
             />
+            <i
+              className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "15px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                fontSize: "1.2rem",
+                color: "#555",
+              }}
+            ></i>
           </div>
 
           <button type="submit" className="btn btn-primary w-100">

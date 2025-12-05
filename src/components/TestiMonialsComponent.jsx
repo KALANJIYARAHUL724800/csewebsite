@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Select from 'react-select';
-import { insertTestimonials, moveImage, getAllCourses } from "../index";
+import { insertTestimonials, moveImage, getAllCourses, findTestimonials } from "../index";
+import { useNavigate } from "react-router-dom";
 
 const TestiMonialsComponent = () => {
+    const navigate = useNavigate();
     const [course, setCourse] = new useState(null)
     useEffect(() => {
         const fetchCourses = async () => {
@@ -13,7 +15,7 @@ const TestiMonialsComponent = () => {
                     label: c.courseName
                 }));
                 setCourse(options);
-            } catch (error) {}
+            } catch (error) { }
         };
 
         fetchCourses();
@@ -38,7 +40,7 @@ const TestiMonialsComponent = () => {
         { value: 'Web Development', label: 'Web Development' },
         { value: 'Cyber Security', label: 'Cyber Security' },
     ];
-    const handleChange = (e) => {
+    const handleChange = async (e) => {
         const { name, value, files } = e.target;
         if (name === "image") {
             const selectedFile = files && files.length > 0 ? files[0] : null;
@@ -97,7 +99,7 @@ const TestiMonialsComponent = () => {
                 console.log(formData);
 
 
-                
+
             }
             if (fileInputRef.current) fileInputRef.current.value = null;
         } catch (error) {
@@ -122,6 +124,9 @@ const TestiMonialsComponent = () => {
     };
     return (
         <div className="container my-5">
+            <button class="btn btn-outline-secondary" onClick={() => { navigate("/dashboard") }}>
+                <i class="bi bi-arrow-left"></i> Go Back
+            </button>
             <h2 className="mb-4 text-center heading" style={{ color: "#004aad" }}>Testimonial Form</h2>
 
             <form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: '600px' }}>

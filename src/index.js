@@ -153,6 +153,12 @@ export const insertTestimonials = async (formData) => {
   });
   return response.data;
 };
+export const updateTestimonials = async (formData) => {
+  const response = await axios.post(`${API_BASE}/testimonials/insert`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+  return response.data;
+};
 
 export const moveImage = async (formData, type = "upload") => {
   const url = new URL(API_BASE);
@@ -185,7 +191,7 @@ export const showAllTestimonials = () => {
 };
 
 export const findTestimonials = (id) => {
-  return axios.get(`${API_BASE}/testimonials/${id}`);
+  return axios.get(`${API_BASE}/testimonials/find/${id}`);
 };
 
 export const insertPost = (value) => {
