@@ -12,6 +12,7 @@ const StudentSignup = ({ onClose }) => {
     email: "",
     password: "",
     confirmPassword: "",
+    enrollNo: ""
   });
   const [serverError, setServerError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -20,6 +21,7 @@ const StudentSignup = ({ onClose }) => {
     email: "",
     password: "",
     confirmPassword: "",
+    enrollNo: ""
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,7 +29,7 @@ const StudentSignup = ({ onClose }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({ name: "", email: "", password: "", confirmPassword: "" });
+    setErrors({ name: "", email: "", password: "", confirmPassword: "", enrollNo: "" });
     setServerError("");
     setSuccessMessage("");
     try {
@@ -36,21 +38,30 @@ const StudentSignup = ({ onClose }) => {
           ...prev,
           confirmPassword: "Passwords do not match.",
         }));
-        return; 
+        return;
       }
+      if (!/^\d{6}$/.test(formData.enrollNo)) {
+        setErrors((prev) => ({
+          ...prev,
+          enrollNo: "Enroll number must be exactly 6 digits."
+        }));
+        return;
+      }
+
       const res = await createUser(formData);
       setSuccessMessage("Signup successful! Redirecting...");
       setTimeout(() => {
-        navigate("/login", { state: { user: res.data } });
+        navigate("/dashboard", { state: { user: res.data } });
       }, 1500);
     } catch (err) {
-      const newErrors = { name: "", email: "", password: "", confirmPassword: "" };
+      const newErrors = { name: "", email: "", password: "", confirmPassword: "", enrollNo: "" };
       if (err.response) {
         const { status, data } = err.response;
         if (status === 400) {
           data.split(";").forEach((msg) => {
             msg = msg.trim().toLowerCase();
             if (msg.includes("name")) newErrors.name = msg;
+            else if (msg.includes("enroll")) newErrors.enrollNo = msg;
             else if (msg.includes("email")) newErrors.email = msg;
             else if (msg.includes("password") && !msg.includes("confirm"))
               newErrors.password = msg;
@@ -85,7 +96,7 @@ const StudentSignup = ({ onClose }) => {
         className="panel bg-white p-4 rounded shadow-lg"
         style={{ width: "380px", position: "relative", borderRadius: "15px" }}
       >
-        <h2 className="text-primary mb-3 heading">Student Sign Up</h2>
+        <h2 className="text-primary mb-3 heading">Student Rigister</h2>
         <span
           className="close-btn"
           style={{
@@ -170,7 +181,7 @@ const StudentSignup = ({ onClose }) => {
             <input
               type={showPassword ? "text" : "password"}
               className="form-control mb-2 para"
-              placeholder="Enter Password"
+              placeholder="Confirm Password"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
@@ -200,8 +211,24 @@ const StudentSignup = ({ onClose }) => {
           {errors.confirmPassword && (
             <div className="text-danger mb-2 para">{errors.confirmPassword}</div>
           )}
+          <input
+            type="text"
+            className={`form-control mb-1 para ${errors.enrollNo ? "is-invalid" : ""}`}
+            placeholder="Enter Enroll No"
+            name="enrollNo"
+            value={formData.enrollNo}
+            maxLength="6"          
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^\d{0,6}$/.test(value)) {
+                handleChange(e); 
+              }
+            }}
+          />
+          {errors.enrollNo && <div className="text-danger mb-2 para">{errors.enrollNo}</div>}
+
           <button type="submit" className="btn btn-primary w-100 mt-2">
-            Sign Up
+            Submit
           </button>
         </form>
       </div>

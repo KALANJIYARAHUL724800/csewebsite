@@ -26,6 +26,7 @@ import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
 import StudentDashBoard from './components/StudentDashBoard';
 import TestiMonialsComponent from './components/TestiMonialsComponent';
+import ViewStudentComponent from './components/ViewStudentComponent';
 
 function App() {
   return (
@@ -44,6 +45,8 @@ function App() {
           <Route path="/events" element={<EventComponent />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/testimonials" element={<TestiMonialsComponent />} />
+          <Route path="/student" element={<ViewStudentComponent />} />
+          
           {/* Public Routes only if not logged in */}
           <Route path="/login" element={
             <PublicRoute>

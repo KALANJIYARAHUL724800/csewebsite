@@ -242,3 +242,7 @@ export const getEmailData = (email) => {
 export const updateUserRecord = (email, data) => {
   return axios.put(`${API_BASE}/update-record/${email}`, data);
 };
+
+export const getStudentsDetails = () => {
+  return axios.get(`${API_BASE}/students-details`);
+};

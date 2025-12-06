@@ -6,7 +6,8 @@ import {
   countAdmin,
   countStudents,
   moveImage,
-  insertPost
+  insertPost,
+  showAllPosts, getTotalLikes, insertComment, updateLikes
 } from "../index";
 import {
   AiOutlinePlus,
@@ -14,10 +15,11 @@ import {
   AiOutlineLineChart,
   AiOutlineCalendar
 } from "react-icons/ai";
-import { FaUserGraduate, FaBook, FaChalkboardTeacher, FaUpload, FaCheckCircle } from "react-icons/fa";
+import { FaUserGraduate, FaBook, FaChalkboardTeacher, FaUpload, FaCheckCircle, FaRegFileAlt } from "react-icons/fa";
 
 const DashboardComponent = () => {
   const [posts, setPosts] = useState([]);
+  const [commentText, setCommentText] = useState({});
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -29,8 +31,12 @@ const DashboardComponent = () => {
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [adminPostCheck, setAdminPostCheck] = useState(false);
   function uploadPosts() {
     setShowForm(true);
+  }
+  function viewPosts() {
+    setAdminPostCheck(true)
   }
   function closeForm() {
     setShowForm(false);
@@ -78,29 +84,67 @@ const DashboardComponent = () => {
     const today = new Date().toISOString().split("T")[0];
     setStartDate(today);
     setEndDate(today);
-    countStudents()
-      .then((res) => {
-        if (res.data == 0) {
-          SetStudentsCount(null)
-        } else if (res.data == null) {
-          SetStudentsCount(null)
+
+    // Fetch counts
+    const fetchCounts = async () => {
+      try {
+        const studentsRes = await countStudents();
+        if (!studentsRes.data || studentsRes.data === 0) {
+          SetStudentsCount(null);
+        } else {
+          SetStudentsCount(studentsRes.data);
         }
-        SetStudentsCount(res.data)
-      })
-      .catch((err) => {});
+      } catch (err) {
+        SetStudentsCount(null);
+      }
 
-    countAdmin()
-      .then((res) => SetAdminCount(res.data))
-      .catch((err) => {});
+      try {
+        const adminRes = await countAdmin();
+        SetAdminCount(adminRes.data);
+      } catch (err) {
+        SetAdminCount(null);
+      }
 
-    courseCount()
-      .then((res) => SetCourseCount(res.data))
-      .catch((err) => {});
+      try {
+        const courseRes = await courseCount();
+        SetCourseCount(courseRes.data);
+      } catch (err) {
+        SetCourseCount(null);
+      }
 
-    enquiryCountNotification(today, today)
-      .then((res) => setNotificationCount(res.data))
-      .catch((err) => {});
+      try {
+        const notifRes = await enquiryCountNotification(today, today);
+        setNotificationCount(notifRes.data);
+      } catch (err) {
+        setNotificationCount(null);
+      }
+    };
+
+    // Fetch posts
+    const fetchPostsData = async () => {
+      try {
+        const res = await showAllPosts();
+        const postsWithLikes = await Promise.all(
+          res.data.map(async (p) => {
+            const likesRes = await getTotalLikes(p.id);
+            return { ...p, liked: false, likes: likesRes.data };
+          })
+        );
+        setPosts(postsWithLikes);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchCounts();
+    fetchPostsData();
+
+    // Refresh posts every 5 seconds
+    const interval = setInterval(fetchPostsData, 5000);
+    return () => clearInterval(interval);
+
   }, []);
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -113,11 +157,61 @@ const DashboardComponent = () => {
     navigate("/enquiry", { state: { startDate, endDate } });
   };
 
+  const fetchPosts = async () => {
+    try {
+      const res = await showAllPosts();
+      const postsWithLikes = await Promise.all(
+        res.data.map(async (p) => {
+          const likesRes = await getTotalLikes(p.id);
+          return { ...p, liked: false, likes: likesRes.data };
+        })
+      );
+      setPosts(postsWithLikes);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleCommentPost = async (postId) => {
+    try {
+      const payload = { comments: commentText[postId], likes: 0 };
+      const res = await insertComment(postId, payload);
+      setPosts((prev) =>
+        prev.map((p) =>
+          p.id === postId ? { ...p, comments: [...(p.comments || []), res.data] } : p
+        )
+      );
+      setCommentText({ ...commentText, [postId]: "" });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const toggleLike = (id) => {
+    const post = posts.find((p) => p.id === id);
+    if (!post) return;
+    const newLiked = !post.liked;
+    const newLikesCount = newLiked ? post.likes + 1 : post.likes - 1;
+
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === id ? { ...p, liked: newLiked, likes: newLikesCount } : p
+      )
+    );
+
+    updateLikes(id, { likes: newLikesCount }).catch(() => {
+      setPosts((prev) =>
+        prev.map((p) =>
+          p.id === id ? { ...p, liked: post.liked, likes: post.likes } : p
+        )
+      );
+    });
+  };
   return (
     <div className="container-fluid p-0">
       {/* Header */}
       <div className="d-flex justify-content-between align-items-center p-3 border-bottom flex-wrap bg-white shadow-sm">
-        <h2 className="mb-2 mb-md-0 heading" style={{color:"#004aad"}}>Admin Dashboard</h2>
+        <h2 className="mb-2 mb-md-0 heading" style={{ color: "#004aad" }}>Admin Dashboard</h2>
 
         <div className="d-flex align-items-center">
           {/* Notification */}
@@ -142,14 +236,22 @@ const DashboardComponent = () => {
       <div className="row g-0">
         {/* Sidebar */}
         <div className="col-12 col-md-3 bg-light p-3 border-end vh-100">
-          <h5 className="mb-4 heading" style={{color:"#004aad"}}>Navigation</h5>
+          <h5 className="mb-4 heading" style={{ color: "#004aad" }}>Navigation</h5>
           <ul className="list-unstyled">
-          <li className="mb-2">
+            <li className="mb-2">
               <button
                 className="btn btn-outline-primary w-100 d-flex align-items-center"
                 onClick={() => navigate("/signup")}
               >
                 <FaUserGraduate className="me-2" />Student Register
+              </button>
+            </li>
+            <li className="mb-2">
+              <button
+                className="btn btn-outline-primary w-100 d-flex align-items-center"
+                onClick={() => setAdminPostCheck(false) }
+              >
+                <FaUserGraduate className="me-2" />View Student
               </button>
             </li>
             <li className="mb-2">
@@ -200,6 +302,15 @@ const DashboardComponent = () => {
                 <FaUpload className="me-2" /> Upload Posts
               </button>
             </li>
+            <li className="mb-2">
+              <button
+                className="btn btn-outline-primary w-100 d-flex align-items-center"
+                onClick={viewPosts}
+              >
+                <FaRegFileAlt className="me-2" />
+                View Posts
+              </button>
+            </li>
           </ul>
         </div>
         {/* Modal Form */}
@@ -247,35 +358,125 @@ const DashboardComponent = () => {
 
         {/* Main Content */}
         <div className="col-12 col-md-9 p-4">
-          <h4 className="heading" style={{color:"#004aad"}}>Welcome, Admin!</h4>
-          <p className="para">Manage courses, view student progress, and monitor notifications.</p>
 
-          {/* Metrics Cards */}
-          <div className="row g-3 mt-4">
-            <div className="col-12 col-sm-6 col-lg-4">
-              <div className="card shadow-sm text-center p-3 h-100">
-                <FaUserGraduate size={30} className="mb-2 text-primary" />
-                <h6 className="heading">Total Students</h6>
-                <h3 className="para">{studentsCount ?? 0}</h3>
-              </div>
-            </div>
 
-            <div className="col-12 col-sm-6 col-lg-4">
-              <div className="card shadow-sm text-center p-3 h-100">
-                <FaBook size={30} className="mb-2 text-success" />
-                <h6>Total Courses</h6>
-                <h3>{courseCounts ?? 0}</h3>
-              </div>
-            </div>
+          {
+            adminPostCheck == false && (
+              <div>
+                <h4 className="heading" style={{ color: "#004aad" }}>Welcome, Admin!</h4>
+                <p className="para">Manage courses, view student progress, and monitor notifications.</p>
+                {/* Metrics Cards */}
+                <div className="row g-3 mt-4">
+                  <div className="col-12 col-sm-6 col-lg-4">
+                    <div className="card shadow-sm text-center p-3 h-100">
+                      <FaUserGraduate size={30} className="mb-2 text-primary" />
+                      <h6 className="heading">Total Students</h6>
+                      <h3 className="para">{studentsCount ?? 0}</h3>
+                    </div>
+                  </div>
 
-            <div className="col-12 col-sm-6 col-lg-4">
-              <div className="card shadow-sm text-center p-3 h-100">
-                <FaChalkboardTeacher size={30} className="mb-2 text-warning" />
-                <h6>Active Staff</h6>
-                <h3>{adminCount ?? 0}</h3>
+                  <div className="col-12 col-sm-6 col-lg-4">
+                    <div className="card shadow-sm text-center p-3 h-100">
+                      <FaBook size={30} className="mb-2 text-success" />
+                      <h6>Total Courses</h6>
+                      <h3>{courseCounts ?? 0}</h3>
+                    </div>
+                  </div>
+
+                  <div className="col-12 col-sm-6 col-lg-4">
+                    <div className="card shadow-sm text-center p-3 h-100">
+                      <FaChalkboardTeacher size={30} className="mb-2 text-warning" />
+                      <h6>Active Staff</h6>
+                      <h3>{adminCount ?? 0}</h3>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            )
+          }
+          {
+            adminPostCheck == true && (
+              <div className="text-end py-2" onClick={() => { setAdminPostCheck(false) }}>
+                <h1 className="heading text-center" style={{ color: "#004aad" }}>Posts</h1>
+                <hr />
+                <button
+                  className="btn btn-danger"
+                  aria-label="Close"
+                >X Close Posts</button>
+              </div>
+            )
+          }
+          {
+            adminPostCheck == true && (
+              <div
+                className="w-100"
+                style={{ height: "100vh", overflowY: "scroll", scrollSnapType: "y mandatory" }}
+              >
+
+                {!posts.length ? (
+                  <h3 className="text-center mt-5">Loading posts...</h3>
+                ) : (
+                  posts.map((post) => (
+                    <div
+                      key={post.id}
+                      className="card border-0 shadow-lg"
+                      style={{ height: "100vh", scrollSnapAlign: "start", borderRadius: "0" }}
+                    >
+                      <div style={{ height: "60vh" }}>
+                        <img
+                          src={`/posts/${post.imageUrl}`}
+                          className="w-100 h-100 post-image"
+                          alt="post"
+                          style={{ objectFit: "cover" }}
+                        />
+                      </div>
+
+                      <div className="p-4 bg-white" style={{ height: "25vh" }}>
+                        <h5 className="fw-bold mb-2">{post.title}</h5>
+
+                        <div className="d-flex align-items-center gap-3 mb-3">
+                          <i
+                            className={`fs-4 ${post.liked ? "fas text-danger" : "far"} fa-heart`}
+                            onClick={() => toggleLike(post.id)}
+                          ></i>
+                          <span>{post.likes}</span>
+
+                          <i
+                            className="far fa-comment fs-4 text-primary"
+                            data-bs-toggle="collapse"
+                            data-bs-target={`#commentBox${post.id}`}
+                          ></i>
+
+                          <i className="fas fa-share fs-4 text-success"></i>
+                        </div>
+
+                        <div id={`commentBox${post.id}`} className="collapse">
+                          <input
+                            type="text"
+                            placeholder="Write a comment..."
+                            className="form-control mb-2"
+                            value={commentText[post.id] || ""}
+                            onChange={(e) =>
+                              setCommentText({ ...commentText, [post.id]: e.target.value })
+                            }
+                          />
+
+                          <button
+                            className="btn btn-primary w-100"
+                            onClick={() => handleCommentPost(post.id)}
+                          >
+                            Post Comment
+                          </button>
+                        </div>
+
+                        <p className="text-muted small">Swipe up for more posts</p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )
+          }
         </div>
         {showSuccess && (
           <div
