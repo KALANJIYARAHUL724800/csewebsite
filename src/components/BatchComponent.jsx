@@ -75,8 +75,8 @@ const BatchComponent = () => {
     };
     return (
         <div className="container mt-4" style={{ fontFamily: "'Roboto', sans-serif" }}>
-            <button class="btn btn-outline-secondary" onClick={() => { navigate("/dashboard") }}>
-                <i class="bi bi-arrow-left"></i> Go Back
+            <button className="btn btn-outline-secondary" onClick={() => { navigate("/dashboard") }}>
+                <i className="bi bi-arrow-left"></i> Go Back
             </button>
             {/* Page Heading */}
             <div className="text-center mb-4">

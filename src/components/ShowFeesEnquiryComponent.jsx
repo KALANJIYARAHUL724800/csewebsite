@@ -88,8 +88,8 @@ const ShowFeesEnquiryComponent = () => {
 
   return (
     <div className="container my-5">
-      <button class="btn btn-outline-secondary" onClick={() => { navigate("/dashboard") }}>
-        <i class="bi bi-arrow-left"></i> Go Back
+      <button className="btn btn-outline-secondary" onClick={() => { navigate("/dashboard") }}>
+        <i className="bi bi-arrow-left"></i> Go Back
       </button>
       <h3 className="mb-4 text-center fw-bold heading" style={{ color: "#004aad" }}>Fees Enquiry List</h3>
 

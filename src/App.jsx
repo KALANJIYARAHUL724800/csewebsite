@@ -45,7 +45,7 @@ function App() {
           <Route path="/events" element={<EventComponent />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/testimonials" element={<TestiMonialsComponent />} />
-          <Route path="/student" element={<ViewStudentComponent />} />
+          <Route path="/view-students" element={<ViewStudentComponent />} />
           
           {/* Public Routes only if not logged in */}
           <Route path="/login" element={
@@ -118,6 +118,14 @@ function App() {
             element={
               <PrivateRoute allowedUserType="false">
                 <StudentDashBoard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/change-password"
+            element={
+              <PrivateRoute allowedUserType="false">
+                <UpdatePassword />
               </PrivateRoute>
             }
           />

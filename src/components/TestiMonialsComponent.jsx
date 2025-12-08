@@ -124,8 +124,8 @@ const TestiMonialsComponent = () => {
     };
     return (
         <div className="container my-5">
-            <button class="btn btn-outline-secondary" onClick={() => { navigate("/dashboard") }}>
-                <i class="bi bi-arrow-left"></i> Go Back
+            <button className="btn btn-outline-secondary" onClick={() => { navigate("/dashboard") }}>
+                <i className="bi bi-arrow-left"></i> Go Back
             </button>
             <h2 className="mb-4 text-center heading" style={{ color: "#004aad" }}>Testimonial Form</h2>
 

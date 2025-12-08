@@ -3,7 +3,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { logout, showAllPosts, updateLikes, getTotalLikes, getAllCourses, downloadCoursePdf, insertComment, moveImage, updateUserRecord, getEmailData } from "../index";
+import { logout, showAllPosts, updateLikes, getTotalLikes, getAllCourses, downloadCoursePdf, insertComment, moveImage, updateUserRecord, getEmailData, postCount } from "../index";
 import { useNavigate } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
 
@@ -12,13 +12,14 @@ export default function StudentDashBoard() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const [imageFile, setImageFile] = useState(null);
-
+  const [darkMode, setDarkMode] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [gender, setGender] = useState("");
   const [bio, setBio] = useState("");
   const [dob, setDob] = useState("");
+  const [count, setCount] = useState(0);
   const [address, setAddress] = useState("");
   const saveProfile = async () => {
     if (!imageFile) return;
@@ -85,7 +86,28 @@ export default function StudentDashBoard() {
     } catch (err) {
     }
   };
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   useEffect(() => {
+    const today = getCurrentDate();
+    postCount(today)
+      .then((res) => {
+        setCount(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching post count:", err);
+      })
+    const dark = localStorage.getItem("darkmode");
+    if (dark !== null) {
+      setDarkMode(dark === "true");
+    }
     const email = localStorage.getItem("email");
     getEmailData(email).then((res) => {
       const data = res.data;
@@ -115,6 +137,14 @@ export default function StudentDashBoard() {
     const interval = setInterval(fetchPosts, 5000);
     return () => clearInterval(interval);
   }, []);
+  const handleToggle = () => {
+    setDarkMode((prev) => {
+      const newMode = !prev;
+      localStorage.setItem("darkmode", newMode);
+      return newMode;
+    });
+  };
+
   const handleCommentPost = async (postId) => {
     try {
       const payload = {
@@ -171,7 +201,10 @@ export default function StudentDashBoard() {
     }
   };
   return (
-    <div className="container-fluid p-0 bg-light">
+    <div
+      className={`container-fluid p-0 ${darkMode ? "bg-dark text-white" : "bg-light text-dark"}`}
+      style={{ minHeight: "100vh" }}
+    >
       {/* Mobile Navbar */}
       <nav className="navbar navbar-dark bg-dark d-md-none">
         <div className="container-fluid">
@@ -235,7 +268,7 @@ export default function StudentDashBoard() {
           transition: "0.3s",
         }}
       >
-        <h1 className="fw-bold mb-4 heading">{activeMenu}</h1>
+        <h1 className="fw-bold mb-4 heading" style={{ color: "#004aad" }}>{activeMenu}</h1>
         {/* DASHBOARD */}
         {activeMenu === "Dashboard" && (
           <div className="position-relative bg-white p-4 rounded-4 shadow-sm">
@@ -268,14 +301,16 @@ export default function StudentDashBoard() {
                 </div>
               </div>
               <div className="col-md-4">
-                <div className="card shadow p-4 text-center border-0 rounded-4">
+                <div className="card shadow p-4 text-center border-0 rounded-4" onClick={() => setActiveMenu("Posts")}>
                   <i className="fas fa-bell fa-3x text-warning mb-3"></i>
                   <h4 className="heading">Notifications</h4>
-                  <p className="text-muted para">2 new announcements</p>
+                  <p className="text-muted para">
+                    {count > 0 ? `${count} new announcements` : "Wait for announcements"}
+                  </p>
                 </div>
               </div>
               <div className="col-md-4">
-                <div className="card shadow p-4 text-center border-0 rounded-4">
+                <div className="card shadow p-4 text-center border-0 rounded-4" onClick={() => window.open("https://docs.google.com/forms/d/1dwCfPMvdAGoPtxwMgJyLhj1CUHZq3kkcF8zah7_RH3M/edit", "_blank", "noopener,noreferrer")}>
                   <i className="fas fa-calendar fa-3x text-success mb-3"></i>
                   <h4 className="heading">Upcoming Exams</h4>
                   <p className="text-muted para">3 Exams this month</p>
@@ -287,7 +322,10 @@ export default function StudentDashBoard() {
 
         {/* Courses */}
         {activeMenu === "Courses" && (
-          <div className="container py-5" id="courses">
+          <div className="container" id="courses">
+            <button className="btn btn-outline-secondary" onClick={() => { window.location.href = "/student-dashboard" }}>
+              <i className="bi bi-arrow-left"></i> Go Back
+            </button>
             <h1 className="text-center mb-5 heading" style={{ color: "#004aad" }}>
               Available Courses
             </h1>
@@ -440,6 +478,9 @@ export default function StudentDashBoard() {
         {/* PROFILE */}
         {activeMenu === "Profile" && (
           <div className="container mt-4">
+            <button className="btn btn-outline-secondary" onClick={() => { window.location.href = "/student-dashboard" }}>
+              <i className="bi bi-arrow-left"></i> Go Back
+            </button><br /><br />
             <div className="row justify-content-center">
 
               {/* LEFT SIDE – PROFILE IMAGE UPLOAD */}
@@ -582,11 +623,14 @@ export default function StudentDashBoard() {
         )}
         {activeMenu === "Settings" && (
           <div className="container mt-4">
+            <button className="btn btn-outline-secondary" onClick={() => { window.location.href = "/student-dashboard" }}>
+              <i className="bi bi-arrow-left"></i> Go Back
+            </button><br /><br />
             {/* Profile Settings */}
             <div className="card mb-4 p-3 shadow-sm">
-              <h5 className="mb-3"><i className="fas fa-user me-2"></i>Profile Settings</h5>
-              <div className="d-flex flex-column flex-md-row gap-2">
-                <button className="btn btn-primary flex-fill" onClick={() => navigate("/update-password")}>
+              <h5 className="mb-3 heading" style={{ color: "#004aad" }}><i className="fas fa-user me-2"></i>Profile Settings</h5>
+              <div className="d-flex flex-column flex-md-row gap-2 heading">
+                <button className="btn btn-primary flex-fill" onClick={() => navigate("/change-password")}>
                   <i className="fas fa-key me-2"></i>Change Password
                 </button>
                 <button className="btn btn-secondary flex-fill" onClick={() => setActiveMenu("Profile")}>
@@ -596,8 +640,8 @@ export default function StudentDashBoard() {
             </div>
 
             {/* Notification Settings */}
-            <div className="card mb-4 p-3 shadow-sm">
-              <h5 className="mb-3"><i className="fas fa-bell me-2"></i>Notification Settings</h5>
+            <div className="card mb-4 p-3 shadow-sm heading">
+              <h5 className="mb-3" style={{ color: "#004aad" }}><i className="fas fa-bell me-2"></i>Notification Settings</h5>
               <div className="form-check form-switch mb-2">
                 <input className="form-check-input" type="checkbox" id="emailNotif" />
                 <label className="form-check-label" htmlFor="emailNotif">
@@ -607,25 +651,26 @@ export default function StudentDashBoard() {
               <div className="form-check form-switch">
                 <input className="form-check-input" type="checkbox" id="pushNotif" />
                 <label className="form-check-label" htmlFor="pushNotif">
-                <i className="fas fa-bell-slash me-2"></i> Push Notifications
+                  <i className="fas fa-bell-slash me-2"></i> Push Notifications
                 </label>
               </div>
             </div>
 
-            {/* Privacy Settings */}
-            <div className="card mb-4 p-3 shadow-sm">
-              <h5 className="mb-3"><i className="fas fa-user-shield me-2"></i>Privacy Settings</h5>
-              <div className="form-check form-switch">
-                <input className="form-check-input" type="checkbox" id="profileVisibility" />
-                <label className="form-check-label" htmlFor="profileVisibility">
-                  <i className="fas fa-eye-slash me-2"></i>Make Profile Private
-                </label>
-              </div>
-            </div>
+            {/* Darkmode Settings */}
+            <div className="form-check form-switch d-flex align-items-center heading">
+              <label className="form-check-label me-2" htmlFor="profileVisibility">
+                <i className={`me-2 ${darkMode ? "fas fa-sun" : "fas fa-moon"}`}></i>
+                {darkMode ? "Light Mode" : "Dark Mode"}
+              </label>
+
+              <button className="btn btn-primary" onClick={handleToggle}>
+                {darkMode ? "Disable Dark Mode" : "Enable Dark Mode"}
+              </button>
+            </div><br />
 
             {/* Account Settings */}
-            <div className="card p-3 shadow-sm">
-              <h5 className="mb-3"><i className="fas fa-user-cog me-2"></i>Account</h5>
+            <div className="card p-3 shadow-sm heading">
+              <h5 className="mb-3" style={{ color: "#004aad" }}><i className="fas fa-user-cog me-2"></i>Account</h5>
               <button className="btn btn-danger w-100" onClick={logout}>
                 <i className="fas fa-sign-out-alt me-2"></i>Logout Account
               </button>

@@ -1,67 +1,124 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import AOS from "aos";
-import "aos/dist/aos.css"; 
-
-import { getStudentsDetails } from "../index";
-
+import { getStudentsDetails, searchEnrollNoRecord, searchMobileNoRecord } from "../index";
+import { useNavigate } from "react-router-dom";
 const ViewStudentComponent = () => {
   const [students, setStudents] = useState([]);
-
-  useEffect(() => {
-    AOS.init({ duration: 800 }); 
-  }, []);
-
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
   useEffect(() => {
     getStudentsDetails()
       .then((response) => {
         setStudents(response.data);
+        setFilteredStudents(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching students details:", error);
+        setMessage("Error fetching students details");
       });
   }, []);
 
+  const enRollNo = async (enrollNo) => {
+    try {
+      const res = await searchEnrollNoRecord(enrollNo);
+      if (res.data) {
+        setFilteredStudents([res.data]);
+        setMessage("");
+      } else {
+        setFilteredStudents([]);
+        setMessage("No student found with this Enroll No");
+      }
+    } catch (error) {
+      setFilteredStudents([]);
+      setMessage("Error searching by Enroll No");
+    }
+  };
+
+  const mobileNo = async (mobile) => {
+    try {
+      const res = await searchMobileNoRecord(mobile);
+      if (res.data) {
+        setFilteredStudents([res.data]);
+        setMessage("");
+      } else {
+        setFilteredStudents([]);
+        setMessage("No student found with this Mobile No");
+      }
+    } catch (error) {
+      setFilteredStudents([]);
+      setMessage("Error searching by Mobile No");
+    }
+  };
+
+  const handleEnrollInput = (e) => {
+    const val = e.target.value.slice(0, 6);
+    e.target.value = val;
+    if (val.length === 6) {
+      enRollNo(val);
+    } else if (val.length === 0) {
+      setFilteredStudents(students);
+      setMessage("");
+    }
+  };
+
+  const handleMobileInput = (e) => {
+    const val = e.target.value.slice(0, 10);
+    e.target.value = val;
+    if (val.length === 10) {
+      mobileNo(val);
+    } else if (val.length === 0) {
+      setFilteredStudents(students);
+      setMessage("");
+    }
+  };
+
   return (
     <div className="container mt-4">
-      <h3>Students Details</h3>
+      <button className="btn btn-outline-secondary" onClick={() => { navigate("/dashboard") }}>
+        <i className="bi bi-arrow-left"></i> Go Back
+      </button>
+      <div className="d-flex py-3 align-items-center">
+        <h3 className="heading me-3" style={{ color: "#004aad" }}>Students Details</h3>
+        <input
+          type="number"
+          placeholder="Search by EnrollNo"
+          className="me-2"
+          onInput={handleEnrollInput}
+        />
+        <input
+          type="number"
+          placeholder="Search by Mobileno"
+          onInput={handleMobileInput}
+        />
+      </div>
+
+      {/* Pop-up message div */}
+      {message && (
+        <div className="alert alert-warning" role="alert">
+          {message}
+        </div>
+      )}
+
       <table className="table table-bordered table-striped">
-        <thead className="thead-dark">
+        <thead className="heading">
           <tr>
-            <th data-aos="fade-down" className="header-icon">
-              S.No <i className="bi bi-hash"></i>
-            </th>
-            <th data-aos="fade-down" className="header-icon">
-              Name <i className="bi bi-person"></i>
-            </th>
-            <th data-aos="fade-down" className="header-icon">
-              Enroll No <i className="bi bi-card-checklist"></i>
-            </th>
-            <th data-aos="fade-down" className="header-icon">
-              Email <i className="bi bi-envelope"></i>
-            </th>
-            <th data-aos="fade-down" className="header-icon">
-              Mobile <i className="bi bi-phone"></i>
-            </th>
-            <th data-aos="fade-down" className="header-icon">
-              Gender <i className="bi bi-gender-ambiguous"></i>
-            </th>
-            <th data-aos="fade-down" className="header-icon">
-              Address <i className="bi bi-geo-alt"></i>
-            </th>
+            <th className="header-icon" style={{ color: "#004aad" }}>S.No</th>
+            <th className="header-icon" style={{ color: "#004aad" }}>Name</th>
+            <th className="header-icon" style={{ color: "#004aad" }}>Enroll No</th>
+            <th className="header-icon" style={{ color: "#004aad" }}>Email</th>
+            <th className="header-icon" style={{ color: "#004aad" }}>Mobile</th>
+            <th className="header-icon" style={{ color: "#004aad" }}>Gender</th>
+            <th className="header-icon" style={{ color: "#004aad" }}>Address</th>
           </tr>
         </thead>
-        <tbody>
-          {students.length === 0 ? (
+        <tbody className="para">
+          {filteredStudents.length === 0 ? (
             <tr>
-              <td colSpan="7" className="text-center">
-                No students found.
-              </td>
+              <td colSpan="7" className="text-center">No students found.</td>
             </tr>
           ) : (
-            students.map((student, index) => (
+            filteredStudents.map((student, index) => (
               <tr key={student.email || index}>
-                <td>{index + 1}</td> {/* Serial number */}
+                <td>{index + 1}</td>
                 <td>{student.name}</td>
                 <td>{student.enrollNo || "-"}</td>
                 <td>{student.email}</td>
@@ -73,21 +130,6 @@ const ViewStudentComponent = () => {
           )}
         </tbody>
       </table>
-
-      {/* Additional CSS for hover animation */}
-      <style>{`
-        .header-icon {
-          cursor: pointer;
-          transition: transform 0.3s ease;
-        }
-        .header-icon:hover {
-          transform: scale(1.2);
-          color: #007bff;
-        }
-        .header-icon i {
-          margin-left: 5px;
-        }
-      `}</style>
     </div>
   );
 };

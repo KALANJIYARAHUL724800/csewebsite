@@ -6,6 +6,7 @@ export const logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("userType");
   localStorage.removeItem("email");
+  localStorage.removeItem("darkmode");
   window.location.href = "/home";
 };
 
@@ -245,4 +246,18 @@ export const updateUserRecord = (email, data) => {
 
 export const getStudentsDetails = () => {
   return axios.get(`${API_BASE}/students-details`);
+};
+
+export const searchEnrollNoRecord = (enrollNo) => {
+  return axios.get(`${API_BASE}/searchby-enrollno/${enrollNo}`);
+};
+
+export const searchMobileNoRecord = (mobileNo) => {
+  return axios.get(`${API_BASE}/searchby-mobileno/${mobileNo}`);
+};
+
+export const postCount = (date) => {
+  return axios.get(`${API_BASE}/posts/count-posts`, {
+    params: { date } 
+  });
 };
