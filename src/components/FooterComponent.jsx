@@ -7,10 +7,7 @@ const footerComponent = () => {
           <div className="col-md-4 mb-4">
             <h5 className="footer-title">About CSE Ramnad</h5>
             <p className='para'>
-              The Computer Science Engineering (CSE) department in Ramnad is
-              committed to excellence in teaching, research, and innovation.
-              We equip students with skills in programming, AI, software
-              development, and modern technologies.
+            The Computer Science training center in Ramnad offers practical, skill-based courses in programming, full-stack development, MS Office, Tally, graphics, and UI/UX. With experienced faculty, online/offline classes, ISO certification, and 26+ years of service, we provide quality computer education at affordable fees.
             </p>
           </div>
           <div className="col-md-4 mb-4">
@@ -29,10 +26,10 @@ const footerComponent = () => {
             <p className='para'><i className="bi bi-telephone-fill me-2"></i>+91 7010038188, +91 9965163156</p>
             <a href='#' target="cseramnad@gmail.com" className='text-white text-decoration-none para'><i className="bi bi-envelope-fill me-2"></i>cseramnad@gmail.com</a>
             <div className="footer-social">
-              <a href="#" className="me-3"><i className="bi bi-facebook"></i></a>
-              <a href="#" className="me-3"><i className="bi bi-twitter"></i></a>
-              <a href="#" className="me-3"><i className="bi bi-linkedin"></i></a>
-              <a href="#"><i className="bi bi-instagram"></i></a>
+              <a href="https://www.facebook.com/cseramnad" target="_blank" className="me-3"><i className="bi bi-facebook"></i></a>
+              <a href="https://www.youtube.com/@cseramnad" target="_blank" className="me-3"><i className="bi bi-youtube"></i></a>
+              <a href="https://in.linkedin.com/company/cseramnad" target="_blank" className="me-3"><i className="bi bi-linkedin"></i></a>
+              <a href="https://www.instagram.com/cse_ramnad/" target="_blank"><i className="bi bi-instagram"></i></a>
             </div>
           </div>
         </div>

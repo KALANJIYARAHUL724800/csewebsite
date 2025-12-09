@@ -5,6 +5,7 @@ const ContactComponent = () => {
   return (
     <div className="contact-container container py-5">
       <h1 className="contact-title text-center mb-4 heading" style={{ color: '#004aad' }}>Contact Information & Location</h1>
+      <hr />
       <div className="row">
         {/* LEFT SIDE */}
         <div className="col-md-6">

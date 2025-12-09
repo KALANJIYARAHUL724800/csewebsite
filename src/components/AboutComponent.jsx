@@ -17,7 +17,7 @@ const AboutComponent = () => {
         const res = await showAllAbout();
         const aboutContent = JSON.parse(res.data[0].content);
         setData(aboutContent);
-      } catch (err) {}
+      } catch (err) { }
     };
 
     fetchData();
@@ -103,10 +103,10 @@ const AboutComponent = () => {
 
             {/* Content — Desktop: center, Mobile: after image */}
             <div className="col-md-4 order-3 order-md-2">
-              <h2 className="fw-bold mb-3 heading" style={{color:"#004aad"}}>{data.about.title}</h2>
+              <h2 className="fw-bold mb-3 heading" style={{ color: "#004aad" }}>{data.about.title}</h2>
               <p className="text-muted lh-lg para">{data.about.description}</p>
 
-              <h5 className="mt-4 fw-semibold heading" style={{color:"#004aad"}}>{data.about.reasonsTitle}</h5>
+              <h5 className="mt-4 fw-semibold heading" style={{ color: "#004aad" }}>{data.about.reasonsTitle}</h5>
               <ul className="list-unstyled text-muted ps-2 para">
                 {data.about.reasons?.map((reason, index) => (
                   <li key={index} className="mb-2">
@@ -133,7 +133,7 @@ const AboutComponent = () => {
       {/* SERVICES */}
       {data.features && (
         <section id="services" className="py-5 bg-white" data-aos="fade-up">
-          <h3 className="text-center fw-bold mb-5 heading" style={{color:"#004aad"}}>Our Features</h3>
+          <h3 className="text-center fw-bold mb-5 heading" style={{ color: "#004aad" }}>Our Features</h3>
           <div className="container">
 
             {/* FEATURES LOOP */}
@@ -151,7 +151,7 @@ const AboutComponent = () => {
                     </div>
                     {f.image && (<img
                       src={f.image ?? ""}
-                      style={{ height: "250px", width: "200px",position:"relative",left:"40px" }}
+                      style={{ height: "250px", width: "200px", position: "relative", left: "40px" }}
                       className="img-fluid ms-5"
                     />)}
                     <h5 className="fw-bold heading">{f.title}</h5>
@@ -164,9 +164,30 @@ const AboutComponent = () => {
           </div>
         </section>
       )}
+        {/* Social Media */}
+        <section className="py-5 bg-light text-center">
+        <div className="container">
+          <h2 className="mb-3 heading" style={{ color: "#004aad" }}>Follow Us</h2>
+          <p className="mb-4 text-muted para">Stay connected with us on social media!</p>
+          <div className="d-flex justify-content-center gap-3">
+            <a href="https://www.facebook.com/cseramnad" target="_blank" className="btn btn-primary btn-lg rounded-circle d-flex align-items-center justify-content-center">
+              <i className="bi bi-facebook"></i>
+            </a>
+            <a href="https://www.youtube.com/@cseramnad" target="_blank" className="btn btn-danger btn-lg rounded-circle d-flex align-items-center justify-content-center">
+              <i className="bi bi-youtube"></i>
+            </a>
+            <a href="https://in.linkedin.com/company/cseramnad" target="_blank" className="btn btn-info btn-lg rounded-circle d-flex align-items-center justify-content-center text-white">
+              <i className="bi bi-linkedin"></i>
+            </a>
+            <a href="https://www.instagram.com/cse_ramnad/" target="_blank" className="btn btn-pink btn-lg rounded-circle d-flex align-items-center justify-content-center text-white" style={{ backgroundColor: '#E4405F' }}>
+              <i className="bi bi-instagram"></i>
+            </a>
+          </div>
+        </div>
+      </section>
       {/* GALLERY */}
       <section className="py-5 bg-white" data-aos="fade-up">
-        <h3 className="text-center fw-bold mb-4 heading" style={{color:"#004aad"}}>Gallery</h3>
+        <h3 className="text-center fw-bold mb-4 heading" style={{ color: "#004aad" }}>Gallery</h3>
         <div className="container">
           <div
             id="galleryCarousel"
@@ -212,7 +233,7 @@ const AboutComponent = () => {
 
       {/* CONTACT FORM */}
       {data.contactForm && (<section id="contact" className="py-5" data-aos="fade-up">
-        <h3 className="text-center fw-bold mb-4 heading" style={{color:"#004aad"}}>Contact Us</h3>
+        <h3 className="text-center fw-bold mb-4 heading" style={{ color: "#004aad" }}>Contact Us</h3>
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-md-8">

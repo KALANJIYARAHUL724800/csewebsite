@@ -52,6 +52,7 @@ const CoursesComponent = () => {
       <h1 className="text-center mb-5 heading" style={{ color: "#004aad" }}>
         Available Courses
       </h1>
+      <hr />
       {loading ? (
         <div className="text-center my-5">
           <div className="spinner-border text-primary" role="status">

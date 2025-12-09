@@ -37,7 +37,7 @@ const GalleryComponent = () => {
         >
           Gallery
         </h1>
-
+        <hr />
         <div className="row g-4 justify-content-center">
           {images.map((img, index) => (
             <div

@@ -116,20 +116,19 @@ const CourseContent = () => {
       {/* Heading with Fees Button */}
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
         <h1
-          className="text-center flex-grow-1 mb-3 mb-md-0 heading"
-          style={{ fontWeight: 700, color: "#007bff", fontFamily: "Poppins, sans-serif" }}
+          className="text-center flex-grow-1 mb-3 mb-md-0 heading" style={{ color: "#004aad" }}
         >
           {courseData.courseName || "Course"}
         </h1>
         <button
           className="btn btn-success d-flex align-items-center"
-          style={{ gap: "0.5rem" }}
+          style={{ gap: "0.5rem",fontFamily:"initial",fontSize:"20px" }}
           onClick={openForm}
         >
-          <FaDollarSign /> Fees
+          <i className="bi bi-currency-rupee"></i> Fees
         </button>
       </div>
-
+    <hr />
       {/* Course Image */}
       <div className="d-flex justify-content-center mb-5 flex-wrap">
         {images.map((img, idx) => (

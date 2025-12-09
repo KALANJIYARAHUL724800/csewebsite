@@ -50,7 +50,7 @@ const HeaderComponent = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <a className="nav-link" href="/events">
                 <i className="bi bi-calendar-event-fill me-1"></i> Event
               </a>
             </li>
