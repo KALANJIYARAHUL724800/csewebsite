@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import HeaderComponent from './components/headerComponent';
+import HeaderComponent from './components/HeaderComponent';
 import FooterComponent from './components/footerComponent';
 import HomeComponent from './components/HomeComponent';
 import AboutComponent from './components/AboutComponent';
@@ -27,6 +27,8 @@ import PublicRoute from './components/PublicRoute';
 import StudentDashBoard from './components/StudentDashBoard';
 import TestiMonialsComponent from './components/TestiMonialsComponent';
 import ViewStudentComponent from './components/ViewStudentComponent';
+import CertificateComponent from './components/CertificateComponent';
+import CertificateFormComponent from './components/CertificateFormComponent';
 
 function App() {
   return (
@@ -46,7 +48,8 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/testimonials" element={<TestiMonialsComponent />} />
           <Route path="/view-students" element={<ViewStudentComponent />} />
-          
+          <Route path="/upload-certificate" element={<CertificateFormComponent />} />
+          <Route path="/view-certificate" element={<CertificateComponent />} />
           {/* Public Routes only if not logged in */}
           <Route path="/login" element={
             <PublicRoute>
@@ -54,9 +57,9 @@ function App() {
             </PublicRoute>
           } />
           <Route path="/signup" element={
-            <PrivateRoute allowedUserType="true">
+            // <PrivateRoute allowedUserType="true">
               <StudentSignup />
-            </PrivateRoute>
+            // </PrivateRoute>
           } />
           <Route path="/update-password" element={
             <PublicRoute>

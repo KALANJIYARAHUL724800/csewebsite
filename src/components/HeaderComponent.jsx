@@ -19,7 +19,7 @@ const HeaderComponent = () => {
       <div className="container-fluid">
 
         <a className="navbar-brand fw-bold header-logo" href="#">
-          <img src="/cselogo.png" alt="cselogo" className='cse-headinglogo' />
+          <img src="/cse.jpg" alt="cselogo" className='cse-headinglogo' />
         </a>
         <button
           className="navbar-toggler"
@@ -64,11 +64,17 @@ const HeaderComponent = () => {
                 <i className="bi bi-image-fill me-1"></i> Gallery
               </a>
             </li>
+            <li className="nav-item bg-success rounded">
+              <a className="nav-link" href="/view-certificate">
+                <i className="bi bi-award-fill me-1"></i>
+                View Certificate
+              </a>
+            </li>
             {login && (
               <li className="nav-item">
                 <a
                   className="nav-link"
-                  href={userType ? "/dashboard" : "/student-dashboard"} 
+                  href={userType ? "/dashboard" : "/student-dashboard"}
                 >
                   <i className="bi bi-speedometer2 me-1"></i> Dashboard
                 </a>
@@ -76,7 +82,7 @@ const HeaderComponent = () => {
             )}
 
             {login && (
-              <li className="nav-item" onClick={()=>{
+              <li className="nav-item" onClick={() => {
                 localStorage.removeItem("token");
                 localStorage.removeItem("userType");
                 localStorage.removeItem("email");

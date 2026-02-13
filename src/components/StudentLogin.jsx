@@ -165,6 +165,12 @@ const StudentLogin = () => {
           >
             <i className="bi bi-key"></i> Forgot Password?
           </a>
+          <a
+            href="/signup"
+            className="d-block text-end mb-3 text-decoration-none small text-muted heading"
+          >
+            <i className="bi bi-lock"></i> Signup
+          </a>
           <button type="submit" className="btn btn-primary w-100 mb-3">
             Login
           </button>
