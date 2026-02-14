@@ -261,3 +261,13 @@ export const postCount = (date) => {
     params: { date } 
   });
 };
+
+export const findCertificate = (enrollNo) => {
+  return axios.get(`${API_BASE}/certificate/find`, {
+    params: { enrollNo } 
+  });
+};
+
+export const insertCertificate = (value) => {
+  return axios.post(`${API_BASE}/certificate/insert`, value);
+};

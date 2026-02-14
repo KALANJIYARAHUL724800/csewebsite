@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from 'react';
+import { findCertificate } from "../index";
 const CertificateComponent = () => {
 
   const [enroll, setEnroll] = useState({
@@ -9,11 +10,37 @@ const CertificateComponent = () => {
   const handleChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
-    setEnroll({
-      ...enroll,
-      [name]: value
-    })
+    if (/^\d{0,6}$/.test(value)) {
+      setEnroll({
+        ...enroll,
+        [name]: value
+      });
+    }
+
   }
+  const [isData, setIsData] = useState(false);
+  const [data, setData] = useState({});
+  const [error, setError] = useState(false);
+  const findCertiticateByEnrollNo = async () => {
+    setError(false);
+    setIsData(false);
+
+    try {
+      const response = await findCertificate(enroll.enrollno);
+
+      if (response.data && response.data.length > 0) {
+        setData(response.data[0]);
+        setIsData(true);
+      } else {
+        setError(true);
+      }
+
+      setEnroll({ enrollno: "" });
+
+    } catch (err) {
+      setError(true);
+    }
+  };
 
   return (
     <div
@@ -23,6 +50,17 @@ const CertificateComponent = () => {
         padding: "80px 0",
       }}
     >
+      {/* Error Popup */}
+      {
+        error && (
+          <div className="container mt-4">
+            <div className="alert alert-danger text-center shadow-sm p-3 rounded">
+              <strong>Certificate Not Found!</strong>
+            </div>
+          </div>
+        )
+      }
+
       <div className="container">
         <div className="row align-items-center">
 
@@ -81,9 +119,7 @@ const CertificateComponent = () => {
                   fontWeight: "600",
                   fontSize: "15px",
                 }}
-                onClick={() => {
-                  console.log(enroll);
-                }}
+                onClick={findCertiticateByEnrollNo}
               >
                 Verify Certificate
               </button>
@@ -103,10 +139,214 @@ const CertificateComponent = () => {
         </div>
       </div>
 
-      {/* Certitificate Details */}
-      <div className="row">
-                
-      </div>
+      {/* Certificate Data */}
+      {
+        isData && (
+          <div className="container mt-5">
+
+            {/* Top Header */}
+            <div
+              className="p-3 rounded-top d-flex align-items-center"
+              style={{
+                backgroundColor: "#8FB339",
+                color: "white"
+              }}
+            >
+              <i className="bi bi-check-circle-fill me-2 fs-4"></i>
+              <div>
+                <h5 className="mb-0 fw-bold">Certificate Verified</h5>
+                <small>Valid certificate found</small>
+              </div>
+            </div>
+
+            {/* Card Body */}
+            <div
+              className="card shadow border-0 rounded-bottom"
+              style={{
+                backgroundColor: "#F2F6E9",
+                border: "2px solid #C5D6A0"
+              }}
+            >
+              <div className="card-body p-4">
+
+                {/* Logo */}
+                <div className="mb-4">
+                  <img
+                    src="cselogo.png"
+                    alt="cselogo"
+                    style={{ height: "100px" }}
+                    className="img-fluid"
+                  />
+                </div>
+
+                <div className="row">
+
+                  {/* Left Side */}
+                  <div className="col-md-6">
+
+                    <p>
+                      <i className="bi bi-person-fill me-2" style={{ color: "#8FB339" }}></i>
+                      <strong>Name</strong><br />
+                      <span className="text-primary">{data.name}</span>
+                    </p>
+
+                    <p>
+                      <i className="bi bi-award me-2" style={{ color: "#8FB339" }}></i>
+                      <strong>Certificate Name</strong><br />
+                      <span className="text-primary">{data.certificateName}</span>
+                    </p>
+
+                    <p>
+                      <i className="bi bi-hash me-2" style={{ color: "#8FB339" }}></i>
+                      <strong>Certificate Number</strong><br />
+                      <span className="text-primary">{data.enrollNumber}</span>
+                    </p>
+
+                    <p>
+                      <i className="bi bi-patch-check me-2" style={{ color: "#8FB339" }}></i>
+                      <strong>Grade</strong><br />
+                      <span className="text-primary">{data.grade}</span>
+                    </p>
+
+                    <p>
+                      <i className="bi bi-calendar-event me-2" style={{ color: "#8FB339" }}></i>
+                      <strong>Certificate Date</strong><br />
+                      <span className="text-primary">{data.certificateDate}</span>
+                    </p>
+
+                  </div>
+
+                  {/* Right Side */}
+                  <div className="col-md-6">
+
+                    <p>
+                      <i className="bi bi-calendar-plus me-2" style={{ color: "#8FB339" }}></i>
+                      <strong>Join Date</strong><br />
+                      <span className="text-primary">{data.joinDate}</span>
+                    </p>
+
+                    <p>
+                      <i className="bi bi-calendar-check me-2" style={{ color: "#8FB339" }}></i>
+                      <strong>End Date</strong><br />
+                      <span className="text-primary">{data.endDate}</span>
+                    </p>
+
+                    <p>
+                      <i className="bi bi-geo-alt me-2" style={{ color: "#8FB339" }}></i>
+                      <strong>Location</strong><br />
+                      <span className="text-primary">{data.location}</span>
+                    </p>
+
+                    <p>
+                      <i className="bi bi-building me-2" style={{ color: "#8FB339" }}></i>
+                      <strong>Institution Name</strong><br />
+                      <span className="text-primary">{data.institutionName}</span>
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+            {/* Grade Description */}
+            <div className="container mt-4">
+
+              {/* Header */}
+              <div
+                className="p-3 rounded-top fw-bold"
+                style={{
+                  backgroundColor: "#C8DCA3",
+                  color: "#2E4A1F"
+                }}
+              >
+                Grade Description
+              </div>
+
+              {/* Table */}
+              <div
+                className="rounded-bottom"
+                style={{
+                  backgroundColor: "#F2F6E9",
+                  border: "1px solid #C5D6A0"
+                }}
+              >
+                <table className="table mb-0 align-middle">
+                  <thead>
+                    <tr style={{ backgroundColor: "#DDE6C5" }}>
+                      <th className="ps-4">Grade</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr>
+                      <td className="ps-4">
+                        <span
+                          className="d-inline-flex justify-content-center align-items-center"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            borderRadius: "50%",
+                            backgroundColor: "#6C757D",
+                            color: "white",
+                            fontWeight: "bold"
+                          }}
+                        >
+                          A+
+                        </span>
+                      </td>
+                      <td>&gt;= 75%</td>
+                    </tr>
+
+                    <tr style={{ backgroundColor: "#EEF4DD" }}>
+                      <td className="ps-4">
+                        <span
+                          className="d-inline-flex justify-content-center align-items-center"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            borderRadius: "50%",
+                            backgroundColor: "#6C757D",
+                            color: "white",
+                            fontWeight: "bold"
+                          }}
+                        >
+                          A
+                        </span>
+                      </td>
+                      <td>&gt;= 60% &lt; 75%</td>
+                    </tr>
+
+                    <tr>
+                      <td className="ps-4">
+                        <span
+                          className="d-inline-flex justify-content-center align-items-center"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            borderRadius: "50%",
+                            backgroundColor: "#6C757D",
+                            color: "white",
+                            fontWeight: "bold"
+                          }}
+                        >
+                          B
+                        </span>
+                      </td>
+                      <td>&gt;= 36% &lt; 60%</td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+
+          </div>
+        )
+      }
     </div>
   );
 };
