@@ -39,6 +39,9 @@ const CertificateComponent = () => {
 
     } catch (err) {
       setError(true);
+      setTimeout(() => {
+        setError(false)
+      }, 3000);
     }
   };
 

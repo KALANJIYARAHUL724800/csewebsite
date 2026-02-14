@@ -14,7 +14,6 @@ export default function CertificateFormComponent() {
         endDate: ""
     });
 
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -31,7 +30,8 @@ export default function CertificateFormComponent() {
         joinDate: "",
         endDate: ""
     });
-
+    const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const handleSubmit = async (e) => {
         e.preventDefault();
         const payload = {
@@ -47,6 +47,9 @@ export default function CertificateFormComponent() {
         }
         await insertCertificate(payload).then((response) => {
             setSuccess(true)
+            setTimeout(() => {
+                setSuccess(false)
+            }, 3000);
             setFormData({
                 name: "",
                 certificateName: "",
@@ -59,8 +62,22 @@ export default function CertificateFormComponent() {
                 endDate: ""
             })
         }).catch((error) => {
-            setErrors(error.response.data);
-            console.log(error.response.data)
+            setError(error.response.data)
+            if (error.response) {
+                if (typeof error.response.data === "string") {
+                    setErrorMessage(error.response.data);  
+
+                    setTimeout(() => {
+                        setErrorMessage(""); 
+                    }, 2000);
+                } else {
+                    setErrors(error.response.data);
+
+                    setTimeout(() => {
+                        setErrors({}); 
+                    }, 2000);
+                }
+            }
         })
     };
 
@@ -76,6 +93,14 @@ export default function CertificateFormComponent() {
                     </div>
                 )
             }
+            {/* Error Popup */}
+            {errorMessage && (
+                <div className="container mt-4">
+                    <div className="alert alert-danger text-center shadow-sm p-3 rounded">
+                        <strong>{errorMessage}</strong>
+                    </div>
+                </div>
+            )}
             <div className="card shadow-lg p-4 rounded-4">
                 <h3 className="text-center mb-4">Certificate Form</h3>
 
