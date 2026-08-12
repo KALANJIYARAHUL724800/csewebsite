@@ -11,7 +11,7 @@ import {
   FaBriefcase,
   FaDollarSign
 } from 'react-icons/fa';
-import { searchCourseContent, insertFeesEnquiry } from "../index";
+import { searchCourseContent, insertFeesEnquiry, getAllCourses } from "../index";
 import { useNavigate } from "react-router-dom";
 const CourseContent = () => {
   const [errors, setErrors] = useState({ name: "", phone: "" });
@@ -52,7 +52,10 @@ const CourseContent = () => {
     { icon: <FaBriefcase size={30} />, title: "Career Opportunities", text: courseData.careerOpportunities }
   ];
 
-  const images = courseData.logoUrl ? [courseData.logoUrl] : ["https://via.placeholder.com/400x200"];
+
+  const images = courseData?.logoUrl
+  ? [courseData.logoUrl]
+  : [];
 
   const handleFormChange = e => {
     const { name, value } = e.target;
@@ -65,6 +68,7 @@ const CourseContent = () => {
     try {
       const res = await searchCourseContent(id);
       const courseData = res.data.courseId ? { ...res.data.courseId, ...res.data } : res.data;
+
       const payload = {
         name: formData.name,
         phone: formData.phone,
@@ -113,35 +117,63 @@ const CourseContent = () => {
 
   return (
     <div className="container my-5">
-      {/* Heading with Fees Button */}
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
-        <h1
-          className="text-center flex-grow-1 mb-3 mb-md-0 heading" style={{ color: "#004aad" }}
-        >
-          {courseData.courseName || "Course"}
-        </h1>
-        <button
-          className="btn btn-success d-flex align-items-center"
-          style={{ gap: "0.5rem",fontFamily:"initial",fontSize:"20px" }}
-          onClick={openForm}
-        >
-          <i className="bi bi-currency-rupee"></i> Fees
-        </button>
-      </div>
-    <hr />
+  {/* Heading with Back & Fees Buttons */}
+<div className="course-header mb-5">
+
+  <button
+    className="btn btn-secondary back-btn d-flex align-items-center"
+    onClick={() => navigate(-1)}
+  >
+    <i className="bi bi-arrow-left me-2"></i>
+    Back
+  </button>
+
+  <h1 className="course-heading mb-0">
+    {courseData.courseName || "Course"}
+  </h1>
+
+  <button
+    className="btn btn-success fees-btn d-flex align-items-center"
+    onClick={openForm}
+  >
+    Join
+  </button>
+
+</div>
+<hr />
+
       {/* Course Image */}
       <div className="d-flex justify-content-center mb-5 flex-wrap">
-        {images.map((img, idx) => (
-          <img
-            key={idx}
-            src={img}
-            alt={`Course ${idx + 1}`}
-            className="img-fluid rounded shadow mb-3"
-            style={{ maxHeight: "250px", marginRight: "10px" }}
-          />
-        ))}
-      </div>
+        {images.map((img, idx) => {
 
+  return (
+    <img
+      key={idx}
+      src={img}
+      alt={`Course ${idx + 1}`}
+      className="img-fluid rounded shadow mb-3"
+      style={{ maxHeight: "250px", marginRight: "10px" }}
+    />
+  );
+})}
+      </div>
+      
+      <div className="text-center mb-5">
+        <img
+          src={`/prospecters/${courseData.image}.png`}
+          alt={courseData?.courseTitle}
+          
+          style={{
+            maxWidth: "100%",
+            maxHeight: "600px",
+            width: "auto",
+            height: "auto",
+            objectFit: "contain",
+            borderRadius: "10px",
+            boxShadow: "0 4px 12px rgba(0,0,0,.2)"
+          }}
+        />
+      </div>
       {/* Course Sections */}
       <div className="row g-4">
         {courseSections.map((section, idx) => (
@@ -203,9 +235,9 @@ const CourseContent = () => {
                   placeholder="Phone Number"
                   value={formData.phone}
                   maxLength={10}
-                  onChange={handleFormChange} 
+                  onChange={handleFormChange}
                 />
-                 {errors.phone && <div className="text-danger small mt-1">{errors.phone}</div>}
+                {errors.phone && <div className="text-danger small mt-1">{errors.phone}</div>}
               </div>
 
               <div className="d-flex justify-content-between">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaTrash, FaEdit, FaHashtag, FaBook, FaCalendarAlt, FaClock } from 'react-icons/fa';
+import { FaTrash, FaEdit, FaHashtag, FaBook, FaCalendarAlt, FaClock, FaMapMarkerAlt   } from 'react-icons/fa';
 import { insertBatches, showAllBatches, deletedBatch, updateBatch } from "../index";
 import { useNavigate } from "react-router-dom";
 
@@ -37,10 +37,11 @@ const BatchComponent = () => {
                 setSuccessMsg('Batch updated successfully!');
                 setEditIndex(null);
             } else {
+                console.log(formData);
                 await insertBatches(formData);
                 setSuccessMsg('Batch added successfully!');
             }
-            setFormData({ course: '', date: '', time: '' });
+            setFormData({ course: '', date: '', time: '',location:'' });
             setTimeout(() => setSuccessMsg(''), 3000);
             loadBatches();
         } catch (error) {
@@ -115,16 +116,24 @@ const BatchComponent = () => {
                                     <th><FaBook style={{ color: '#00FFFF', marginRight: '5px' }} />Course</th>
                                     <th><FaCalendarAlt style={{ color: '#FFA500', marginRight: '5px' }} />Date</th>
                                     <th><FaClock style={{ color: '#ADFF2F', marginRight: '5px' }} />Time</th>
+                                   <th>
+                                    <FaMapMarkerAlt
+                                        style={{ color: "#ff6d2f", marginRight: "5px" }}
+                                    />
+                                    Location
+                                    </th>
                                     <th><FaEdit style={{ color: '#00BFFF', marginRight: '5px' }} />Action</th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 {batches.map((batch, index) => (
                                     <tr key={batch.id || index}>
                                         <td>{index + 1}</td>
-                                        <td>{batch.course}</td>
+                                        <td>{String(batch.course || "").trim().toUpperCase()}</td>
                                         <td>{batch.date}</td>
                                         <td>{batch.time}</td>
+                                       <td>{String(batch.location || "").trim().toUpperCase()}</td>
                                         <td className="d-flex flex-wrap gap-1">
                                             <button
                                                 className="btn btn-warning btn-sm d-flex align-items-center gap-1"
@@ -185,6 +194,30 @@ const BatchComponent = () => {
                                 onChange={handleChange}
                             />
                             {errors.time && <div className="text-danger mt-1 para">{errors.time}</div>}
+                        </div>
+
+                        {/* location set this code here */}
+                        <div className="mb-3">
+                            <label className="form-label text-white fw-bold heading">
+                                Location
+                            </label>
+
+                            <select
+                                name="location"
+                                className={`form-select para ${errors.location ? "is-invalid" : ""}`}
+                                value={formData.location}
+                                onChange={handleChange}
+                            >
+                                <option value="">Select Location</option>
+                                <option value="Ramnad">Ramnad</option>
+                                <option value="Udumalpet">Udumalpet</option>
+                            </select>
+
+                            {errors.location && (
+                                <div className="text-danger mt-1 para">
+                                    {errors.location}
+                                </div>
+                            )}
                         </div>
 
                         <button type="submit" className="btn btn-primary w-100 fw-bold">

@@ -6,7 +6,6 @@ import { showAllAbout } from "../index";
 
 const AboutComponent = () => {
   const [data, setData] = useState(null);
-  const [contact, setContact] = useState({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState({});
   const [sent, setSent] = useState(false);
 
@@ -16,6 +15,8 @@ const AboutComponent = () => {
       try {
         const res = await showAllAbout();
         const aboutContent = JSON.parse(res.data[0].content);
+        console.log(aboutContent['about']['udumalpet']);
+        
         setData(aboutContent);
       } catch (err) { }
     };
@@ -23,34 +24,16 @@ const AboutComponent = () => {
     fetchData();
   }, []);
   if (!data) return <p>Loading...</p>;
-  const handleChange = (e) => setContact({ ...contact, [e.target.name]: e.target.value });
-
-  const validate = () => {
-    const err = {};
-    if (!contact.name.trim()) err.name = "Name required";
-    if (!contact.email.match(/^\S+@\S+\.\S+$/)) err.email = "Valid email required";
-    if (!contact.message.trim()) err.message = "Message required";
-    return err;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const v = validate();
-    setErrors(v);
-    if (Object.keys(v).length === 0) {
-      setSent(true);
-      setTimeout(() => {
-        setSent(false);
-        setContact({ name: "", email: "", message: "" });
-      }, 1800);
-    }
-  };
 
   const galleryImages = [
     "public/gallery/Counselling-1.jpg",
     "public/gallery/Counselling-2.jpg",
-    "public/gallery/Lab.png",
-    "public/gallery/Class-2.jpg",
+    "public/gallery/3.jpeg",
+    "public/gallery/4.jpeg",
+    "public/gallery/5.jpeg",
+    "public/gallery/6.jpeg",
+    "public/gallery/7.jpeg",
+    "public/gallery/8.jpeg",    
   ];
 
   return (
@@ -91,44 +74,115 @@ const AboutComponent = () => {
         </section>
       )}
 
-      {/* ABOUT SECTION */}
-      {data?.about && (
-        <section className="container py-5" data-aos="fade-up">
-          <div className="row align-items-center gy-4">
+    {/* ================= ABOUT SECTION ================= */}
+{data?.about && (
+  <section className="about-section container py-5" data-aos="fade-up">
 
-            {/* Say Image — Desktop: left, Mobile: top */}
-            <div className="col-md-4 order-1 order-md-1 text-center text-md-start">
-              <img src="public/about/say.png" alt="Say" className="img-fluid" />
-            </div>
+    <div className="row align-items-center gy-4">
 
-            {/* Content — Desktop: center, Mobile: after image */}
-            <div className="col-md-4 order-3 order-md-2">
-              <h2 className="fw-bold mb-3 heading" style={{ color: "#004aad" }}>{data.about.title}</h2>
-              <p className="text-muted lh-lg para">{data.about.description}</p>
+      {/* ================= DESKTOP GIRL ================= */}
+      <div className="col-md-4 about-girl-desktop text-center">
+        <img
+          src="/about/say.png"
+          alt="Say"
+          className="about-girl-img"
+        />
+      </div>
 
-              <h5 className="mt-4 fw-semibold heading" style={{ color: "#004aad" }}>{data.about.reasonsTitle}</h5>
-              <ul className="list-unstyled text-muted ps-2 para">
-                {data.about.reasons?.map((reason, index) => (
-                  <li key={index} className="mb-2">
-                    ✅ {reason}
-                  </li>
-                ))}
-              </ul>
-            </div>
+      {/* ================= CONTENT ================= */}
+      <div className="col-md-4 about-content">
 
-            {/* Right Image */}
-            <div className="col-md-4 order-2 order-md-3 text-center">
-              <img
-                src={data.about.image}
-                alt="About"
-                className="img-fluid rounded-4 shadow-lg"
-                style={{ maxHeight: "350px", objectFit: "cover" }}
-              />
-            </div>
+        <h2
+          className="fw-bold mb-3 heading"
+          style={{ color: "#004aad" }}
+        >
+          {data.about.title}
+        </h2>
+
+        <p className="text-muted lh-lg para">
+          {data.about.description}
+        </p>
+
+
+        {/* ================= MOBILE WHY CHOOSE AREA ================= */}
+        <div className="mobile-why-wrapper">
+
+          {/* Girl pointing towards Why Choose Us */}
+          <div className="mobile-girl">
+            <img
+              src="/about/say.png"
+              alt="Why choose us"
+            />
+          </div>
+
+          {/* Why Choose Us */}
+          <div className="mobile-reasons">
+
+            <h5
+              className="mt-4 fw-semibold heading"
+              style={{ color: "#004aad" }}
+            >
+              {data.about.reasonsTitle}
+            </h5>
+
+            <ul className="list-unstyled text-muted ps-0 para">
+              {data.about.reasons?.map((reason, index) => (
+                <li key={index} className="mb-2">
+                  <span className="reason-check">✅</span>
+                  <span>{reason}</span>
+                </li>
+              ))}
+            </ul>
 
           </div>
-        </section>
-      )}
+
+        </div>
+
+
+        {/* ================= DESKTOP WHY CHOOSE ================= */}
+        <div className="desktop-reasons">
+
+          <h5
+            className="mt-4 fw-semibold heading"
+            style={{ color: "#004aad" }}
+          >
+            {data.about.reasonsTitle}
+          </h5>
+
+          <ul className="list-unstyled text-muted ps-2 para">
+            {data.about.reasons?.map((reason, index) => (
+              <li key={index} className="mb-2">
+                ✅ {reason}
+              </li>
+            ))}
+          </ul>
+
+        </div>
+
+      </div>
+
+
+      {/* ================= RIGHT IMAGES ================= */}
+      <div className="col-md-4 about-right-images text-center">
+
+        <img
+          src={data.about.image}
+          alt="About"
+          className="about-main-image"
+        />
+
+        <img
+          src={data.about.udumalpet}
+          alt="Udumalpet"
+          className="about-second-image"
+        />
+
+      </div>
+
+    </div>
+
+  </section>
+)}
 
       {/* SERVICES */}
       {data.features && (
@@ -186,97 +240,69 @@ const AboutComponent = () => {
         </div>
       </section>
       {/* GALLERY */}
-      <section className="py-5 bg-white" data-aos="fade-up">
-        <h3 className="text-center fw-bold mb-4 heading" style={{ color: "#004aad" }}>Gallery</h3>
-        <div className="container">
-          <div
-            id="galleryCarousel"
-            className="carousel slide shadow rounded overflow-hidden"
-            data-bs-ride="carousel"
-          >
-            <div className="carousel-inner">
-              {galleryImages.map((g, i) => {
-                const src = g.startsWith("public/") ? g.replace("public", "") : g;
-                return (
-                  <div key={i} className={`carousel-item ${i === 0 ? "active" : ""}`}>
-                    <img
-                      src={src}
-                      className="d-block w-100"
-                      alt={`slide-${i}`}
-                      style={{ height: "480px", objectFit: "cover" }}
-                    />
-                  </div>
-                );
-              })}
-            </div>
+     <section className="py-5 bg-white" data-aos="fade-up">
+  <h3
+    className="text-center fw-bold mb-4 heading"
+    style={{ color: "#004aad" }}
+  >
+    Gallery
+  </h3>
 
-            <button
-              className="carousel-control-prev"
-              type="button"
-              data-bs-target="#galleryCarousel"
-              data-bs-slide="prev"
+  <div className="container">
+    <div
+      id="galleryCarousel"
+      className="carousel slide shadow rounded overflow-hidden"
+      data-bs-ride="carousel"
+      data-bs-interval="1000"
+      data-bs-wrap="true"
+    >
+      <div className="carousel-inner">
+        {galleryImages.map((g, i) => {
+          const src = g.startsWith("public/")
+            ? g.replace("public", "")
+            : g;
+
+          return (
+            <div
+              key={i}
+              className={`carousel-item ${i === 0 ? "active" : ""}`}
             >
-              <span className="carousel-control-prev-icon"></span>
-            </button>
-
-            <button
-              className="carousel-control-next"
-              type="button"
-              data-bs-target="#galleryCarousel"
-              data-bs-slide="next"
-            >
-              <span className="carousel-control-next-icon"></span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* CONTACT FORM */}
-      {data.contactForm && (<section id="contact" className="py-5" data-aos="fade-up">
-        <h3 className="text-center fw-bold mb-4 heading" style={{ color: "#004aad" }}>Contact Us</h3>
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-md-8">
-              <form onSubmit={handleSubmit} className="card p-4 shadow border-0">
-                <div className="mb-3">
-                  <label className="form-label heading">Name</label>
-                  <input
-                    name="name"
-                    value={contact.name}
-                    onChange={handleChange}
-                    className={`form-control para ${errors.name ? "is-invalid" : ""}`}
-                  />
-                  {errors.name && <div className="invalid-feedback para">{errors.name}</div>}
-                </div>
-                <div className="mb-3">
-                  <label className="form-label heading">Email</label>
-                  <input
-                    name="email"
-                    value={contact.email}
-                    onChange={handleChange}
-                    className={`form-control ${errors.email ? "is-invalid" : ""}`}
-                  />
-                  {errors.email && <div className="invalid-feedback para">{errors.email}</div>}
-                </div>
-                <div className="mb-3">
-                  <label className="form-label heading">Message</label>
-                  <textarea
-                    name="message"
-                    value={contact.message}
-                    onChange={handleChange}
-                    rows="4"
-                    className={`form-control ${errors.message ? "is-invalid" : ""}`}
-                  ></textarea>
-                  {errors.message && <div className="invalid-feedback para">{errors.message}</div>}
-                </div>
-                <button type="submit" className="btn btn-primary"><i className="bi bi-send heading"></i>
-                  {sent ? "Sent!" : "Send Message"}
-                </button>
-              </form>
+              <img
+                src={src}
+                className="d-block w-100"
+                alt={`slide-${i}`}
+                style={{
+                  height: "480px",
+                  objectFit: "cover",
+                }}
+              />
             </div>
-          </div>
-        </div>
-      </section>)}
+          );
+        })}
+      </div>
+
+      {/* Previous Button */}
+      <button
+        className="carousel-control-prev"
+        type="button"
+        data-bs-target="#galleryCarousel"
+        data-bs-slide="prev"
+      >
+        <span className="carousel-control-prev-icon"></span>
+      </button>
+
+      {/* Next Button */}
+      <button
+        className="carousel-control-next"
+        type="button"
+        data-bs-target="#galleryCarousel"
+        data-bs-slide="next"
+      >
+        <span className="carousel-control-next-icon"></span>
+      </button>
+    </div>
+  </div>
+</section>
 
       <style>
         {`

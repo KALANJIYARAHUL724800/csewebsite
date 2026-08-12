@@ -1,24 +1,34 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { search, showAllBatches, showAllTestimonials, findBatch, insertFeesEnquiry, insertFeesEnquiryTemp } from "../index";
+import { search, showAllBatches, showAllTestimonials, findBatch, insertFeesEnquiry, insertFeesEnquiryTemp, searchCourseContent } from "../index";
 import { FaCheckCircle } from 'react-icons/fa';
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useParams } from "react-router-dom";
 const HomeComponent = () => {
-  const galleryImages = [
-    "public/gallery/entrance2.jpg",
-    "public/gallery/Entrance.jpg",
-    "public/gallery/Counselling-2.jpg"
-  ];
+const galleryImages = [
+  "/gallery/entrance2.jpg",
+  "/gallery/Entrance.jpg",
+  "/gallery/Counselling-2.jpg",
+  "/gallery/2.jpeg",
+  "/gallery/3.jpeg",
+  "/gallery/4.jpeg",
+  "/gallery/5.jpeg",
+  "/gallery/6.jpeg",
+  "/gallery/7.jpeg",
+  "/gallery/8.jpeg"
+];
   const [currentImage, setCurrentImage] = useState(0);
   const [errors, setErrors] = useState({});
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   const [userLogin, setUserLogin] = useState(!token);
+  const { id } = useParams();
   const [formData, setFormData] = useState({
     name: "",
-    phone: ""
+    phone: "",
+    location: "",
   });
   const openForm = async (id) => {
     try {
@@ -30,7 +40,13 @@ const HomeComponent = () => {
       }));
       setShowForm(true);
     } catch (error) {
-      setErrors(err.response.data);
+       console.error("Find batch error:", error);
+
+  setErrors(
+    error.response?.data || {
+      general: "Unable to load batch details"
+    }
+  );
     }
   };
   function openFormTemp() {
@@ -55,7 +71,10 @@ const HomeComponent = () => {
     const newErrors = {};
     if (!formData.name) newErrors.name = "Name is required";
     if (!formData.phone) newErrors.phone = "Phone is required";
-
+    if (!formData.location) newErrors.location = "Location is required";
+    // code here 
+    const expiryTime = new Date().getTime() + 60 * 60 * 1000;
+    sessionStorage.setItem("token", expiryTime);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -64,6 +83,7 @@ const HomeComponent = () => {
     const dataToSubmit = {
       name: formData.name,
       phone: formData.phone,
+      location: formData.location,
       courseTitle: formData.course,
     };
 
@@ -75,10 +95,11 @@ const HomeComponent = () => {
       }
 
       setShowSuccess(true);
+      navigate("/course/"+sessionStorage.getItem("courseId"));
       setTimeout(() => {
         setShowSuccess(false);
         setShowForm(false);
-        setFormData({ name: "", phone: "", course: "" });
+        setFormData({ name: "", phone: "", course: "", location: "" });
         closePopup();
       }, 3000);
     } catch (err) {
@@ -86,6 +107,7 @@ const HomeComponent = () => {
       setErrors({
         name: apiErrors.name || "",
         phone: apiErrors.phone || "",
+        location: apiErrors.location || "",
       });
       setShowSuccess(false);
     }
@@ -100,10 +122,31 @@ const HomeComponent = () => {
   const [showBatchPopup, setShowBatchPopup] = useState(false);
   const [hasBatches, setHasBatches] = useState(false);
   const confettiInterval = useRef(null);
+  // pagination
+  const [currentPage, setCurrentPage] = useState(1);
+
+const itemsPerPage = 6;
+
+
+const totalPages = Math.ceil(testimonials.length / itemsPerPage);
+
+const startIndex = (currentPage - 1) * itemsPerPage;
+const currentTestimonials = testimonials.slice(
+  startIndex,
+  startIndex + itemsPerPage
+);
+
+const handlePageChange = (page) => {
+  setCurrentPage(page);
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
     AOS.refresh();
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     setUserLogin(!token);
     showAllBatches()
       .then((response) => {
@@ -117,24 +160,26 @@ const HomeComponent = () => {
       .catch((err) => {
         setHasBatches(false);
       });
-    showAllTestimonials()
-      .then((response) => {
-        if (response.data && response.data.length > 0) {
-          setTestimonials(response.data)
-        } else {
-          setTestimonials(false)
-        }
-      })
-      .catch((err) => {
-        setHasBatches(false);
-      });
+  showAllTestimonials()
+  .then((response) => {
+    if (Array.isArray(response.data)) {
+      setTestimonials(response.data);
+    } else {
+      setTestimonials([]);
+    }
+  })
+  .catch((err) => {
+    console.error("Testimonials error:", err);
+    setTestimonials([]);
+  });
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % galleryImages.length);
     }, 2000);
 
     return () => clearInterval(interval);
+
+
   }, []);
-  if (!testimonials || testimonials.length === 0) return null;
   const studentLogin = () => navigate("/login");
   const startConfetti = () => {
     if (confettiInterval.current) return;
@@ -159,8 +204,8 @@ const HomeComponent = () => {
       alert("No batches available right now!");
       return;
     }
-    const audio = new Audio("/partyPop/party.mp3");
-    audio.play();
+    //const audio = new Audio("/partyPop/party.mp3");
+    //audio.play();
     setGiftClicked(true);
     setShowBatchPopup(true);
     startConfetti();
@@ -216,105 +261,161 @@ const HomeComponent = () => {
             </button>
           </div>
 
-          <div data-aos="fade-down">
-            <img src="public/cselogo.png" alt="CSE Logo" style={{ height: "180px" }} />
+          <div data-aos="" className="heading-content">
+            {/* <img src="public/cselogo.png" alt="CSE Logo" style={{ height: "180px" }} /> */}
             <h1 className="display-5 fw-bold mt-4 text-white heading">CSE Computer Education</h1>
             <p className="lead text-light para">Empowering Minds, Shaping Futures</p>
           </div>
+
         </section>
 
-        {/* Gift box or Batch popup */}
-        {hasBatches && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginBottom: "20px",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "10px",
-              position: "relative",
-            }}
-          >
-            {!giftClicked ? (
-              <img
-                src="/gift.png"
-                className="shake img img-fluid"
-                style={{ width: "300px", height: "300px", cursor: "pointer" }}
-                alt="Gift Box"
-                onClick={giftPopup}
-              />
-            ) : (
-              showBatchPopup && (
-                <div
-                  className="batch-popup"
-                  style={{
-                    padding: "20px 40px",
-                    backgroundColor: "#fff",
-                    borderRadius: "10px",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-                    animation: "fadeIn 0.5s ease-in-out",
-                    maxWidth: "400px",
-                    textAlign: "center",
-                  }}
-                >
-                  <h3 className="heading">Available Batches</h3>
-                  <ul style={{ listStyle: "none", padding: 0, marginTop: "10px" }}>
-                    {batches.map((batch) => (
-                      <li
-                        key={batch.id}
-                        style={{
-                          padding: "10px",
-                          borderBottom: "1px solid #ccc",
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        <div style={{ textAlign: "left" }}>
-                          <strong className="heading">{batch.course}</strong> <br />
-                          Date: {batch.date} <br />
-                          Time: {batch.time}
-                        </div>
-                        <a
-                          onClick={() => openForm(batch.id)}
-                          className="btn btn-success heading"
-                          style={{
-                            marginTop: "5px",
-                            textDecoration: "none",
-                            color: "white",
-                            fontWeight: "bold",
-                            padding: "6px 12px",
-                            borderRadius: "6px",
-                            left: "10px"
-                          }}
-                        >
-                          Fees
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+{/* ================= AVAILABLE BATCHES ================= */}
+{hasBatches && (
+  <section className="available-batches-section">
 
-                  <button
-                    onClick={closePopup}
-                    style={{
-                      marginTop: "15px",
-                      padding: "8px 16px",
-                      border: "none",
-                      borderRadius: "5px",
-                      backgroundColor: "#007bff",
-                      color: "#fff",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Close
-                  </button>
-                </div>
-              )
-            )}
-          </div>
-        )}
+    <h3 className="available-batches-title">
+      Available Batches
+    </h3>
+
+    <div className="batch-location-grid">
+
+      {/* ================= RAMNAD - LEFT ================= */}
+      <div className="batch-location-card">
+
+        <div className="batch-location-header">
+          <h4>Ramnad</h4>
+        </div>
+
+        <div className="batch-table-wrapper">
+          <table className="batch-table">
+
+            <thead>
+              <tr>
+                <th>Course</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Place</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {batches
+                .filter(
+                  (batch) =>
+                    batch.location?.toLowerCase().trim() === "ramnad"
+                )
+                .map((batch) => (
+                  <tr key={batch.id}>
+
+                    <td>
+                      <span className="course-name">
+                        {String(batch.course ?? "")
+                          .trim()
+                          .toUpperCase()}
+                      </span>
+                    </td>
+
+                    <td>{batch.date}</td>
+
+                    <td>{batch.time}</td>
+
+                    <td>
+                      {String(batch.location ?? "")
+                        .trim()
+                        .toUpperCase()}
+                    </td>
+
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() => openForm(batch.id)}
+                        className="batch-fees-btn"
+                      >
+                        Join Now
+                      </button>
+                    </td>
+
+                  </tr>
+                ))}
+            </tbody>
+
+          </table>
+        </div>
+
+      </div>
+
+
+      {/* ================= UDHUMALPET - RIGHT ================= */}
+      <div className="batch-location-card">
+
+        <div className="batch-location-header">
+          <h4>Udumalpet</h4>
+        </div>
+
+        <div className="batch-table-wrapper">
+          <table className="batch-table">
+
+            <thead>
+              <tr>
+                <th>Course</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Place</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {batches
+                .filter(
+                  (batch) =>
+                    batch.location?.toLowerCase().trim() === "udumalpet"
+                )
+                .map((batch) => (
+                  <tr key={batch.id}>
+
+                    <td>
+                      <span className="course-name">
+                        {String(batch.course ?? "")
+                          .trim()
+                          .toUpperCase()}
+                      </span>
+                    </td>
+
+                    <td>{batch.date}</td>
+
+                    <td>{batch.time}</td>
+
+                    <td>
+                      {String(batch.location ?? "")
+                        .trim()
+                        .toUpperCase()}
+                    </td>
+
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() => openForm(batch.id)}
+                        className="batch-fees-btn"
+                      >
+                        Join Now
+                      </button>
+                    </td>
+
+                  </tr>
+                ))}
+            </tbody>
+
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+)}
 
         {/* Top Row: Logo + Heading */}
         <div
@@ -449,131 +550,205 @@ const HomeComponent = () => {
             <img src="/gallery/Entrance.jpg" alt="Entrance" />
             <img src="/gallery/entrance2.jpg" alt="Entrance 2" />
             <img src="/gallery/Lab.png" alt="Lab" />
+            <img src="/gallery/2.jpeg" alt="Lab" />
+            <img src="/gallery/3.jpeg" alt="Lab" />
+            <img src="/gallery/4.jpeg" alt="Lab" />
+            <img src="/gallery/5.jpeg" alt="Lab" />
+            <img src="/gallery/6.jpeg" alt="Lab" />
+            <img src="/gallery/7.jpeg" alt="Lab" />
+            <img src="/gallery/8.jpeg" alt="Lab" />
           </div>
         </div><br />
 
         {/* Testimonials Section */}
-        <section className="py-5" data-aos="fade-up">
-          <h3 className="text-center fw-bold mb-5 heading" style={{color:"#004aad"}}>Testimonials</h3>
-          <div className="container">
-            <div className="row g-3">
-              {testimonials.map((t, i) => (
-                <div
-                  key={i}
-                  className="col-md-4"
-                  data-aos="flip-left"
-                  data-aos-delay={i * 150}
-                >
-                  <div className="testimonial-card p-4 h-100 position-relative d-flex">
-                    <div className="border-animate"></div>
+       {/* ===================== Testimonials Section ===================== */}
+<section
+  className="py-5 testimonial-section"
+  data-aos="fade-up"
+>
 
-                    {/* LEFT SIDE */}
-                    <div className="text-center me-3 flex-shrink-0">
-                      <img
-                        src={`public/uploads/${t.imageUrl}`}
-                        alt={t.name}
-                        className="rounded-circle mb-3 shadow-lg"
-                        width="90"
-                        height="90"
-                        style={{ objectFit: "cover" }}
-                      />
+  {/* ===================== TESTIMONIAL HEADING ===================== */}
 
-                      {/* Table-like details */}
-                      <table className="testimonial-table mx-auto text-start">
-                        <tbody>
-                          <tr>
-                            <td className="fw-bold heading">Enroll No:</td>
-                            <td className="para">{t.enrollno}</td>
-                          </tr>
-                          <tr>
-                            <td className="fw-bold heading">Course:</td>
-                            <td className="para">{t.courseName}</td>
-                          </tr>
-                          <tr>
-                            <td className="fw-bold heading">Place:</td>
-                            <td className="para">{t.place}</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+  <div className="text-center mb-4">
+    <h2 className="heading">
+      Student Testimonials
+    </h2>
 
-                    {/* MIDDLE LINE */}
-                    <div className="divider mx-3"></div>
+    <p className="para text-muted">
+      What our students say about their learning experience
+    </p>
+  </div>
 
-                    {/* RIGHT SIDE */}
-                    <div className="flex-grow-1">
-                      <h3 className="heading">{t.name} Says</h3>
-                      <p className="fst-italic text-muted mb-0 para">“{t.text}”</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
+
+  {/* ===================== TESTIMONIAL CARDS ===================== */}
+
+  <div className="row g-3 testimonial-row">
+
+    {currentTestimonials?.length > 0 &&
+    currentTestimonials.map((t, i) => (
+
+      <div
+        key={t.id || i}
+        className="col-6 col-md-4 testimonial-col"
+        data-aos="flip-left"
+        data-aos-delay={i * 150}
+      >
+
+        <div className="testimonial-card testimonial-mobile-card h-100 position-relative">
+
+          {/* Animated Border */}
+          <div className="border-animate"></div>
+
+          {/* Card Content */}
+          <div className="testimonial-card-content">
+
+            {/* ================= LEFT SIDE ================= */}
+
+            <div className="testimonial-left">
+
+              {/* Student Image */}
+              <img
+                src={`/uploads/${t.imageUrl}`}
+                alt={t.name}
+                className="rounded-circle shadow-lg testimonial-img"
+              />
+
+              {/* Student Details */}
+              <table className="testimonial-table testimonial-info-table">
+                <tbody>
+
+                  <tr>
+                    <td className="fw-bold heading">
+                      Enroll No:
+                    </td>
+
+                    <td className="para text-dark">
+                      {t.enrollno}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className="fw-bold heading">
+                      Course:
+                    </td>
+
+                    <td className="para text-dark">
+                      {t.courseName}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className="fw-bold heading text-dark">
+                      Place:
+                    </td>
+
+                    <td className="para text-dark">
+                      {t.place}
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+
             </div>
+
+
+            {/* ================= DIVIDER ================= */}
+
+            <div className="divider"></div>
+
+
+            {/* ================= RIGHT SIDE ================= */}
+
+            <div className="testimonial-right">
+
+              <h3 className="heading testimonial-name">
+                {t.name} Says
+              </h3>
+
+              <p className="fst-italic text-dark mb-0 para testimonial-message">
+                “{t.text}”
+              </p>
+
+            </div>
+
           </div>
 
-          {/* CSS Styling */}
-          <style>{`
-    .testimonial-card {
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 6px 25px rgba(0,0,0,0.1);
-      overflow: hidden;
-      position: relative;
-      display: flex;
-      align-items: flex-start;
-    }
+        </div>
 
-    .testimonial-card .border-animate {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 15px;
-      padding: 2px;
-      background: linear-gradient(270deg, #ff6ec4, #7873f5, #42a5f5, #ff6ec4);
-      background-size: 600% 600%;
-      animation: borderMove 6s linear infinite;
-      -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-              mask-composite: exclude;
-    }
+      </div>
 
-    @keyframes borderMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+    ))}
 
-    .divider {
-      width: 2px;
-      height: 100%;
-      background: linear-gradient(180deg, #ff6ec4, #7873f5, #42a5f5);
-      border-radius: 5px;
-      opacity: 0.8;
-    }
+  </div>
 
-    .testimonial-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      transition: all 0.4s ease;
-    }
+  {/* ===================== PAGINATION ===================== */}
 
-    .testimonial-table {
-      font-size: 0.85rem;
-      margin-top: 0.5rem;
-      width: auto;
-    }
+{totalPages > 1 && (
 
-    .testimonial-table td {
-      padding: 2px 8px;
-    }
+  <div className="testimonial-pagination-wrapper">
 
-    .testimonial-table td.fw-bold {
-      font-weight: 600;
-    }
-  `}</style>
-        </section>
+    <nav aria-label="Testimonials pagination">
+
+      <ul className="pagination testimonial-pagination mb-0">
+
+        {/* ================= PREVIOUS ================= */}
+
+        <li
+          className={`page-item ${
+            currentPage === 1 ? "disabled" : ""
+          }`}
+        >
+
+          <button
+            type="button"
+            className="page-link"
+            disabled={currentPage === 1}
+            onClick={() =>
+              handlePageChange(currentPage - 1)
+            }
+            aria-label="Previous page"
+          >
+            <i className="bi bi-chevron-left"></i>
+            <span>Previous</span>
+          </button>
+
+        </li>
+
+
+        {/* ================= NEXT ================= */}
+
+        <li
+          className={`page-item ${
+            currentPage === totalPages ? "disabled" : ""
+          }`}
+        >
+
+          <button
+            type="button"
+            className="page-link"
+            disabled={currentPage === totalPages}
+            onClick={() =>
+              handlePageChange(currentPage + 1)
+            }
+            aria-label="Next page"
+          >
+            <span>Next</span>
+            <i className="bi bi-chevron-right"></i>
+          </button>
+
+        </li>
+
+      </ul>
+
+    </nav>
+
+  </div>
+
+)}
+
+</section>
+
 
 
         {/* Show Form */}
@@ -581,19 +756,18 @@ const HomeComponent = () => {
           <div
             style={{
               position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              backgroundColor: "rgba(0,0,0,0.3)",
-              backdropFilter: "blur(5px)",
+              inset: 0,
+              width: "100vw",
+              height: "100vh",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               padding: "10px",
-              zIndex: 999,
-              overflowY: "auto",
               boxSizing: "border-box",
+              overflow: "hidden",
+              backgroundColor: "rgba(0,0,0,0.3)",
+              backdropFilter: "blur(5px)",
+              zIndex: 999,
             }}
           >
             <div
@@ -602,13 +776,34 @@ const HomeComponent = () => {
                 padding: "20px",
                 borderRadius: "10px",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-                width: "90%",
+                width: "100%",
                 maxWidth: "500px",
                 boxSizing: "border-box",
-                margin: "auto 0",
+                position: "relative",
               }}
             >
-              <h3 className="text-center mb-3 heading">Fees Form</h3>
+              <h3 className="text-center mb-3 heading">Enquiry Form</h3>
+              <button
+                type="button"
+                onClick={() => {
+                  setErrors({});
+                  setShowForm(false);
+                }}
+                style={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "15px",
+                  background: "transparent",
+                  border: "none",
+                  color: "red",
+                  fontSize: "28px",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  lineHeight: "1",
+                }}
+              >
+                &times;
+              </button>
               <form>
                 {/* Name Field */}
                 <label className="heading">Name:</label>
@@ -683,13 +878,39 @@ const HomeComponent = () => {
                       }}
                     ></i>
                   )}
+
                 </div>
                 {errors.phone && (
                   <div className="para" style={{ color: "red", fontSize: "0.8rem", marginBottom: "0.5rem" }}>
                     {errors.phone}
                   </div>
                 )}
+                <div className="mb-3">
+                  <label htmlFor="location" className="form-label">
+                    Location
+                  </label>
 
+                  <select
+                    className="form-select"
+                    id="location"
+                    name="location"
+                    value={formData.location}
+                    onChange={(e) =>
+                      setFormData({ ...formData, location: e.target.value })
+                    }
+                  >
+                    <option value="">-- Select Location --</option>
+                    <option value="RAMNAD">RAMNAD</option>
+                    <option value="UDUMALPET">UDUMALPET</option>
+                    <option value="KEELAKARAI">KEELAKARAI</option>
+                  </select>
+
+                  {errors.location && (
+                    <div className="para" style={{ color: "red", fontSize: "0.8rem" }}>
+                      {errors.location}
+                    </div>
+                  )}
+                </div>
                 {/* Hidden Date & Time */}
                 <input type="hidden" name="currentDate" value={new Date().toLocaleDateString()} />
                 <input type="hidden" name="currentTime" value={new Date().toLocaleTimeString()} />
@@ -712,15 +933,6 @@ const HomeComponent = () => {
                   Submit
                 </button>
               </form>
-
-              {/* Cancel Button */}
-              <button
-                type="button"
-                className="btn btn-light mt-2 w-100"
-                onClick={() => setShowForm(false)}
-              >
-                Cancel
-              </button>
             </div>
           </div>
         )}

@@ -39,7 +39,7 @@ export default function StudentDashBoard() {
 
     try {
       const res = await moveImage(formData, "profile");
-      await updateUserRecord(localStorage.getItem("email"), formObject).then((res) => {
+      await updateUserRecord(sessionStorage.getItem("email"), formObject).then((res) => {
         setShowSuccess(true);
         setTimeout(() => {
           setShowSuccess(false);
@@ -104,11 +104,11 @@ export default function StudentDashBoard() {
       .catch((err) => {
         console.error("Error fetching post count:", err);
       })
-    const dark = localStorage.getItem("darkmode");
+    const dark = sessionStorage.getItem("darkmode");
     if (dark !== null) {
       setDarkMode(dark === "true");
     }
-    const email = localStorage.getItem("email");
+    const email = sessionStorage.getItem("email");
     getEmailData(email).then((res) => {
       const data = res.data;
       setName(data.name);
@@ -140,7 +140,7 @@ export default function StudentDashBoard() {
   const handleToggle = () => {
     setDarkMode((prev) => {
       const newMode = !prev;
-      localStorage.setItem("darkmode", newMode);
+      sessionStorage.setItem("darkmode", newMode);
       return newMode;
     });
   };
@@ -240,7 +240,6 @@ export default function StudentDashBoard() {
         </h3>
         {[
           { name: "Dashboard", icon: "fa-home" },
-          { name: "Courses", icon: "fa-book" },
           { name: "Posts", icon: "fa-image" },
           { name: "Profile", icon: "fa-user" },
           { name: "Settings", icon: "fas fa-cog me-2" },
@@ -319,93 +318,7 @@ export default function StudentDashBoard() {
             </div>
           </div>
         )}
-
-        {/* Courses */}
-        {activeMenu === "Courses" && (
-          <div className="container" id="courses">
-            <button className="btn btn-outline-secondary" onClick={() => { window.location.href = "/student-dashboard" }}>
-              <i className="bi bi-arrow-left"></i> Go Back
-            </button>
-            <h1 className="text-center mb-5 heading" style={{ color: "#004aad" }}>
-              Available Courses
-            </h1>
-            {loading ? (
-              <div className="text-center my-5">
-                <div className="spinner-border text-primary" role="status">
-                  <span className="visually-hidden heading">Loading...</span>
-                </div>
-                <p className="mt-3 heading">Loading courses...</p>
-              </div>
-            ) : (
-              <>
-                <div
-                  className="courses-grid"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                    gap: "1rem",
-                  }}
-                >
-                  {currentCourses.length > 0 ? (
-                    currentCourses.map((course) => (
-                      <div
-                        key={course.id}
-                        className="card h-100 shadow-sm text-center"
-                        data-aos="fade-up"
-                      >
-                        <img
-                          src={course.logoUrl || "https://via.placeholder.com/150"}
-                          className="card-img-top img-fluid mx-auto mt-3"
-                          alt={course.courseName}
-                          style={{ height: "100px", width: "100px", objectFit: "contain" }}
-                        />
-                        <div className="card-body d-flex flex-column">
-                          <h5 className="card-title text-primary heading">{course.courseName}</h5>
-                          <p className="card-text para">{course.courseContent}</p>
-                          <div className="mt-auto d-flex justify-content-between align-items-center">
-                            <span className="text-muted">
-                              <i className="fas fa-clock"></i> {course.month}
-                            </span>
-                            <button
-                              onClick={(e) => downloadPdf(e, course.id)}
-                              className="btn btn-success btn-sm"
-                            >
-                              <i className="bi bi-download"></i> Download Syllabus
-                            </button>
-
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-center heading">No courses available.</p>
-                  )}
-                </div>
-
-                {/* Pagination */}
-                <div className="d-flex justify-content-center mt-4 gap-2">
-                  <button
-                    className="btn btn-secondary"
-                    onClick={handlePrev}
-                    disabled={currentPage === 1}
-                  >
-                    Previous
-                  </button>
-                  <span className="align-self-center">
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <button
-                    className="btn btn-secondary"
-                    onClick={handleNext}
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        )}
+      
         {/* POSTS */}
         {activeMenu === "Posts" && (
           <div

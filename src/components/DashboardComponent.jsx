@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import {
   enquiryCountNotification,
   courseCount,
@@ -81,6 +81,7 @@ const DashboardComponent = () => {
       });
   }
   useEffect(() => {
+    
     const today = new Date().toISOString().split("T")[0];
     setStartDate(today);
     setEndDate(today);
@@ -120,7 +121,7 @@ const DashboardComponent = () => {
       }
     };
 
-    // Fetch posts
+    // Fetch posts  
     const fetchPostsData = async () => {
       try {
         const res = await showAllPosts();
@@ -147,9 +148,9 @@ const DashboardComponent = () => {
 
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userType");
-    localStorage.removeItem("email");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("userType");
+    sessionStorage.removeItem("email");
     navigate("/home");
   };
 
@@ -207,8 +208,18 @@ const DashboardComponent = () => {
       );
     });
   };
-  const moveCertificate = ()=>{
-    alert("hello")
+  const moveCertificate = () => {
+    const userType = sessionStorage.getItem("userType");
+
+    if (userType === "true") {
+      navigate("/upload-certificate");
+    } else {
+      alert("Access Denied!");
+      navigate("/home");
+    }
+  }
+  const viewCertificatesPage = ()=>{
+    navigate("/view-certificates");
   }
   return (
     <div className="container-fluid p-0">
@@ -241,14 +252,7 @@ const DashboardComponent = () => {
         <div className="col-12 col-md-3 bg-light p-3 border-end vh-100">
           <h5 className="mb-4 heading" style={{ color: "#004aad" }}>Navigation</h5>
           <ul className="list-unstyled">
-            <li className="mb-2">
-              <button
-                className="btn btn-outline-primary w-100 d-flex align-items-center"
-                onClick={() => navigate("/signup")}
-              >
-                <FaUserGraduate className="me-2" />Student Register
-              </button>
-            </li>
+           
             <li className="mb-2">
               <button
                 className="btn btn-outline-primary w-100 d-flex align-items-center"
@@ -257,7 +261,15 @@ const DashboardComponent = () => {
                   navigate("/view-students");
                 }}
               >
-                <FaUserGraduate className="me-2" />View Student
+                <FaUserGraduate className="me-2" />View Students
+              </button>
+            </li>
+            <li className="mb-2">
+              <button
+                className="btn btn-outline-primary w-100 d-flex align-items-center"
+                onClick={() => navigate("/enquiry")}
+              >
+                <AiOutlineLineChart className="me-2" /> Show All Enquiries
               </button>
             </li>
             <li className="mb-2">
@@ -276,14 +288,7 @@ const DashboardComponent = () => {
                 <AiOutlineUnorderedList className="me-2" /> View Courses
               </button>
             </li>
-            <li className="mb-2">
-              <button
-                className="btn btn-outline-primary w-100 d-flex align-items-center"
-                onClick={() => navigate("/enquiry")}
-              >
-                <AiOutlineLineChart className="me-2" /> Show All Enquiries
-              </button>
-            </li>
+            
             <li className="mb-2">
               <button
                 className="btn btn-outline-primary w-100 d-flex align-items-center"
@@ -324,6 +329,15 @@ const DashboardComponent = () => {
               >
                 <FaCertificate className="me-2" />
                 Certiticate Issued
+              </button>
+            </li>
+             <li className="mb-2">
+              <button
+                className="btn btn-outline-primary w-100 d-flex align-items-center"
+                onClick={viewCertificatesPage}
+              >
+                <FaCertificate className="me-2" />
+                View Certiticates
               </button>
             </li>
           </ul>

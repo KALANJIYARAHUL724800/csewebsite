@@ -3,12 +3,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { useState } from 'react';
 const HeaderComponent = () => {
-  const [login, setLogin] = useState(() => localStorage.getItem("token"));
-  const [userType, setUserType] = useState(() => localStorage.getItem("userType") === "true");
+  const [login, setLogin] = useState(() => sessionStorage.getItem("token"));
+  const [userType, setUserType] = useState(() => sessionStorage.getItem("userType") === "true");
   useEffect(() => {
     const interval = setInterval(() => {
-      const token = localStorage.getItem("token");
-      const user = localStorage.getItem("userType") === "true";
+      const token = sessionStorage.getItem("token");
+      const user = sessionStorage.getItem("userType") === "true";
       setUserType(user);
       setLogin(token);
     }, 1000);
@@ -51,7 +51,7 @@ const HeaderComponent = () => {
             </li>
             <li className="nav-item">
               <a className="nav-link" href="/events">
-                <i className="bi bi-calendar-event-fill me-1"></i> Event
+                <i className="bi bi-calendar-event-fill me-1"></i> Events
               </a>
             </li>
             <li className="nav-item">
@@ -70,6 +70,17 @@ const HeaderComponent = () => {
                 View Certificate
               </a>
             </li>
+            {!login && (
+              <li className="nav-item ms-2">
+                <a
+                  href="/login"
+                  className="btn btn-primary"
+                >
+                  <i className="bi bi-person-circle me-1"></i>
+                  Login
+                </a>
+              </li>
+            )}
             {login && (
               <li className="nav-item">
                 <a
@@ -83,9 +94,9 @@ const HeaderComponent = () => {
 
             {login && (
               <li className="nav-item" onClick={() => {
-                localStorage.removeItem("token");
-                localStorage.removeItem("userType");
-                localStorage.removeItem("email");
+                sessionStorage.removeItem("token");
+                sessionStorage.removeItem("userType");
+                sessionStorage.removeItem("email");
                 window.location.href = "/home";
               }}>
                 <a className="nav-link text-danger" href="#">

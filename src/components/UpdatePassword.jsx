@@ -1,20 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { updatePassword } from "../index.js";
 
-const updatePassword = async ({ email, password, confirmPassword }) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (!email || !password || !confirmPassword) {
-        reject({ response: { data: { message: "All fields are required" } } });
-      } else if (password !== confirmPassword) {
-        reject({ response: { data: { message: "Passwords do not match" } } });
-      } else {
-        resolve({ data: { message: "Password updated successfully" } });
-      }
-    }, 500);
-  });
-};
 
 const UpdatePassword = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -29,8 +17,8 @@ const UpdatePassword = () => {
   const [success, setSuccess] = useState("");
 
   const handleClose = () => {
-    const userType = localStorage.getItem("userType") === "true";
-    const email = localStorage.getItem("email");
+    const userType = sessionStorage.getItem("userType") === "true";
+    const email = sessionStorage.getItem("email");
 
     if (email && !userType) navigate("/student-dashboard");
     else if (email && userType) navigate("/dashboard");
@@ -45,31 +33,63 @@ const UpdatePassword = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.email || !formData.password || !formData.confirmPassword) {
-      setError("Please fill in all fields.");
-      return;
-    }
+  e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match!");
-      return;
-    }
+  setError("");
+  setSuccess("");
 
-    try {
-      const response = await updatePassword(formData);
-      setSuccess(response.data.message);
-      setError("");
+  if (
+    !formData.email ||
+    !formData.password ||
+    !formData.confirmPassword
+  ) {
+    setError("Please fill in all fields.");
+    return;
+  }
 
-      setTimeout(() => navigate("/student-dashboard"), 2000);
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to update password.");
-      setSuccess("");
-    }
-  };
-  useEffect(() => {
-    localStorage.removeItem("email");
-  }, [])
+  if (formData.password !== formData.confirmPassword) {
+    setError("Passwords do not match!");
+    return;
+  }
+
+  if (formData.password.length < 8 || formData.password.length > 16) {
+    setError("Password must be between 8 and 16 characters.");
+    return;
+  }
+
+  try {
+    const response = await updatePassword({
+      email: formData.email,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+    });
+
+    setSuccess(
+      response.data?.message || "Password updated successfully."
+    );
+
+    setError("");
+
+   setTimeout(() => {
+  sessionStorage.clear();
+  localStorage.removeItem("token");
+  localStorage.removeItem("userType");
+  localStorage.removeItem("email");
+
+  navigate("/login", { replace: true });
+}, 2000);
+
+  } catch (err) {
+    console.error("Password update error:", err);
+
+    setError(
+      err.response?.data?.message ||
+      "Failed to update password."
+    );
+
+    setSuccess("");
+  }
+};
   return (
     <div
       className="overlay d-flex justify-content-center align-items-center"

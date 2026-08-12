@@ -1,7 +1,17 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { insertCertificate } from "../index.js"
 export default function CertificateFormComponent() {
+    const navigate = useNavigate();
+    useEffect(() => {
+        const userType = sessionStorage.getItem("userType");
+
+        if (userType !== "true") {
+            navigate("/home", { replace: true });
+        }
+    }, [navigate]);
     const [formData, setFormData] = useState({
         name: "",
         certificateName: "",
@@ -65,16 +75,16 @@ export default function CertificateFormComponent() {
             setError(error.response.data)
             if (error.response) {
                 if (typeof error.response.data === "string") {
-                    setErrorMessage(error.response.data);  
+                    setErrorMessage(error.response.data);
 
                     setTimeout(() => {
-                        setErrorMessage(""); 
+                        setErrorMessage("");
                     }, 2000);
                 } else {
                     setErrors(error.response.data);
 
                     setTimeout(() => {
-                        setErrors({}); 
+                        setErrors({});
                     }, 2000);
                 }
             }
@@ -202,8 +212,9 @@ export default function CertificateFormComponent() {
                                 onChange={handleChange}
                             >
                                 <option>--Choose Location--</option>
-                                <option value="Ramnad">Ramnad</option>
-                                <option value="Kilakarai">Kilakarai</option>
+                                <option value="RAMNAD">Ramnad</option>
+                                <option value="UDUMALPET">Udumalpet</option>
+                                <option value="KILAKARAI">Kilakarai</option>
                             </select>
                             {errors.location && <div className="text-danger mb-2 para">{errors.location}</div>}
                         </div>

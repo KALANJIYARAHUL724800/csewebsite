@@ -199,7 +199,7 @@ const AddCourseComponent = () => {
                   <th>Month</th>
                   <th>Actions</th>
                   <th>Update Content</th>
-                  <th>Upload Pdf</th>
+                  {/* <th>Upload Pdf</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -266,7 +266,7 @@ const AddCourseComponent = () => {
                     <td>
                       <button className="btn btn-success" onClick={() => handleUpdateContent(course.id)}>Update Content</button>
                     </td>
-                    <td>
+                    {/* <td>
                       <input
                         type="file"
                         style={{ display: "none" }}
@@ -279,7 +279,7 @@ const AddCourseComponent = () => {
                       >
                         <i className="bi bi-upload"></i> Upload PDF
                       </button>
-                    </td>
+                    </td> */}
 
                   </tr>
                 ))}

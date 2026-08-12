@@ -27,7 +27,7 @@ const ForgotPassword = ({ onClose }) => {
     setErrors({ email: "" });
     try {
       await forgotPassword(formData).then(()=>{
-        localStorage.setItem("email",formData.email);
+        sessionStorage.setItem("email",formData.email);
       });
       setSuccessMessage("Password reset link sent to your email!");
     } catch (err) {

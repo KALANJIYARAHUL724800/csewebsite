@@ -12,7 +12,6 @@ const StudentSignup = ({ onClose }) => {
     email: "",
     password: "",
     confirmPassword: "",
-    enrollNo: ""
   });
   const [serverError, setServerError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -21,7 +20,6 @@ const StudentSignup = ({ onClose }) => {
     email: "",
     password: "",
     confirmPassword: "",
-    enrollNo: ""
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,7 +27,7 @@ const StudentSignup = ({ onClose }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({ name: "", email: "", password: "", confirmPassword: "", enrollNo: "" });
+    setErrors({ name: "", email: "", password: "", confirmPassword: "" });
     setServerError("");
     setSuccessMessage("");
     try {
@@ -40,28 +38,20 @@ const StudentSignup = ({ onClose }) => {
         }));
         return;
       }
-      if (!/^\d{6}$/.test(formData.enrollNo)) {
-        setErrors((prev) => ({
-          ...prev,
-          enrollNo: "Enroll number must be exactly 6 digits."
-        }));
-        return;
-      }
 
       const res = await createUser(formData);
       setSuccessMessage("Signup successful! Redirecting...");
       setTimeout(() => {
-        navigate("/dashboard", { state: { user: res.data } });
+        navigate("/login", { state: { user: res.data } });
       }, 1500);
     } catch (err) {
-      const newErrors = { name: "", email: "", password: "", confirmPassword: "", enrollNo: "" };
+      const newErrors = { name: "", email: "", password: "", confirmPassword: ""};
       if (err.response) {
         const { status, data } = err.response;
         if (status === 400) {
           data.split(";").forEach((msg) => {
             msg = msg.trim().toLowerCase();
             if (msg.includes("name")) newErrors.name = msg;
-            else if (msg.includes("enroll")) newErrors.enrollNo = msg;
             else if (msg.includes("email")) newErrors.email = msg;
             else if (msg.includes("password") && !msg.includes("confirm"))
               newErrors.password = msg;
@@ -211,22 +201,6 @@ const StudentSignup = ({ onClose }) => {
           {errors.confirmPassword && (
             <div className="text-danger mb-2 para">{errors.confirmPassword}</div>
           )}
-          <input
-            type="text"
-            className={`form-control mb-1 para ${errors.enrollNo ? "is-invalid" : ""}`}
-            placeholder="Enter Enroll No"
-            name="enrollNo"
-            value={formData.enrollNo}
-            maxLength="6"          
-            onChange={(e) => {
-              const value = e.target.value;
-              if (/^\d{0,6}$/.test(value)) {
-                handleChange(e); 
-              }
-            }}
-          />
-          {errors.enrollNo && <div className="text-danger mb-2 para">{errors.enrollNo}</div>}
-
           <button type="submit" className="btn btn-primary w-100 mt-2">
             Submit
           </button>

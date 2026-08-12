@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FaUser, FaPhone, FaBookOpen, FaCalendarAlt, FaClock, FaFileExcel } from 'react-icons/fa';
+import { FaUser, FaPhone, FaBookOpen, FaCalendarAlt, FaClock, FaFileExcel, FaMapMarkerAlt  } from 'react-icons/fa';
 import { showAllFeesEnquiry, searchDateEnquiry, enquiryExportExcel } from "../index";
 import { useLocation,useNavigate } from "react-router-dom";
 
@@ -148,7 +148,8 @@ const ShowFeesEnquiryComponent = () => {
               <th>ID</th>
               <th><FaUser className="me-1" /> Name</th>
               <th><FaPhone className="me-1" /> Phone</th>
-              <th><FaBookOpen className="me-1" /> Course</th>
+              {/* <th><FaBookOpen className="me-1" /> Course</th> */}
+              <th><FaMapMarkerAlt className="me-1" /> Location</th>
               <th><FaCalendarAlt className="me-1" /> Date</th>
               <th><FaClock className="me-1" /> Time</th>
             </tr>
@@ -158,9 +159,10 @@ const ShowFeesEnquiryComponent = () => {
               filteredData.map((enquiry, index) => (
                 <tr key={enquiry.id}>
                   <td>{isFilteredMode ? index + 1 : enquiry.id}</td>
-                  <td className="text-success fw-bold">{enquiry.name}</td>
+                  <td className="text-success fw-bold">{enquiry.name.toUpperCase()}</td>
                   <td>{enquiry.phone}</td>
-                  <td className="fw-semibold">{enquiry.courseName}</td>
+                  {/* <td className="fw-semibold">{enquiry.courseName}</td> */}
+                    <td className="fw-semibold">{enquiry.location}</td>
                   <td>{enquiry.currentDate}</td>
                   <td>{enquiry.currentTime}</td>
                 </tr>

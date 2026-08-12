@@ -10,7 +10,7 @@ const CertificateComponent = () => {
   const handleChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
-    if (/^\d{0,6}$/.test(value)) {
+    if (/^\d{0,10}$/.test(value)) {
       setEnroll({
         ...enroll,
         [name]: value

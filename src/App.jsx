@@ -29,6 +29,9 @@ import TestiMonialsComponent from './components/TestiMonialsComponent';
 import ViewStudentComponent from './components/ViewStudentComponent';
 import CertificateComponent from './components/CertificateComponent';
 import CertificateFormComponent from './components/CertificateFormComponent';
+import PrivateCeritificateUrl from './components/PrivateCeritificateUrl';
+import ViewCertificates from './components/ViewCertificates';
+import PasswordProtectRoute from './components/PasswordProtectRoute';
 
 function App() {
   return (
@@ -61,11 +64,16 @@ function App() {
               <StudentSignup />
             // </PrivateRoute>
           } />
-          <Route path="/update-password" element={
+          <Route
+          path="/update-password"
+          element={
+        <PasswordProtectRoute>
             <PublicRoute>
-              <UpdatePassword />
+                <UpdatePassword />
             </PublicRoute>
-          } />
+        </PasswordProtectRoute>
+    }
+/>
           <Route path="/admin" element={
             <PublicRoute>
               <StaffLogin />
@@ -114,6 +122,22 @@ function App() {
               <PrivateRoute allowedUserType="true">
                 <DashboardComponent />
               </PrivateRoute>
+            }
+          />
+           <Route
+            path="/upload-certificate"
+            element={
+              <PrivateCeritificateUrl allowedUserType="true">
+                <CertificateFormComponent />
+              </PrivateCeritificateUrl>
+            }
+          />
+            <Route
+            path="/view-certificates"
+            element={
+              <PrivateCeritificateUrl allowedUserType="true">
+                <ViewCertificates />
+              </PrivateCeritificateUrl>
             }
           />
           <Route

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { getAllCourses } from "../index";
-import { useNavigate } from "react-router-dom";
+import { getAllCourses, searchCourseContent } from "../index";
+import { useNavigate, useParams } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 const CoursesComponent = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const coursesPerPage = 5;
+  const [showForm, setShowForm] = useState(false);
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
     getAllCourses()
@@ -28,10 +28,6 @@ const CoursesComponent = () => {
       })
       .finally(() => setLoading(false));
   }, [navigate]);
-  const indexOfLastCourse = currentPage * coursesPerPage;
-  const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
-  const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
-  const totalPages = Math.ceil(courses.length / coursesPerPage);
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -62,66 +58,60 @@ const CoursesComponent = () => {
         </div>
       ) : (
         <>
-          <div
-            className="courses-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: "1rem",
-            }}
-          >
-            {currentCourses.length > 0 ? (
-              currentCourses.map((course) => (
-                <div
-                  key={course.id}
-                  className="card h-100 shadow-sm text-center"
-                  data-aos="fade-up"
-                >
-                  <img
-                    src={course.logoUrl || "https://via.placeholder.com/150"}
-                    className="card-img-top img-fluid mx-auto mt-3"
-                    alt={course.courseName}
-                    style={{ height: "100px", width: "100px", objectFit: "contain" }}
-                  />
-                  <div className="card-body d-flex flex-column">
-                    <h5 className="card-title text-primary heading">{course.courseName}</h5>
-                    <p className="card-text para">{course.courseContent}</p>
-                    <div className="mt-auto d-flex justify-content-between align-items-center">
-                      <span className="text-muted">
-                        <i className="fas fa-clock para"></i> {course.month}
-                      </span>
-                      <a href={`/course/${course.id}`} className="btn btn-primary btn-sm">
-                        Learn More and Fees
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="text-center heading">No courses available.</p>
-            )}
-          </div>
+<div className="courses-grid">
+  {courses.length > 0 ? (
+    courses.map((course, index) => {
+      
+      const ribbonColors = ["green", "blue", "red", "purple"];
 
-          {/* Pagination */}
-          <div className="d-flex justify-content-center mt-4 gap-2">
-            <button
-              className="btn btn-secondary"
-              onClick={handlePrev}
-              disabled={currentPage === 1}
+      return (
+        <div key={course.id} data-aos="fade-up">
+          <div className="training-card">
+
+            <span
+              className={`ribbon ${
+                ribbonColors[index % ribbonColors.length]
+              }`}
             >
-              Previous
-            </button>
-            <span className="align-self-center">
-              Page {currentPage} of {totalPages}
+              FRESHER
             </span>
-            <button
-              className="btn btn-secondary"
-              onClick={handleNext}
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </button>
+
+            <img
+              src={course.logoUrl || "https://via.placeholder.com/150"}
+              alt={course.courseName}
+              className="course-img"
+            />
+
+            <h5>{course.courseName}</h5>
+
+            <p className="course-content">
+              {course.courseContent}
+            </p>
+
+            <div className="card-footer-custom">
+              <span className="duration">
+                <i className="fas fa-clock"></i> {course.month}
+              </span>
+
+              <a
+                href={`/course/${course.id}`}
+                className="btn btn-primary btn-sm"
+                onClick={() => {
+                  sessionStorage.setItem("courseId", course.id);
+                }}
+              >
+                Syllabus
+              </a>
+            </div>
+
           </div>
+        </div>
+      );
+    })
+  ) : (
+    <p className="text-center heading">No courses available.</p>
+  )}
+</div>
         </>
       )}
     </div>

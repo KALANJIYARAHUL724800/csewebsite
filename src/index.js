@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = "http://localhost:8080/api";
+const API_BASE = "/api";
 
 export const logout = () => {
   localStorage.removeItem("token");
@@ -271,3 +271,15 @@ export const findCertificate = (enrollNo) => {
 export const insertCertificate = (value) => {
   return axios.post(`${API_BASE}/certificate/insert`, value);
 };
+
+export const viewCertificates = () => {
+  return axios.get(`${API_BASE}/certificate/showall-cerficates`);
+};
+
+export const updateCertificate = (id, value) => {
+    return axios.put(`${API_BASE}/certificate/update/${id}`, value);
+};
+
+export const showAllEvents = () => {
+  return axios.get(`${API_BASE}/event/all`);
+}
