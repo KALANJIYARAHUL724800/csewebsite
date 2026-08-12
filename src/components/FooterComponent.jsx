@@ -1,5 +1,5 @@
 import React from 'react'
-const footerComponent = () => {
+const FooterComponent = () => {
   return (
     <div className='bg-dark footer'>
       <div className="container py-3">
@@ -66,4 +66,4 @@ const footerComponent = () => {
   )
 }
 
-export default footerComponent
+export default FooterComponent

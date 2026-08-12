@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import HeaderComponent from './components/HeaderComponent';
-import FooterComponent from './components/footerComponent';
+import FooterComponent from './components/FooterComponent';
 import HomeComponent from './components/HomeComponent';
 import AboutComponent from './components/AboutComponent';
 import CoursesComponent from './components/CoursesComponent';
