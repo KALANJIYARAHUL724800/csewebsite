@@ -243,7 +243,7 @@ const handlePageChange = (page) => {
         <section
           className="hero-section text-center d-flex align-items-center justify-content-center position-relative"
           style={{
-            background: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${galleryImages[currentImage]}) center/cover no-repeat`,
+            background: `url(${galleryImages[currentImage]}) center/cover no-repeat`,
             minHeight: "100vh",
             marginBottom: 0,
             padding: 0,
