@@ -25,17 +25,16 @@ const AboutComponent = () => {
   }, []);
   if (!data) return <p>Loading...</p>;
 
-  const galleryImages = [
-    "public/gallery/Counselling-1.jpg",
-    "public/gallery/Counselling-2.jpg",
-    "public/gallery/3.jpeg",
-    "public/gallery/4.jpeg",
-    "public/gallery/5.jpeg",
-    "public/gallery/6.jpeg",
-    "public/gallery/7.jpeg",
-    "public/gallery/8.jpeg",    
-  ];
-
+const galleryImages = [
+  "/gallery/Counselling-1.jpg",
+  "/gallery/Counselling-2.jpg",
+  "/gallery/3.jpeg",
+  "/gallery/4.jpeg",
+  "/gallery/5.jpeg",
+  "/gallery/6.jpeg",
+  "/gallery/7.jpeg",
+  "/gallery/8.jpeg",
+];
   return (
     <div className="about-page bg-light m-0 p-0" style={{ overflowX: "hidden" }}>
       {/* HERO SECTION */}
