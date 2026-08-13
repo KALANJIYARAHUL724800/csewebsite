@@ -12,7 +12,6 @@ const galleryImages = [
   "/gallery/Counselling-2.jpg",
   "/gallery/2.jpeg",
   "/gallery/3.jpeg",
-  "/gallery/4.jpeg",
   "/gallery/5.jpeg",
   "/gallery/6.jpeg",
   "/gallery/7.jpeg",

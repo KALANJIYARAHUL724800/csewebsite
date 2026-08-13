@@ -21,7 +21,7 @@ const FooterComponent = () => {
             </ul>
           </div>
           <div className="col-lg col-md-6 mb-3">
-            <h5 className="footer-title heading">கிளைகள்</h5>
+            <h5 className="footer-title heading">தொடர்புக்கு</h5>
             <p className='para'><i className="bi bi-geo-alt-fill me-2 para"></i>பல்-லக்கி  பிளாசா,<br /> ஐஸ்வர்யா ஹோட்டல் மாடியில்,<br /> இராமநாதபுரம்.</p>
             <p className='para'><i className="bi bi-telephone-fill me-2"></i>+91 7010038188,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +91 9965163156</p>
             <a href='#' target="cseramnad@gmail.com" className='text-white text-decoration-none para'><i className="bi bi-envelope-fill me-2"></i>cseramnad@gmail.com</a>
@@ -33,7 +33,6 @@ const FooterComponent = () => {
             </div>
           </div>
           <div className="col-lg col-md-6 mb-3">
-            <h5 className="footer-title heading">கிளைகள்</h5>
             <p className='para'><i className="bi bi-geo-alt-fill me-2 para"></i>U.K.P காம்ப்ளக்ஸ், <br />   2nd FLOOR,<br />  (புவனேஸ்வரி மெடிக்கல் மாடியில்) உடுமலை. <br /></p>
             <p className='para'><i className="bi bi-telephone-fill me-2"></i>+91 7373537833, <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +91 9080082772</p>
             <a href='#' target="cseramnad@gmail.com" className='text-white text-decoration-none para'><i className="bi bi-envelope-fill me-2"></i>cseudt2016@gmail.com</a>
@@ -46,9 +45,8 @@ const FooterComponent = () => {
 
           <div className="col-lg col-md-6 mb-3">
             {/* New Address */}
-            <h5 className="footer-title heading">கிளைகள்</h5>
             <p className='para'><i className="bi bi-geo-alt-fill me-2 para"></i>பீஸா பேக்கரி மாடியில், <br />  வள்ளல் சீதக்காதி சாலை,<br />  கீழக்கரை. <br /></p>
-            <p className='para'><i className="bi bi-telephone-fill me-2"></i>+91 6383678645,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; +91 9080082772</p>
+            <p className='para'><i className="bi bi-telephone-fill me-2"></i>+91 6383678645</p>
             <a href='#' target="cseramnad@gmail.com" className='text-white text-decoration-none para'><i className="bi bi-envelope-fill me-2"></i>cseramnad@gmail.com</a>
             <div className="footer-social">
               <a href="https://www.facebook.com/CSEudt" target="_blank" className="me-3"><i className="bi bi-facebook"></i></a>
