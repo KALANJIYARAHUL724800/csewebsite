@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { search, showAllBatches, showAllTestimonials, findBatch, insertFeesEnquiry, insertFeesEnquiryTemp, searchCourseContent } from "../index";
+import { search, showAllBatches, showAllTestimonials,getAllCourses, findBatch, insertFeesEnquiry, insertFeesEnquiryTemp, searchCourseContent,showAllBlogs } from "../index";
 import { FaCheckCircle } from 'react-icons/fa';
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 const HomeComponent = () => {
 const galleryImages = [
   "/gallery/entrance2.jpg",
@@ -24,6 +25,7 @@ const galleryImages = [
   const token = sessionStorage.getItem("token");
   const [userLogin, setUserLogin] = useState(!token);
   const { id } = useParams();
+  const [blogs, setBlogs] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -159,6 +161,35 @@ const handlePageChange = (page) => {
       .catch((err) => {
         setHasBatches(false);
       });
+       getAllCourses()
+            .then((response) => {
+              const fetchedCourses = response.data;
+              const hasValidCourse = fetchedCourses.some((course) => course.id > 0);
+              if (!hasValidCourse) {
+                navigate("/home");
+                return;
+              }
+              setCourses(fetchedCourses);
+            })
+            .catch((error) => {
+              console.error("Error fetching courses:", error);
+              navigate("/home");
+            })
+              // Blogs
+  showAllBlogs()
+    .then((response) => {
+      if (Array.isArray(response.data)) {
+        
+        setBlogs(response.data);
+      } else {
+        setBlogs([]);
+      }
+    })
+    .catch((err) => {
+      console.error("Blogs error:", err);
+      setBlogs([]);
+    });
+
   showAllTestimonials()
   .then((response) => {
     if (Array.isArray(response.data)) {
@@ -462,7 +493,7 @@ const handlePageChange = (page) => {
           </div>
         </div>
 
-        {/* Courses Section */}
+        {/* Courses Section */}  
         {searched && courses.length > 0 && (
           <div className="container py-5 position-relative" id="courses">
             <button
@@ -559,6 +590,63 @@ const handlePageChange = (page) => {
           </div>
         </div><br />
 
+{/* course section */}
+<h1 className="display-5 fw-bold mt-4 text-primary text-center heading">All Courses</h1>
+<hr />
+<div className="courses-grid">
+  {courses.length > 0 ? (
+    courses.map((course, index) => {
+      
+      const ribbonColors = ["green", "blue", "red", "purple"];
+
+      return (
+        <div key={course.id} data-aos="fade-up">
+          <div className="training-card">
+
+            <span
+              className={`ribbon ${
+                ribbonColors[index % ribbonColors.length]
+              }`}
+            >
+              FRESHER
+            </span>
+
+            <img
+              src={course.logoUrl || "https://via.placeholder.com/150"}
+              alt={course.courseName}
+              className="course-img"
+            />
+
+            <h5>{course.courseName}</h5>
+
+            <p className="course-content">
+              {course.courseContent}
+            </p>
+
+            <div className="card-footer-custom">
+              <span className="duration">
+                <i className="fas fa-clock"></i> {course.month}
+              </span>
+
+              <a
+                href={`/course/${course.id}`}
+                className="btn btn-primary btn-sm"
+                onClick={() => {
+                  sessionStorage.setItem("courseId", course.id);
+                }}
+              >
+                Syllabus
+              </a>
+            </div>
+
+          </div>
+        </div>
+      );
+    })
+  ) : (
+    <p className="text-center heading">No courses available.</p>
+  )}
+</div>
         {/* Testimonials Section */}
        {/* ===================== Testimonials Section ===================== */}
 <section
@@ -748,7 +836,125 @@ const handlePageChange = (page) => {
 
 </section>
 
+{/* Blog Section */}
 
+<section className="py-5 bg-light">
+  <div className="container">
+
+    {/* Section Heading */}
+    <div className="text-center mb-5">
+
+      <span className="text-primary fw-semibold text-uppercase small">
+        Our Blog
+      </span>
+
+      <h2 className="fw-bold mt-2">
+        Latest Articles & Insights
+      </h2>
+
+      <p
+        className="text-muted mx-auto"
+        style={{ maxWidth: "650px" }}
+      >
+        Explore our latest articles, tips, and insights to improve your
+        computer skills and build a successful career.
+      </p>
+
+    </div>
+
+    {/* Blog Cards */}
+    <div className="row g-4">
+
+      {blogs.length > 0 ? (
+
+        blogs.slice(0, 3).map((blog) => (
+
+          <div
+            className="col-lg-4 col-md-6"
+            key={blog.id}
+          >
+
+            <div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+
+              <img
+                src={blog.image}
+                className="card-img-top"
+                alt={blog.category}
+                style={{
+                  height: "230px",
+                  objectFit: "cover"
+                }}
+              />
+
+              <div className="card-body p-4">
+
+                <div className="d-flex justify-content-between align-items-center mb-3">
+
+                  <span className="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+                    {blog.category}
+                  </span>
+
+                  <small className="text-muted">
+                    {blog.date}
+                  </small>
+
+                </div>
+
+                <h5 className="card-title fw-bold">
+                  {blog.title}
+                </h5>
+
+                <p className="card-text text-muted">
+                  {blog.description}
+                </p>
+
+                <Link
+                  to={`/blog/${blog.id}`}
+                  className="text-primary fw-semibold text-decoration-none"
+                >
+                  {blog.button || "Read More"}
+
+                  <i className="bi bi-arrow-right ms-1"></i>
+                </Link>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        ))
+
+      ) : (
+
+        <div className="col-12 text-center">
+          <p className="text-muted">
+            No blogs available.
+          </p>
+        </div>
+
+      )}
+
+    </div>
+
+    {/* View All */}
+    {blogs.length > 3 && (
+
+      <div className="text-center mt-5">
+
+        <Link
+          to="/blogs"
+          className="btn btn-primary px-4 py-2 rounded-pill"
+        >
+          View All Blogs
+        </Link>
+
+      </div>
+
+    )}
+
+  </div>
+</section>
 
         {/* Show Form */}
         {showForm && (

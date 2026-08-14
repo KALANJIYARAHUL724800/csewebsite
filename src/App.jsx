@@ -32,6 +32,7 @@ import CertificateFormComponent from './components/CertificateFormComponent';
 import PrivateCeritificateUrl from './components/PrivateCeritificateUrl';
 import ViewCertificates from './components/ViewCertificates';
 import PasswordProtectRoute from './components/PasswordProtectRoute';
+import BlogDetailsComponent from "./components/BlogDetailsComponent";
 
 function App() {
   return (
@@ -73,6 +74,10 @@ function App() {
             </PublicRoute>
         </PasswordProtectRoute>
     }
+/>
+      <Route
+  path="/blog/:id"
+  element={<BlogDetailsComponent />}
 />
           <Route path="/admin" element={
             <PublicRoute>

@@ -283,3 +283,22 @@ export const updateCertificate = (id, value) => {
 export const showAllEvents = () => {
   return axios.get(`${API_BASE}/event/all`);
 }
+
+export const insertBlog = (data) => {
+  return axios.post(`${API_BASE}/blogs/insert`, data);
+};
+
+export const updateBlog = (data) => {
+  return axios.put(`${API_BASE}/blogs/update`, data);
+};
+
+export const deleteBlog = (id) => {
+  return axios.patch(`${API_BASE}/blogs/delete?id=${id}`);
+};
+
+export const showAllBlogs = () => {
+  return axios.get(`${API_BASE}/blogs/all`);
+};
+export const showBlogById = (id) => {
+  return axios.get(`${API_BASE}/blogs/${id}`);
+};
