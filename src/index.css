@@ -32,7 +32,16 @@ body {
 #navbarNav ul li a {
   color: white;
 }
-
+@media (max-width: 991px) {
+  .navbar-toggler {
+    background-color: #0d6efd; /* Mobile Dropdown Open ஆகும்போது Transparent ஆகாமல் இருக்க */
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1035 !important;
+  }
+}
 .navbar-nav .nav-link {
   font-family: "Roboto", sans-serif;
   font-optical-sizing: auto;
@@ -40,7 +49,7 @@ body {
   font-weight: 1000;
   font-style: normal;
   font-variation-settings:
-    "wdth" 100;
+  "wdth" 100;
 }
 
 .navbar-nav .nav-link:hover {
@@ -70,10 +79,49 @@ body {
   position: relative;
   height: 60px;
   width: 100px;
-  border-radius: 8px;
+  border-radius: 5px;
   padding: 2px;
 }
+.tally-logo {
+  height: 45px;
+  width: auto;
+  object-fit: contain;
+  position: relative;
+  left: 260px;
+  border-radius: 3px;
+}
 
+.tally-angeekaram {
+  height: 75px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  position: relative;
+  left: 260px;
+}
+
+/* Mobile View Fixes */
+@media (max-width: 768px) {
+  .tally-logo {
+    height: 35px;
+    left: 0;
+    border-radius: 3px;
+  }
+  
+  .tally-angeekaram {
+    height: 35px;
+    max-width: 180px;
+    left: 0;
+    margin-left: 0;
+  }
+
+  .cse-headinglogo {
+    height: 40px;
+    width: 90px;
+    border-radius: 5px;
+    padding: 2px;
+  }
+}
 /* Main wrapper */
 .cse-main {
   margin: 0;

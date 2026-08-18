@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { useState } from 'react';
+
 const HeaderComponent = () => {
   const [login, setLogin] = useState(() => sessionStorage.getItem("token"));
   const [userType, setUserType] = useState(() => sessionStorage.getItem("userType") === "true");
+
   useEffect(() => {
     const interval = setInterval(() => {
       const token = sessionStorage.getItem("token");
@@ -14,15 +15,27 @@ const HeaderComponent = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
   return (
     <nav className="navbar navbar-expand-lg header sticky-top">
-      <div className="container-fluid">
+      <div className="container-fluid d-flex align-items-center justify-content-between">
 
-        <a className="navbar-brand fw-bold header-logo" href="#">
-          <img src="/cse.jpg" alt="cselogo" className='cse-headinglogo' />
-        </a>
+        {/* All Logos Grouped Left/Center */}
+        <div className="d-flex align-items-center gap-2">
+          <a className="navbar-brand p-0 m-0" href="home">
+            <img src="/cse.jpg" alt="cselogo" className="cse-headinglogo" />
+          </a>
+          <a className="navbar-brand p-0 m-0">
+            <img src="/tally-logo.jpeg" alt="tally-logo" className="tally-logo" />
+          </a>
+          <a className="navbar-brand p-0 m-0">
+            <img src="/tally-angeekaram.png" alt="tally-angeekaram" className="tally-angeekaram" />
+          </a>
+        </div>
+
+        {/* Mobile Toggle Button (Pushed to Far Right using ms-auto) */}
         <button
-          className="navbar-toggler"
+          className="navbar-toggler ms-auto d-flex align-items-center gap-1"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
@@ -31,7 +44,10 @@ const HeaderComponent = () => {
           aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
+          <span className="fw-bold fs-6 text-white">Menu</span>
         </button>
+
+        {/* Navigation Links */}
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
@@ -65,22 +81,11 @@ const HeaderComponent = () => {
               </a>
             </li>
             <li className="nav-item bg-success rounded">
-              <a className="nav-link" href="/view-certificate">
-                <i className="bi bi-award-fill me-1"></i>
-                View Certificate
+              <a className="nav-link text-white" href="/view-certificate">
+                <i className="bi bi-award-fill me-1"></i> View Certificate
               </a>
             </li>
-            {/* {!login && (
-              <li className="nav-item ms-2">
-                <a
-                  href="/login"
-                  className="btn btn-primary"
-                >
-                  <i className="bi bi-person-circle me-1"></i>
-                  Login
-                </a>
-              </li>
-            )} */}
+
             {login && (
               <li className="nav-item">
                 <a
@@ -93,12 +98,15 @@ const HeaderComponent = () => {
             )}
 
             {login && (
-              <li className="nav-item" onClick={() => {
-                sessionStorage.removeItem("token");
-                sessionStorage.removeItem("userType");
-                sessionStorage.removeItem("email");
-                window.location.href = "/home";
-              }}>
+              <li
+                className="nav-item"
+                onClick={() => {
+                  sessionStorage.removeItem("token");
+                  sessionStorage.removeItem("userType");
+                  sessionStorage.removeItem("email");
+                  window.location.href = "/home";
+                }}
+              >
                 <a className="nav-link text-danger" href="#">
                   <i className="bi bi-box-arrow-right me-1"></i> Logout
                 </a>
