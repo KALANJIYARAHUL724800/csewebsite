@@ -217,27 +217,121 @@ const galleryImages = [
           </div>
         </section>
       )}
-        {/* Social Media */}
-        <section className="py-5 bg-light text-center">
-        <div className="container">
-          <h2 className="mb-3 heading" style={{ color: "#004aad" }}>Follow Us</h2>
-          <p className="mb-4 text-muted para">Stay connected with us on social media!</p>
+      {/* Social Media */}
+<section className="py-5 bg-light text-center">
+  <div className="container">
+    <div className="row g-4">
+
+      {/* Ramnad */}
+      <div className="col-md-6">
+        <div className="p-4 h-100">
+          <h2 className="mb-3 heading" style={{ color: "#004aad" }}>
+            Follow Ramnad
+          </h2>
+
+          <p className="mb-4 text-muted para">
+            Stay connected with CSE Computer Education Ramnad!
+          </p>
+
           <div className="d-flex justify-content-center gap-3">
-            <a href="https://www.facebook.com/cseramnad" target="_blank" className="btn btn-primary btn-lg rounded-circle d-flex align-items-center justify-content-center">
+
+            {/* Facebook */}
+            <a
+              href="https://www.facebook.com/cseramnad"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary btn-lg rounded-circle d-flex align-items-center justify-content-center"
+            >
               <i className="bi bi-facebook"></i>
             </a>
-            <a href="https://www.youtube.com/@cseramnad" target="_blank" className="btn btn-danger btn-lg rounded-circle d-flex align-items-center justify-content-center">
+
+            {/* YouTube */}
+            <a
+              href="https://www.youtube.com/@cseramnad"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-danger btn-lg rounded-circle d-flex align-items-center justify-content-center"
+            >
               <i className="bi bi-youtube"></i>
             </a>
-            <a href="https://in.linkedin.com/company/cseramnad" target="_blank" className="btn btn-info btn-lg rounded-circle d-flex align-items-center justify-content-center text-white">
+
+            {/* LinkedIn */}
+            <a
+              href="https://in.linkedin.com/company/cseramnad"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-info btn-lg rounded-circle d-flex align-items-center justify-content-center text-white"
+            >
               <i className="bi bi-linkedin"></i>
             </a>
-            <a href="https://www.instagram.com/cse_ramnad/" target="_blank" className="btn btn-pink btn-lg rounded-circle d-flex align-items-center justify-content-center text-white" style={{ backgroundColor: '#E4405F' }}>
+
+            {/* Instagram */}
+            <a
+              href="https://www.instagram.com/cse_ramnad/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-lg rounded-circle d-flex align-items-center justify-content-center text-white"
+              style={{ backgroundColor: "#E4405F" }}
+            >
               <i className="bi bi-instagram"></i>
             </a>
+
           </div>
         </div>
-      </section>
+      </div>
+
+
+      {/* Udumalpet */}
+      <div className="col-md-6">
+        <div className="p-4 h-100">
+          <h2 className="mb-3 heading" style={{ color: "#004aad" }}>
+            Follow Udumalpet
+          </h2>
+
+          <p className="mb-4 text-muted para">
+            Stay connected with CSE Computer Education Udumalpet!
+          </p>
+
+          <div className="d-flex justify-content-center gap-3">
+
+            {/* Facebook */}
+            <a
+              href="https://www.facebook.com/CSEudt"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary btn-lg rounded-circle d-flex align-items-center justify-content-center"
+            >
+              <i className="bi bi-facebook"></i>
+            </a>
+
+            {/* YouTube */}
+            <a
+              href="https://www.youtube.com/@cseudt4548"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-danger btn-lg rounded-circle d-flex align-items-center justify-content-center"
+            >
+              <i className="bi bi-youtube"></i>
+            </a>
+
+            {/* Instagram */}
+            <a
+              href="https://www.instagram.com/cse_udumalpet/?hl=en"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-lg rounded-circle d-flex align-items-center justify-content-center text-white"
+              style={{ backgroundColor: "#E4405F" }}
+            >
+              <i className="bi bi-instagram"></i>
+            </a>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
       {/* GALLERY */}
      <section className="py-5 bg-white" data-aos="fade-up">
   <h3
