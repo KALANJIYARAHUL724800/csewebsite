@@ -86,32 +86,32 @@ const HeaderComponent = () => {
               </a>
             </li>
 
-            {login && (
-              <li className="nav-item">
-                <a
-                  className="nav-link"
-                  href={userType ? "/dashboard" : "/student-dashboard"}
-                >
-                  <i className="bi bi-speedometer2 me-1"></i> Dashboard
-                </a>
-              </li>
-            )}
+            {login && userType && (
+  <>
+    <li className="nav-item">
+      <a
+        className="nav-link"
+        href="/dashboard"
+      >
+        <i className="bi bi-speedometer2 me-1"></i> Dashboard
+      </a>
+    </li>
 
-            {login && (
-              <li
-                className="nav-item"
-                onClick={() => {
-                  sessionStorage.removeItem("token");
-                  sessionStorage.removeItem("userType");
-                  sessionStorage.removeItem("email");
-                  window.location.href = "/home";
-                }}
-              >
-                <a className="nav-link text-danger" href="#">
-                  <i className="bi bi-box-arrow-right me-1"></i> Logout
-                </a>
-              </li>
-            )}
+    <li
+      className="nav-item"
+      onClick={() => {
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("userType");
+        sessionStorage.removeItem("email");
+        window.location.href = "/home";
+      }}
+    >
+      <a className="nav-link text-danger" href="#">
+        <i className="bi bi-box-arrow-right me-1"></i> Logout
+      </a>
+    </li>
+  </>
+)}
           </ul>
         </div>
 
