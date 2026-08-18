@@ -865,77 +865,86 @@ const handlePageChange = (page) => {
     {/* Blog Cards */}
     <div className="row g-4">
 
-      {blogs.length > 0 ? (
+  {blogs.length > 0 ? (
 
-        blogs.slice(0, 3).map((blog) => (
+    blogs.slice(0, 3).map((blog) => (
+
+      <div
+        className="col-lg-4 col-md-6"
+        key={blog.id}
+      >
+
+        <Link
+          to={`/blog/${blog.id}`}
+          className="text-decoration-none text-dark"
+        >
 
           <div
-            className="col-lg-4 col-md-6"
-            key={blog.id}
+            className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden"
+            style={{
+              cursor: "pointer"
+            }}
           >
 
-            <div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+            <img
+              src={blog.image}
+              className="card-img-top"
+              alt={blog.category}
+              style={{
+                height: "230px",
+                objectFit: "cover"
+              }}
+            />
 
-              <img
-                src={blog.image}
-                className="card-img-top"
-                alt={blog.category}
-                style={{
-                  height: "230px",
-                  objectFit: "cover"
-                }}
-              />
+            <div className="card-body p-4">
 
-              <div className="card-body p-4">
+              <div className="d-flex justify-content-between align-items-center mb-3">
 
-                <div className="d-flex justify-content-between align-items-center mb-3">
+                <span className="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+                  {blog.category}
+                </span>
 
-                  <span className="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
-                    {blog.category}
-                  </span>
-
-                  <small className="text-muted">
-                    {blog.date}
-                  </small>
-
-                </div>
-
-                <h5 className="card-title fw-bold">
-                  {blog.title}
-                </h5>
-
-                <p className="card-text text-muted">
-                  {blog.description}
-                </p>
-
-                <Link
-                  to={`/blog/${blog.id}`}
-                  className="text-primary fw-semibold text-decoration-none"
-                >
-                  {blog.button || "Read More"}
-
-                  <i className="bi bi-arrow-right ms-1"></i>
-                </Link>
+                <small className="text-muted">
+                  {blog.date}
+                </small>
 
               </div>
+
+              <h5 className="card-title fw-bold">
+                {blog.title}
+              </h5>
+
+              <p className="card-text text-muted">
+                {blog.description}
+              </p>
+
+              <span className="text-primary fw-semibold">
+                {blog.button || "Read More"}
+
+                <i className="bi bi-arrow-right ms-1"></i>
+              </span>
 
             </div>
 
           </div>
 
-        ))
+        </Link>
 
-      ) : (
+      </div>
 
-        <div className="col-12 text-center">
-          <p className="text-muted">
-            No blogs available.
-          </p>
-        </div>
+    ))
 
-      )}
+  ) : (
 
+    <div className="col-12 text-center">
+      <p className="text-muted">
+        No blogs available.
+      </p>
     </div>
+
+  )}
+
+</div>
 
     {/* View All */}
     {blogs.length > 3 && (

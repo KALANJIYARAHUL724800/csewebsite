@@ -109,7 +109,7 @@ const galleryImages = [
           {/* Girl pointing towards Why Choose Us */}
           <div className="mobile-girl">
             <img
-              src="/about/say.png"
+              src="/about/girl.png"
               alt="Why choose us"
             />
           </div>
