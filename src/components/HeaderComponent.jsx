@@ -35,17 +35,17 @@ const HeaderComponent = () => {
 
         {/* Mobile Toggle Button (Pushed to Far Right using ms-auto) */}
         <button
-          className="navbar-toggler ms-auto d-flex align-items-center gap-1"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-          <span className="fw-bold fs-6 text-white">Menu</span>
-        </button>
+  className="navbar-toggler ms-auto d-flex d-lg-none align-items-center gap-1"
+  type="button"
+  data-bs-toggle="collapse"
+  data-bs-target="#navbarNav"
+  aria-controls="navbarNav"
+  aria-expanded="false"
+  aria-label="Toggle navigation"
+>
+  <span className="navbar-toggler-icon"></span>
+  <span className="fw-bold fs-6 text-white">Menu</span>
+</button>
 
         {/* Navigation Links */}
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav">

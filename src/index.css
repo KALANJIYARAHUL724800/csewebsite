@@ -23,6 +23,7 @@ body {
 .header {
   background-color: #0D47A1;
   position: sticky;
+  z-index: 1030 !important;
 }
 
 .header .header-logo {
@@ -77,27 +78,37 @@ body {
 
 .cse-headinglogo {
   position: relative;
-  height: 60px;
+  height: 50px;
   width: 100px;
   border-radius: 5px;
   padding: 2px;
 }
+
 .tally-logo {
   height: 45px;
   width: auto;
   object-fit: contain;
-  position: relative;
-  left: 260px;
   border-radius: 3px;
 }
 
 .tally-angeekaram {
-  height: 75px;
+  height: 65px;
   width: auto;
   max-width: 100%;
   object-fit: contain;
-  position: relative;
-  left: 260px;
+}
+
+/* Laptops / Desktops (Space பத்தாமல் Overlap ஆவதை தடுக்கும்) */
+@media (min-width: 992px) and (max-width: 1280px) {
+  .tally-angeekaram {
+    height: 38px;
+    max-width: 220px;
+  }
+  .navbar-nav .nav-link {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    font-size: 14px;
+  }
 }
 
 /* Mobile View Fixes */
@@ -109,7 +120,7 @@ body {
   }
   
   .tally-angeekaram {
-    height: 35px;
+    height: 55px;
     max-width: 180px;
     left: 0;
     margin-left: 0;
