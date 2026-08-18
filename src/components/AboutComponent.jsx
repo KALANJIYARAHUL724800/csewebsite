@@ -23,7 +23,7 @@ const AboutComponent = () => {
 
     fetchData();
   }, []);
-  if (!data) return <p>Loading...</p>;
+  if (!data) return <p>Please Wait</p>;
 
 const galleryImages = [
   "/gallery/Counselling-1.jpg",
@@ -82,8 +82,8 @@ const galleryImages = [
       {/* ================= DESKTOP GIRL ================= */}
       <div className="col-md-4 about-girl-desktop text-center">
         <img
-          src="/about/say.png"
-          alt="Say"
+          src="/about/girl.png"
+          alt="girl"
           className="about-girl-img"
         />
       </div>
