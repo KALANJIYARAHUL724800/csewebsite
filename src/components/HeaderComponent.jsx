@@ -70,7 +70,7 @@ const HeaderComponent = () => {
                 View Certificate
               </a>
             </li>
-            {!login && (
+            {/* {!login && (
               <li className="nav-item ms-2">
                 <a
                   href="/login"
@@ -80,7 +80,7 @@ const HeaderComponent = () => {
                   Login
                 </a>
               </li>
-            )}
+            )} */}
             {login && (
               <li className="nav-item">
                 <a

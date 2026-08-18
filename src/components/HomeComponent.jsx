@@ -559,7 +559,7 @@ const handlePageChange = (page) => {
           </p>
         )}
         {/* Authentication buttons */}
-        <div className="auth-container mt-5 text-center">
+        {/* <div className="auth-container mt-5 text-center">
           {userLogin && (
             <button
               id="studentLoginBtn"
@@ -569,7 +569,7 @@ const handlePageChange = (page) => {
               Student Login
             </button>
           )}
-        </div>
+        </div> */}
         <div className="container-fluid dflex mb-5 marquee-container">
           <div className="marquee-track">
             <img src="/gallery/Class-1.jpg" alt="Class 1" />
