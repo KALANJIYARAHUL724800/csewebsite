@@ -8,11 +8,7 @@ const EventComponent = () => {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		AOS.init({
-			duration: 800,
-			once: true,
-			offset: 80,
-		});
+		AOS.init({ duration: 300, once: true });
 
 		const fetchData = async () => {
 			try {

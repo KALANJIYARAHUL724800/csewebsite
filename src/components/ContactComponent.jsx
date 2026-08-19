@@ -14,7 +14,7 @@ const ContactComponent = () => {
 	const handleChange = (e) =>
 		setContact({ ...contact, [e.target.name]: e.target.value });
 	useEffect(() => {
-		AOS.init({ duration: 1000, once: true });
+		AOS.init({ duration: 300, once: true });
 	}, []);
 	const validate = () => {
 		const err = {};
