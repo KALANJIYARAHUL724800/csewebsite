@@ -22,7 +22,6 @@ const AboutComponent = () => {
 
     fetchData();
   }, []);
-  if (!data) return <p></p>;
 
   const galleryImages = [
     "/gallery/Counselling-1.jpg",
