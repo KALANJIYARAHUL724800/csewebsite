@@ -157,9 +157,9 @@ export const insertTestimonials = async (formData) => {
 	);
 	return response.data;
 };
-export const updateTestimonials = async (formData) => {
-	const response = await axios.post(
-		`${API_BASE}/testimonials/insert`,
+export const updateTestimonial = async (enrollno, formData) => {
+	const response = await axios.put(
+		`${API_BASE}/testimonials/update/${enrollno}`,
 		formData,
 		{
 			headers: { "Content-Type": "multipart/form-data" },
@@ -179,19 +179,6 @@ export const moveImage = async (formData, type = "upload") => {
 		headers: { "Content-Type": "multipart/form-data" },
 	});
 	return response.data;
-};
-
-export const updateTestimonial = (id, formData) => {
-	const data = new FormData();
-	for (let key in formData) {
-		if (formData[key] !== null && formData[key] !== undefined) {
-			data.append(key, formData[key]);
-		}
-	}
-
-	return axios.put(`${API_BASE}/testimonials/update/${id}`, data, {
-		headers: { "Content-Type": "multipart/form-data" },
-	});
 };
 
 export const showAllTestimonials = () => {

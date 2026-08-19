@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
 	search,
@@ -153,6 +153,20 @@ const HomeComponent = () => {
 			behavior: "smooth",
 		});
 	};
+	const fetchTestimonials = useCallback(() => {
+		showAllTestimonials()
+			.then((response) => {
+				if (Array.isArray(response.data)) {
+					setTestimonials(response.data);
+				} else {
+					setTestimonials([]);
+				}
+			})
+			.catch((err) => {
+				console.error("Testimonials error:", err);
+				setTestimonials([]);
+			});
+	}, []);
 	useEffect(() => {
 		AOS.init({ duration: 300, once: true });
 		AOS.refresh();
@@ -198,24 +212,29 @@ const HomeComponent = () => {
 				setBlogs([]);
 			});
 
-		showAllTestimonials()
-			.then((response) => {
-				if (Array.isArray(response.data)) {
-					setTestimonials(response.data);
-				} else {
-					setTestimonials([]);
+		fetchTestimonials();
+		let intervalId;
+
+		const startPolling = () => {
+			// Tab active-a irundha mattum 10s interval-la fetch pannum
+			intervalId = setInterval(() => {
+				if (document.visibilityState === "visible") {
+					fetchTestimonials();
 				}
-			})
-			.catch((err) => {
-				console.error("Testimonials error:", err);
-				setTestimonials([]);
-			});
+			}, 10000); // 10 seconds is safer for server
+		};
+
+		fetchTestimonials(); // Initial load
+		startPolling();
+
+		// Cleanup on component unmount
+		return () => clearInterval(intervalId);
 		const interval = setInterval(() => {
 			setCurrentImage((prev) => (prev + 1) % galleryImages.length);
 		}, 2000);
 
 		return () => clearInterval(interval);
-	}, []);
+	}, [fetchTestimonials]);
 	const studentLogin = () => navigate("/login");
 	const startConfetti = () => {
 		if (confettiInterval.current) return;
@@ -688,8 +707,9 @@ const HomeComponent = () => {
 
 											<div className="testimonial-left">
 												{/* Student Image */}
+												{/* Testimonial Student Image */}
 												<img
-													src={`/uploads/${t.imageUrl}`}
+													src={t.imageUrl}
 													alt={t.name}
 													className="rounded-circle shadow-lg testimonial-img"
 												/>
