@@ -4,11 +4,7 @@ import "aos/dist/aos.css";
 
 const GalleryComponent = () => {
 	useEffect(() => {
-		AOS.init({
-			duration: 1000,
-			once: true,
-			easing: "ease-out-cubic",
-		});
+		AOS.init({ duration: 300, once: true });
 	}, []);
 
 	const images = [

@@ -154,7 +154,7 @@ const HomeComponent = () => {
 		});
 	};
 	useEffect(() => {
-		AOS.init({ duration: 1000, once: true });
+		AOS.init({ duration: 300, once: true });
 		AOS.refresh();
 		const token = sessionStorage.getItem("token");
 		setUserLogin(!token);

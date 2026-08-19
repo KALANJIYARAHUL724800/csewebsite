@@ -10,7 +10,7 @@ const AboutComponent = () => {
   const [sent, setSent] = useState(false);
 
   useEffect(() => {
-    AOS.init({ duration: 1000, once: true });
+    AOS.init({ duration: 300, once: true });
     const fetchData = async () => {
       try {
         const res = await showAllAbout();
