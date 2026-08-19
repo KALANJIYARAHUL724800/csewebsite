@@ -22,7 +22,7 @@ const AboutComponent = () => {
 
     fetchData();
   }, []);
-  if (!data) return <p>Please Wait</p>;
+  if (!data) return <p></p>;
 
   const galleryImages = [
     "/gallery/Counselling-1.jpg",
