@@ -11,15 +11,16 @@ const CoursesComponent = () => {
 	const [loading, setLoading] = useState(true);
 	const [showForm, setShowForm] = useState(false);
 	useEffect(() => {
-		AOS.init({ duration: 800, once: true });
+		AOS.init({ duration: 300, once: true });
 		getAllCourses()
 			.then((response) => {
 				const fetchedCourses = response.data;
-				const hasValidCourse = fetchedCourses.some((course) => course.id > 0);
-				if (!hasValidCourse) {
+
+				if (!fetchedCourses?.length) {
 					navigate("/home");
 					return;
 				}
+
 				setCourses(fetchedCourses);
 			})
 			.catch((error) => {
