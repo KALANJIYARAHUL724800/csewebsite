@@ -1,16 +1,16 @@
 import { Navigate } from "react-router-dom";
 
 const PrivateCeritificateUrl = ({ children, allowedUserType }) => {
-  const userType = sessionStorage.getItem("userType");
+	const userType = sessionStorage.getItem("userType");
 
-  console.log("userType:", userType);
-  console.log("allowedUserType:", allowedUserType);
+	console.log("userType:", userType);
+	console.log("allowedUserType:", allowedUserType);
 
-  if (userType === allowedUserType) {
-    return children;
-  }
+	if (userType === allowedUserType) {
+		return children;
+	}
 
-  return <Navigate to="/home" replace />;
+	return <Navigate to="/home" replace />;
 };
 
 export default PrivateCeritificateUrl;

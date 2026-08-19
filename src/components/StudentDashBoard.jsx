@@ -3,606 +3,711 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { logout, showAllPosts, updateLikes, getTotalLikes, getAllCourses, downloadCoursePdf, insertComment, moveImage, updateUserRecord, getEmailData, postCount } from "../index";
+import {
+	logout,
+	showAllPosts,
+	updateLikes,
+	getTotalLikes,
+	getAllCourses,
+	downloadCoursePdf,
+	insertComment,
+	moveImage,
+	updateUserRecord,
+	getEmailData,
+	postCount,
+} from "../index";
 import { useNavigate } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
 
 export default function StudentDashBoard() {
-  const [errors, setErrors] = useState({});
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [profileImage, setProfileImage] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
-  const [darkMode, setDarkMode] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [gender, setGender] = useState("");
-  const [bio, setBio] = useState("");
-  const [dob, setDob] = useState("");
-  const [count, setCount] = useState(0);
-  const [address, setAddress] = useState("");
-  const saveProfile = async () => {
-    if (!imageFile) return;
-    const data = new FormData();
-    data.append("name", name);
-    data.append("email", email);
-    data.append("phone", phone);
-    data.append("gender", gender);
-    data.append("bio", bio);
-    data.append("dob", dob);
-    data.append("address", address);
-    data.append("profile", imageFile);
-    const formObject = Object.fromEntries(data.entries());
-    formObject.imageUrl = imageFile.name;
-    const formData = new FormData();
-    formData.append("image", imageFile);
+	const [errors, setErrors] = useState({});
+	const [showSuccess, setShowSuccess] = useState(false);
+	const [profileImage, setProfileImage] = useState(null);
+	const [imageFile, setImageFile] = useState(null);
+	const [darkMode, setDarkMode] = useState(false);
+	const [name, setName] = useState("");
+	const [email, setEmail] = useState("");
+	const [phone, setPhone] = useState("");
+	const [gender, setGender] = useState("");
+	const [bio, setBio] = useState("");
+	const [dob, setDob] = useState("");
+	const [count, setCount] = useState(0);
+	const [address, setAddress] = useState("");
+	const saveProfile = async () => {
+		if (!imageFile) return;
+		const data = new FormData();
+		data.append("name", name);
+		data.append("email", email);
+		data.append("phone", phone);
+		data.append("gender", gender);
+		data.append("bio", bio);
+		data.append("dob", dob);
+		data.append("address", address);
+		data.append("profile", imageFile);
+		const formObject = Object.fromEntries(data.entries());
+		formObject.imageUrl = imageFile.name;
+		const formData = new FormData();
+		formData.append("image", imageFile);
 
-    try {
-      const res = await moveImage(formData, "profile");
-      await updateUserRecord(sessionStorage.getItem("email"), formObject).then((res) => {
-        setShowSuccess(true);
-        setTimeout(() => {
-          setShowSuccess(false);
-        }, 2000);
-      }).catch((err) => {
-        setErrors(err)
-      })
-      setProfileImage(URL.createObjectURL(imageFile));
-    } catch (err) {
-      if (err.response && err.response.data) {
-        setErrors(err.response.data);
-      } else {
-        setErrors({ general: "Something went wrong" });
-      }
-    }
-  };
+		try {
+			const res = await moveImage(formData, "profile");
+			await updateUserRecord(sessionStorage.getItem("email"), formObject)
+				.then((res) => {
+					setShowSuccess(true);
+					setTimeout(() => {
+						setShowSuccess(false);
+					}, 2000);
+				})
+				.catch((err) => {
+					setErrors(err);
+				});
+			setProfileImage(URL.createObjectURL(imageFile));
+		} catch (err) {
+			if (err.response && err.response.data) {
+				setErrors(err.response.data);
+			} else {
+				setErrors({ general: "Something went wrong" });
+			}
+		}
+	};
 
-  const [activeMenu, setActiveMenu] = useState("Dashboard");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [posts, setPosts] = useState([]);
-  const [commentText, setCommentText] = useState({});
-  const navigate = useNavigate();
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [coursesPerPage] = useState(6);
-  const totalPages = Math.ceil(courses.length / coursesPerPage);
-  const currentCourses = courses.slice(
-    (currentPage - 1) * coursesPerPage,
-    currentPage * coursesPerPage
-  );
-  const handleNext = () => { if (currentPage < totalPages) setCurrentPage(currentPage + 1); };
-  const handlePrev = () => { if (currentPage > 1) setCurrentPage(currentPage - 1); };
-  const fetchPosts = async () => {
-    try {
-      const res = await showAllPosts();
-      const postsWithLikes = await Promise.all(
-        res.data.map(async (p) => {
-          const likesRes = await getTotalLikes(p.id);
-          return { ...p, liked: false, likes: likesRes.data };
-        })
-      );
-      setPosts(postsWithLikes);
-    } catch (err) {
-    }
-  };
-  const getCurrentDate = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
+	const [activeMenu, setActiveMenu] = useState("Dashboard");
+	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [posts, setPosts] = useState([]);
+	const [commentText, setCommentText] = useState({});
+	const navigate = useNavigate();
+	const [courses, setCourses] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [coursesPerPage] = useState(6);
+	const totalPages = Math.ceil(courses.length / coursesPerPage);
+	const currentCourses = courses.slice(
+		(currentPage - 1) * coursesPerPage,
+		currentPage * coursesPerPage,
+	);
+	const handleNext = () => {
+		if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+	};
+	const handlePrev = () => {
+		if (currentPage > 1) setCurrentPage(currentPage - 1);
+	};
+	const fetchPosts = async () => {
+		try {
+			const res = await showAllPosts();
+			const postsWithLikes = await Promise.all(
+				res.data.map(async (p) => {
+					const likesRes = await getTotalLikes(p.id);
+					return { ...p, liked: false, likes: likesRes.data };
+				}),
+			);
+			setPosts(postsWithLikes);
+		} catch (err) {}
+	};
+	const getCurrentDate = () => {
+		const today = new Date();
+		const year = today.getFullYear();
+		const month = String(today.getMonth() + 1).padStart(2, "0");
+		const day = String(today.getDate()).padStart(2, "0");
+		return `${year}-${month}-${day}`;
+	};
 
-  useEffect(() => {
-    const today = getCurrentDate();
-    postCount(today)
-      .then((res) => {
-        setCount(res.data);
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching post count:", err);
-      })
-    const dark = sessionStorage.getItem("darkmode");
-    if (dark !== null) {
-      setDarkMode(dark === "true");
-    }
-    const email = sessionStorage.getItem("email");
-    getEmailData(email).then((res) => {
-      const data = res.data;
-      setName(data.name);
-      setEmail(data.email);
-      setPhone(data.mobile);
-      setGender(data.gender);
-      setBio(data.bio);
-      setDob(data.dob);
-      setAddress(data.address);
-      setImageFile(data.profile);
-    })
-    fetchPosts();
-    AOS.init({ duration: 800, once: true });
-    getAllCourses()
-      .then((response) => {
-        const fetchedCourses = response.data;
-        const hasValidCourse = fetchedCourses.some((course) => course.id > 0);
-        if (!hasValidCourse) {
-          navigate("/home");
-          return;
-        }
-        setCourses(fetchedCourses);
-      })
-      .catch(() => navigate("/home"))
-      .finally(() => setLoading(false));
-    const interval = setInterval(fetchPosts, 5000);
-    return () => clearInterval(interval);
-  }, []);
-  const handleToggle = () => {
-    setDarkMode((prev) => {
-      const newMode = !prev;
-      sessionStorage.setItem("darkmode", newMode);
-      return newMode;
-    });
-  };
+	useEffect(() => {
+		const today = getCurrentDate();
+		postCount(today)
+			.then((res) => {
+				setCount(res.data);
+				console.log(res.data);
+			})
+			.catch((err) => {
+				console.error("Error fetching post count:", err);
+			});
+		const dark = sessionStorage.getItem("darkmode");
+		if (dark !== null) {
+			setDarkMode(dark === "true");
+		}
+		const email = sessionStorage.getItem("email");
+		getEmailData(email).then((res) => {
+			const data = res.data;
+			setName(data.name);
+			setEmail(data.email);
+			setPhone(data.mobile);
+			setGender(data.gender);
+			setBio(data.bio);
+			setDob(data.dob);
+			setAddress(data.address);
+			setImageFile(data.profile);
+		});
+		fetchPosts();
+		AOS.init({ duration: 800, once: true });
+		getAllCourses()
+			.then((response) => {
+				const fetchedCourses = response.data;
+				const hasValidCourse = fetchedCourses.some((course) => course.id > 0);
+				if (!hasValidCourse) {
+					navigate("/home");
+					return;
+				}
+				setCourses(fetchedCourses);
+			})
+			.catch(() => navigate("/home"))
+			.finally(() => setLoading(false));
+		const interval = setInterval(fetchPosts, 5000);
+		return () => clearInterval(interval);
+	}, []);
+	const handleToggle = () => {
+		setDarkMode((prev) => {
+			const newMode = !prev;
+			sessionStorage.setItem("darkmode", newMode);
+			return newMode;
+		});
+	};
 
-  const handleCommentPost = async (postId) => {
-    try {
-      const payload = {
-        comments: commentText[postId],
-        likes: 0
-      };
-      const res = await insertComment(postId, payload);
-      setPosts(prevPosts =>
-        prevPosts.map(p =>
-          p.id === postId
-            ? { ...p, comments: [...(p.comments || []), res.data] }
-            : p
-        )
-      );
-      setCommentText({ ...commentText, [postId]: "" });
-    } catch (error) {
-    }
-  };
-  const toggleLike = (id) => {
-    const post = posts.find(p => p.id === id);
-    if (!post) return;
-    const newLiked = !post.liked;
-    const newLikesCount = newLiked ? post.likes + 1 : post.likes - 1;
-    setPosts(prev =>
-      prev.map(p =>
-        p.id === id ? { ...p, liked: newLiked, likes: newLikesCount } : p
-      )
-    );
-    updateLikes(id, { likes: newLikesCount })
-      .then((res) => { })
-      .catch((err) => {
-        setPosts(prev =>
-          prev.map(p =>
-            p.id === id ? { ...p, liked: post.liked, likes: post.likes } : p
-          )
-        );
-      });
-  };
+	const handleCommentPost = async (postId) => {
+		try {
+			const payload = {
+				comments: commentText[postId],
+				likes: 0,
+			};
+			const res = await insertComment(postId, payload);
+			setPosts((prevPosts) =>
+				prevPosts.map((p) =>
+					p.id === postId
+						? { ...p, comments: [...(p.comments || []), res.data] }
+						: p,
+				),
+			);
+			setCommentText({ ...commentText, [postId]: "" });
+		} catch (error) {}
+	};
+	const toggleLike = (id) => {
+		const post = posts.find((p) => p.id === id);
+		if (!post) return;
+		const newLiked = !post.liked;
+		const newLikesCount = newLiked ? post.likes + 1 : post.likes - 1;
+		setPosts((prev) =>
+			prev.map((p) =>
+				p.id === id ? { ...p, liked: newLiked, likes: newLikesCount } : p,
+			),
+		);
+		updateLikes(id, { likes: newLikesCount })
+			.then((res) => {})
+			.catch((err) => {
+				setPosts((prev) =>
+					prev.map((p) =>
+						p.id === id ? { ...p, liked: post.liked, likes: post.likes } : p,
+					),
+				);
+			});
+	};
 
-  const downloadPdf = async (e, id) => {
-    e.preventDefault();
-    try {
-      const response = await downloadCoursePdf(id);
-      const url = window.URL.createObjectURL(
-        new Blob([response.data], { type: "application/pdf" })
-      );
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `course_${id}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } catch (error) {
-    }
-  };
-  return (
-    <div
-      className={`container-fluid p-0 ${darkMode ? "bg-dark text-white" : "bg-light text-dark"}`}
-      style={{ minHeight: "100vh" }}
-    >
-      {/* Mobile Navbar */}
-      <nav className="navbar navbar-dark bg-dark d-md-none">
-        <div className="container-fluid">
-          <button
-            className="btn btn-dark"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-          >
-            <i className="fas fa-bars fs-4"></i>
-          </button>
-          <span className="navbar-brand ms-2 text-success fw-bold heading">
-            Student Portal
-          </span>
-        </div>
-      </nav>
+	const downloadPdf = async (e, id) => {
+		e.preventDefault();
+		try {
+			const response = await downloadCoursePdf(id);
+			const url = window.URL.createObjectURL(
+				new Blob([response.data], { type: "application/pdf" }),
+			);
+			const link = document.createElement("a");
+			link.href = url;
+			link.setAttribute("download", `course_${id}.pdf`);
+			document.body.appendChild(link);
+			link.click();
+			link.remove();
+		} catch (error) {}
+	};
+	return (
+		<div
+			className={`container-fluid p-0 ${darkMode ? "bg-dark text-white" : "bg-light text-dark"}`}
+			style={{ minHeight: "100vh" }}>
+			{/* Mobile Navbar */}
+			<nav className="navbar navbar-dark bg-dark d-md-none">
+				<div className="container-fluid">
+					<button
+						className="btn btn-dark"
+						onClick={() => setSidebarOpen(!sidebarOpen)}>
+						<i className="fas fa-bars fs-4"></i>
+					</button>
+					<span className="navbar-brand ms-2 text-success fw-bold heading">
+						Student Portal
+					</span>
+				</div>
+			</nav>
 
-      {/* Sidebar */}
-      <div
-        className="bg-dark text-white vh-100 p-3 position-fixed top-0 start-0 d-flex flex-column shadow-lg"
-        style={{
-          width: "240px",
-          zIndex: 1050,
-          transform:
-            window.innerWidth >= 768
-              ? "translateX(0)"
-              : sidebarOpen
-                ? "translateX(0)"
-                : "translateX(-100%)",
-          transition: "0.4s ease",
-        }}
-      >
-        <h3 className="text-success mb-4 fw-bold heading">
-          <i className="fas fa-graduation-cap me-2"></i>Dashboard
-        </h3>
-        {[
-          { name: "Dashboard", icon: "fa-home" },
-          { name: "Posts", icon: "fa-image" },
-          { name: "Profile", icon: "fa-user" },
-          { name: "Settings", icon: "fas fa-cog me-2" },
-        ].map((menu) => (
-          <button
-            key={menu.name}
-            className={`btn btn-dark text-start mb-2 d-flex align-items-center w-100 rounded heading ${activeMenu === menu.name ? "bg-secondary fw-bold" : ""
-              }`}
-            onClick={() => {
-              setActiveMenu(menu.name);
-              if (window.innerWidth < 768) setSidebarOpen(false);
-            }}
-          >
-            <i className={`fas ${menu.icon} me-3`}></i>
-            {menu.name}
-          </button>
-        ))}
-      </div>
+			{/* Sidebar */}
+			<div
+				className="bg-dark text-white vh-100 p-3 position-fixed top-0 start-0 d-flex flex-column shadow-lg"
+				style={{
+					width: "240px",
+					zIndex: 1050,
+					transform:
+						window.innerWidth >= 768
+							? "translateX(0)"
+							: sidebarOpen
+								? "translateX(0)"
+								: "translateX(-100%)",
+					transition: "0.4s ease",
+				}}>
+				<h3 className="text-success mb-4 fw-bold heading">
+					<i className="fas fa-graduation-cap me-2"></i>Dashboard
+				</h3>
+				{[
+					{ name: "Dashboard", icon: "fa-home" },
+					{ name: "Posts", icon: "fa-image" },
+					{ name: "Profile", icon: "fa-user" },
+					{ name: "Settings", icon: "fas fa-cog me-2" },
+				].map((menu) => (
+					<button
+						key={menu.name}
+						className={`btn btn-dark text-start mb-2 d-flex align-items-center w-100 rounded heading ${
+							activeMenu === menu.name ? "bg-secondary fw-bold" : ""
+						}`}
+						onClick={() => {
+							setActiveMenu(menu.name);
+							if (window.innerWidth < 768) setSidebarOpen(false);
+						}}>
+						<i className={`fas ${menu.icon} me-3`}></i>
+						{menu.name}
+					</button>
+				))}
+			</div>
 
-      {/* MAIN CONTENT */}
-      <div
-        className="p-4"
-        style={{
-          marginLeft: window.innerWidth >= 768 ? "240px" : "0",
-          transition: "0.3s",
-        }}
-      >
-        <h1 className="fw-bold mb-4 heading" style={{ color: "#004aad" }}>{activeMenu}</h1>
-        {/* DASHBOARD */}
-        {activeMenu === "Dashboard" && (
-          <div className="position-relative bg-white p-4 rounded-4 shadow-sm">
+			{/* MAIN CONTENT */}
+			<div
+				className="p-4"
+				style={{
+					marginLeft: window.innerWidth >= 768 ? "240px" : "0",
+					transition: "0.3s",
+				}}>
+				<h1 className="fw-bold mb-4 heading" style={{ color: "#004aad" }}>
+					{activeMenu}
+				</h1>
+				{/* DASHBOARD */}
+				{activeMenu === "Dashboard" && (
+					<div className="position-relative bg-white p-4 rounded-4 shadow-sm">
+						{/* Profile image positioned absolute at top-left */}
+						<img
+							src={
+								profileImage
+									? profileImage
+									: imageFile
+										? `/profile/${imageFile}`
+										: "https://via.placeholder.com/150"
+							}
+							alt="profile"
+							className="rounded-circle position-absolute top-0 start-0 m-3"
+							style={{
+								width: "60px",
+								height: "60px",
+								objectFit: "cover",
+								zIndex: 10,
+							}}
+						/>{" "}
+						{name && (
+							<h3
+								className="ms-5 heading"
+								style={{
+									position: "relative",
+									left: "10px",
+									marginTop: "3px",
+									color: "grey",
+								}}>
+								<i> Welcome {name} </i>
+							</h3>
+						)}
+						{/* Add margin-top to move row down below image */}
+						<div className="row g-4 mt-5">
+							<div className="col-md-4">
+								<div className="card shadow p-4 text-center border-0 rounded-4">
+									<i className="fas fa-book fa-3x text-primary mb-3"></i>
+									<h4 className="heading">Enrolled Courses</h4>
+									<p className="text-muted para">
+										You are enrolled in 4 active courses
+									</p>
+								</div>
+							</div>
+							<div className="col-md-4">
+								<div
+									className="card shadow p-4 text-center border-0 rounded-4"
+									onClick={() => setActiveMenu("Posts")}>
+									<i className="fas fa-bell fa-3x text-warning mb-3"></i>
+									<h4 className="heading">Notifications</h4>
+									<p className="text-muted para">
+										{count > 0
+											? `${count} new announcements`
+											: "Wait for announcements"}
+									</p>
+								</div>
+							</div>
+							<div className="col-md-4">
+								<div
+									className="card shadow p-4 text-center border-0 rounded-4"
+									onClick={() =>
+										window.open(
+											"https://docs.google.com/forms/d/1dwCfPMvdAGoPtxwMgJyLhj1CUHZq3kkcF8zah7_RH3M/edit",
+											"_blank",
+											"noopener,noreferrer",
+										)
+									}>
+									<i className="fas fa-calendar fa-3x text-success mb-3"></i>
+									<h4 className="heading">Upcoming Exams</h4>
+									<p className="text-muted para">3 Exams this month</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
 
-            {/* Profile image positioned absolute at top-left */}
-            <img
-              src={
-                profileImage
-                  ? profileImage
-                  : imageFile
-                    ? `/profile/${imageFile}`
-                    : "https://via.placeholder.com/150"
-              }
-              alt="profile"
-              className="rounded-circle position-absolute top-0 start-0 m-3"
-              style={{ width: "60px", height: "60px", objectFit: "cover", zIndex: 10 }}
-            />  {name && (
-              <h3 className="ms-5 heading" style={{ position: "relative", left: "10px", marginTop: "3px", color: "grey" }}>
-                <i> Welcome {name} </i>
-              </h3>
-            )}
+				{/* POSTS */}
+				{activeMenu === "Posts" && (
+					<div
+						className="w-100"
+						style={{
+							height: "100vh",
+							overflowY: "scroll",
+							scrollSnapType: "y mandatory",
+						}}>
+						{!posts.length ? (
+							<h3 className="text-center mt-5 heading">Loading posts...</h3>
+						) : (
+							posts.map((post) => (
+								<div
+									key={post.id}
+									className="card border-0 shadow-lg"
+									style={{
+										height: "100vh",
+										scrollSnapAlign: "start",
+										borderRadius: "0",
+									}}>
+									<div style={{ height: "60vh" }}>
+										<img
+											src={`/posts/${post.imageUrl}`}
+											className="w-100 h-100 post-image"
+											alt="post"
+											style={{ objectFit: "cover" }}
+										/>
+									</div>
 
-            {/* Add margin-top to move row down below image */}
-            <div className="row g-4 mt-5">
-              <div className="col-md-4">
-                <div className="card shadow p-4 text-center border-0 rounded-4">
-                  <i className="fas fa-book fa-3x text-primary mb-3"></i>
-                  <h4 className="heading">Enrolled Courses</h4>
-                  <p className="text-muted para">You are enrolled in 4 active courses</p>
-                </div>
-              </div>
-              <div className="col-md-4">
-                <div className="card shadow p-4 text-center border-0 rounded-4" onClick={() => setActiveMenu("Posts")}>
-                  <i className="fas fa-bell fa-3x text-warning mb-3"></i>
-                  <h4 className="heading">Notifications</h4>
-                  <p className="text-muted para">
-                    {count > 0 ? `${count} new announcements` : "Wait for announcements"}
-                  </p>
-                </div>
-              </div>
-              <div className="col-md-4">
-                <div className="card shadow p-4 text-center border-0 rounded-4" onClick={() => window.open("https://docs.google.com/forms/d/1dwCfPMvdAGoPtxwMgJyLhj1CUHZq3kkcF8zah7_RH3M/edit", "_blank", "noopener,noreferrer")}>
-                  <i className="fas fa-calendar fa-3x text-success mb-3"></i>
-                  <h4 className="heading">Upcoming Exams</h4>
-                  <p className="text-muted para">3 Exams this month</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      
-        {/* POSTS */}
-        {activeMenu === "Posts" && (
-          <div
-            className="w-100"
-            style={{ height: "100vh", overflowY: "scroll", scrollSnapType: "y mandatory" }}
-          >
-            {!posts.length ? (
-              <h3 className="text-center mt-5 heading">Loading posts...</h3>
-            ) : (
-              posts.map((post) => (
-                <div
-                  key={post.id}
-                  className="card border-0 shadow-lg"
-                  style={{ height: "100vh", scrollSnapAlign: "start", borderRadius: "0" }}
-                >
-                  <div style={{ height: "60vh" }}>
-                    <img
-                      src={`/posts/${post.imageUrl}`}
-                      className="w-100 h-100 post-image"
-                      alt="post"
-                      style={{ objectFit: "cover" }}
-                    />
-                  </div>
+									<div className="p-4 bg-white" style={{ height: "25vh" }}>
+										<h5 className="fw-bold mb-2 heading">{post.title}</h5>
 
-                  <div className="p-4 bg-white" style={{ height: "25vh" }}>
-                    <h5 className="fw-bold mb-2 heading">{post.title}</h5>
+										<div className="d-flex align-items-center gap-3 mb-3">
+											<i
+												className={`fs-4 like-btn ${post.liked ? "fas text-danger" : "far"} fa-heart`}
+												onClick={() => toggleLike(post.id)}></i>
+											<span>{post.likes}</span>
 
-                    <div className="d-flex align-items-center gap-3 mb-3">
-                      <i
-                        className={`fs-4 like-btn ${post.liked ? "fas text-danger" : "far"} fa-heart`}
-                        onClick={() => toggleLike(post.id)}
-                      ></i>
-                      <span>{post.likes}</span>
+											<i
+												className="far fa-comment fs-4 text-primary comment-btn"
+												data-bs-toggle="collapse"
+												data-bs-target={`#commentBox${post.id}`}></i>
 
-                      <i
-                        className="far fa-comment fs-4 text-primary comment-btn"
-                        data-bs-toggle="collapse"
-                        data-bs-target={`#commentBox${post.id}`}
-                      ></i>
+											<i className="fas fa-share fs-4 text-success"></i>
+										</div>
 
-                      <i className="fas fa-share fs-4 text-success"></i>
-                    </div>
+										<div id={`commentBox${post.id}`} className="collapse">
+											<input
+												type="text"
+												placeholder="Write a comment..."
+												className="form-control mb-2 para"
+												value={commentText[post.id] || ""}
+												onChange={(e) =>
+													setCommentText({
+														...commentText,
+														[post.id]: e.target.value,
+													})
+												}
+											/>
 
-                    <div id={`commentBox${post.id}`} className="collapse">
-                      <input
-                        type="text"
-                        placeholder="Write a comment..."
-                        className="form-control mb-2 para"
-                        value={commentText[post.id] || ""}
-                        onChange={(e) =>
-                          setCommentText({ ...commentText, [post.id]: e.target.value })
-                        }
-                      />
+											<button
+												className="btn btn-primary w-100"
+												onClick={() => handleCommentPost(post.id)}>
+												Post Comment
+											</button>
+										</div>
 
-                      <button
-                        className="btn btn-primary w-100"
-                        onClick={() => handleCommentPost(post.id)}
-                      >
-                        Post Comment
-                      </button>
-                    </div>
+										<p className="text-muted small para">
+											Swipe up for more posts
+										</p>
+									</div>
+								</div>
+							))
+						)}
+					</div>
+				)}
+				{/* PROFILE */}
+				{activeMenu === "Profile" && (
+					<div className="container mt-4">
+						<button
+							className="btn btn-outline-secondary"
+							onClick={() => {
+								window.location.href = "/student-dashboard";
+							}}>
+							<i className="bi bi-arrow-left"></i> Go Back
+						</button>
+						<br />
+						<br />
+						<div className="row justify-content-center">
+							{/* LEFT SIDE – PROFILE IMAGE UPLOAD */}
+							<div className="col-md-4">
+								<div className="card shadow-sm text-center p-3">
+									<img
+										src={
+											profileImage
+												? profileImage
+												: imageFile
+													? `/profile/${imageFile}`
+													: "https://via.placeholder.com/150"
+										}
+										alt="profile"
+										className="rounded-circle mb-3"
+										style={{
+											width: "150px",
+											height: "150px",
+											objectFit: "cover",
+										}}
+									/>
+									<input
+										type="file"
+										className="heading"
+										onChange={(e) => {
+											const file = e.target.files[0];
+											if (!file) return;
 
-                    <p className="text-muted small para">Swipe up for more posts</p>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-        {/* PROFILE */}
-        {activeMenu === "Profile" && (
-          <div className="container mt-4">
-            <button className="btn btn-outline-secondary" onClick={() => { window.location.href = "/student-dashboard" }}>
-              <i className="bi bi-arrow-left"></i> Go Back
-            </button><br /><br />
-            <div className="row justify-content-center">
+											setProfileImage(URL.createObjectURL(file));
+											setImageFile(file);
+										}}
+									/>
+									<small className="text-muted para">
+										Upload Profile Picture
+									</small>
+									{errors.image && (
+										<div className="text-danger mt-1">{errors.image}</div>
+									)}
+								</div>
+							</div>
 
-              {/* LEFT SIDE – PROFILE IMAGE UPLOAD */}
-              <div className="col-md-4">
-                <div className="card shadow-sm text-center p-3">
-                  <img
-                    src={
-                      profileImage
-                        ? profileImage
-                        : imageFile
-                          ? `/profile/${imageFile}`
-                          : "https://via.placeholder.com/150"
-                    }
-                    alt="profile"
-                    className="rounded-circle mb-3"
-                    style={{ width: "150px", height: "150px", objectFit: "cover" }}
-                  />
-                  <input
-                    type="file"
-                    className="heading"
-                    onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (!file) return;
+							{/* RIGHT SIDE – PROFILE FIELDS */}
+							<div className="col-md-8">
+								<div className="card shadow-sm p-4">
+									<h4 className="mb-3 heading">Profile Details</h4>
+									<div className="row">
+										{/* Full Name */}
+										<div className="col-md-6 mb-3">
+											<label className="form-label heading">Full Name</label>
+											<input
+												type="text"
+												className={`form-control para ${errors.name ? "is-invalid" : ""}`}
+												value={name}
+												onChange={(e) => setName(e.target.value)}
+											/>
+											{errors.name && (
+												<div className="invalid-feedback">{errors.name}</div>
+											)}
+										</div>
 
-                      setProfileImage(URL.createObjectURL(file));
-                      setImageFile(file);
-                    }}
-                  />
-                  <small className="text-muted para">Upload Profile Picture</small>
-                  {errors.image && <div className="text-danger mt-1">{errors.image}</div>}
-                </div>
-              </div>
+										{/* Email */}
+										<div className="col-md-6 mb-3">
+											<label className="form-label heading">Email</label>
+											<input
+												type="email"
+												className={`form-control para ${errors.email ? "is-invalid" : ""}`}
+												value={email}
+												onChange={(e) => setEmail(e.target.value)}
+											/>
+											{errors.email && (
+												<div className="invalid-feedback">{errors.email}</div>
+											)}
+										</div>
 
-              {/* RIGHT SIDE – PROFILE FIELDS */}
-              <div className="col-md-8">
-                <div className="card shadow-sm p-4">
-                  <h4 className="mb-3 heading">Profile Details</h4>
-                  <div className="row">
+										{/* Phone */}
+										<div className="col-md-6 mb-3">
+											<label className="form-label heading">Phone</label>
+											<input
+												type="number"
+												className={`form-control para ${errors.phone ? "is-invalid" : ""}`}
+												value={phone}
+												onChange={(e) => setPhone(e.target.value)}
+											/>
+											{errors.phone && (
+												<div className="invalid-feedback">{errors.phone}</div>
+											)}
+										</div>
 
-                    {/* Full Name */}
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label heading">Full Name</label>
-                      <input
-                        type="text"
-                        className={`form-control para ${errors.name ? "is-invalid" : ""}`}
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                      {errors.name && <div className="invalid-feedback">{errors.name}</div>}
-                    </div>
+										{/* Gender */}
+										<div className="col-md-6 mb-3">
+											<label className="form-label heading">Gender</label>
+											<select
+												className={`form-select para ${errors.gender ? "is-invalid" : ""}`}
+												value={gender ?? ""}
+												onChange={(e) => setGender(e.target.value)}>
+												<option value="">Choose</option>
+												<option value="Male">Male</option>
+												<option value="Female">Female</option>
+												<option value="Others">Others</option>
+											</select>
+											{errors.gender && (
+												<div className="invalid-feedback">{errors.gender}</div>
+											)}
+										</div>
 
-                    {/* Email */}
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label heading">Email</label>
-                      <input
-                        type="email"
-                        className={`form-control para ${errors.email ? "is-invalid" : ""}`}
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                      {errors.email && <div className="invalid-feedback">{errors.email}</div>}
-                    </div>
+										{/* Bio */}
+										<div className="col-md-12 mb-3">
+											<label className="form-label heading">Bio</label>
+											<textarea
+												className={`form-control para ${errors.bio ? "is-invalid" : ""}`}
+												rows="3"
+												value={bio}
+												onChange={(e) => setBio(e.target.value)}
+												placeholder="Write something about yourself..."
+											/>
+											{errors.bio && (
+												<div className="invalid-feedback">{errors.bio}</div>
+											)}
+										</div>
 
-                    {/* Phone */}
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label heading">Phone</label>
-                      <input
-                        type="number"
-                        className={`form-control para ${errors.phone ? "is-invalid" : ""}`}
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                      />
-                      {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
-                    </div>
+										{/* Date of Birth */}
+										<div className="col-md-6 mb-3">
+											<label className="form-label heading">
+												Date of Birth
+											</label>
+											<input
+												type="date"
+												className={`form-control para ${errors.dob ? "is-invalid" : ""}`}
+												value={dob}
+												onChange={(e) => setDob(e.target.value)}
+											/>
+											{errors.dob && (
+												<div className="invalid-feedback">{errors.dob}</div>
+											)}
+										</div>
 
-                    {/* Gender */}
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label heading">Gender</label>
-                      <select
-                        className={`form-select para ${errors.gender ? "is-invalid" : ""}`}
-                        value={gender ?? ""}
-                        onChange={(e) => setGender(e.target.value)}
-                      >
-                        <option value="">Choose</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Others">Others</option>
-                      </select>
-                      {errors.gender && <div className="invalid-feedback">{errors.gender}</div>}
-                    </div>
+										{/* Address */}
+										<div className="col-md-6 mb-3">
+											<label className="form-label heading">Address</label>
+											<input
+												type="text"
+												className={`form-control para ${errors.address ? "is-invalid" : ""}`}
+												value={address}
+												onChange={(e) => setAddress(e.target.value)}
+											/>
+											{errors.address && (
+												<div className="invalid-feedback">{errors.address}</div>
+											)}
+										</div>
+									</div>
 
-                    {/* Bio */}
-                    <div className="col-md-12 mb-3">
-                      <label className="form-label heading">Bio</label>
-                      <textarea
-                        className={`form-control para ${errors.bio ? "is-invalid" : ""}`}
-                        rows="3"
-                        value={bio}
-                        onChange={(e) => setBio(e.target.value)}
-                        placeholder="Write something about yourself..."
-                      />
-                      {errors.bio && <div className="invalid-feedback">{errors.bio}</div>}
-                    </div>
+									{/* SAVE BUTTON */}
+									<button
+										className="btn btn-primary w-100"
+										onClick={saveProfile}>
+										Save Profile
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
+				{activeMenu === "Settings" && (
+					<div className="container mt-4">
+						<button
+							className="btn btn-outline-secondary"
+							onClick={() => {
+								window.location.href = "/student-dashboard";
+							}}>
+							<i className="bi bi-arrow-left"></i> Go Back
+						</button>
+						<br />
+						<br />
+						{/* Profile Settings */}
+						<div className="card mb-4 p-3 shadow-sm">
+							<h5 className="mb-3 heading" style={{ color: "#004aad" }}>
+								<i className="fas fa-user me-2"></i>Profile Settings
+							</h5>
+							<div className="d-flex flex-column flex-md-row gap-2 heading">
+								<button
+									className="btn btn-primary flex-fill"
+									onClick={() => navigate("/change-password")}>
+									<i className="fas fa-key me-2"></i>Change Password
+								</button>
+								<button
+									className="btn btn-secondary flex-fill"
+									onClick={() => setActiveMenu("Profile")}>
+									<i className="fas fa-user-edit me-2"></i>Update Profile Info
+								</button>
+							</div>
+						</div>
 
-                    {/* Date of Birth */}
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label heading">Date of Birth</label>
-                      <input
-                        type="date"
-                        className={`form-control para ${errors.dob ? "is-invalid" : ""}`}
-                        value={dob}
-                        onChange={(e) => setDob(e.target.value)}
-                      />
-                      {errors.dob && <div className="invalid-feedback">{errors.dob}</div>}
-                    </div>
+						{/* Notification Settings */}
+						<div className="card mb-4 p-3 shadow-sm heading">
+							<h5 className="mb-3" style={{ color: "#004aad" }}>
+								<i className="fas fa-bell me-2"></i>Notification Settings
+							</h5>
+							<div className="form-check form-switch mb-2">
+								<input
+									className="form-check-input"
+									type="checkbox"
+									id="emailNotif"
+								/>
+								<label className="form-check-label" htmlFor="emailNotif">
+									<i className="fas fa-envelope me-2"></i>Email Notifications
+								</label>
+							</div>
+							<div className="form-check form-switch">
+								<input
+									className="form-check-input"
+									type="checkbox"
+									id="pushNotif"
+								/>
+								<label className="form-check-label" htmlFor="pushNotif">
+									<i className="fas fa-bell-slash me-2"></i> Push Notifications
+								</label>
+							</div>
+						</div>
 
-                    {/* Address */}
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label heading">Address</label>
-                      <input
-                        type="text"
-                        className={`form-control para ${errors.address ? "is-invalid" : ""}`}
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                      />
-                      {errors.address && <div className="invalid-feedback">{errors.address}</div>}
-                    </div>
+						{/* Darkmode Settings */}
+						<div className="form-check form-switch d-flex align-items-center heading">
+							<label
+								className="form-check-label me-2"
+								htmlFor="profileVisibility">
+								<i
+									className={`me-2 ${darkMode ? "fas fa-sun" : "fas fa-moon"}`}></i>
+								{darkMode ? "Light Mode" : "Dark Mode"}
+							</label>
 
-                  </div>
+							<button className="btn btn-primary" onClick={handleToggle}>
+								{darkMode ? "Disable Dark Mode" : "Enable Dark Mode"}
+							</button>
+						</div>
+						<br />
 
-                  {/* SAVE BUTTON */}
-                  <button className="btn btn-primary w-100" onClick={saveProfile}>
-                    Save Profile
-                  </button>
-                </div>
-              </div>
+						{/* Account Settings */}
+						<div className="card p-3 shadow-sm heading">
+							<h5 className="mb-3" style={{ color: "#004aad" }}>
+								<i className="fas fa-user-cog me-2"></i>Account
+							</h5>
+							<button className="btn btn-danger w-100" onClick={logout}>
+								<i className="fas fa-sign-out-alt me-2"></i>Logout Account
+							</button>
+						</div>
+					</div>
+				)}
 
-            </div>
-          </div>
-        )}
-        {activeMenu === "Settings" && (
-          <div className="container mt-4">
-            <button className="btn btn-outline-secondary" onClick={() => { window.location.href = "/student-dashboard" }}>
-              <i className="bi bi-arrow-left"></i> Go Back
-            </button><br /><br />
-            {/* Profile Settings */}
-            <div className="card mb-4 p-3 shadow-sm">
-              <h5 className="mb-3 heading" style={{ color: "#004aad" }}><i className="fas fa-user me-2"></i>Profile Settings</h5>
-              <div className="d-flex flex-column flex-md-row gap-2 heading">
-                <button className="btn btn-primary flex-fill" onClick={() => navigate("/change-password")}>
-                  <i className="fas fa-key me-2"></i>Change Password
-                </button>
-                <button className="btn btn-secondary flex-fill" onClick={() => setActiveMenu("Profile")}>
-                  <i className="fas fa-user-edit me-2"></i>Update Profile Info
-                </button>
-              </div>
-            </div>
-
-            {/* Notification Settings */}
-            <div className="card mb-4 p-3 shadow-sm heading">
-              <h5 className="mb-3" style={{ color: "#004aad" }}><i className="fas fa-bell me-2"></i>Notification Settings</h5>
-              <div className="form-check form-switch mb-2">
-                <input className="form-check-input" type="checkbox" id="emailNotif" />
-                <label className="form-check-label" htmlFor="emailNotif">
-                  <i className="fas fa-envelope me-2"></i>Email Notifications
-                </label>
-              </div>
-              <div className="form-check form-switch">
-                <input className="form-check-input" type="checkbox" id="pushNotif" />
-                <label className="form-check-label" htmlFor="pushNotif">
-                  <i className="fas fa-bell-slash me-2"></i> Push Notifications
-                </label>
-              </div>
-            </div>
-
-            {/* Darkmode Settings */}
-            <div className="form-check form-switch d-flex align-items-center heading">
-              <label className="form-check-label me-2" htmlFor="profileVisibility">
-                <i className={`me-2 ${darkMode ? "fas fa-sun" : "fas fa-moon"}`}></i>
-                {darkMode ? "Light Mode" : "Dark Mode"}
-              </label>
-
-              <button className="btn btn-primary" onClick={handleToggle}>
-                {darkMode ? "Disable Dark Mode" : "Enable Dark Mode"}
-              </button>
-            </div><br />
-
-            {/* Account Settings */}
-            <div className="card p-3 shadow-sm heading">
-              <h5 className="mb-3" style={{ color: "#004aad" }}><i className="fas fa-user-cog me-2"></i>Account</h5>
-              <button className="btn btn-danger w-100" onClick={logout}>
-                <i className="fas fa-sign-out-alt me-2"></i>Logout Account
-              </button>
-            </div>
-          </div>
-        )}
-
-        {showSuccess && (
-          <div
-            className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
-            style={{ background: "rgba(0,0,0,0.5)", zIndex: 9999 }}
-          >
-            <div className="bg-white p-4 rounded shadow text-center" style={{ minWidth: "300px", maxWidth: "400px" }}>
-              <FaCheckCircle size={50} style={{ color: 'green', marginBottom: '15px' }} />
-              <h5 className="mb-2">Successfully Profile Updated!</h5>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+				{showSuccess && (
+					<div
+						className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+						style={{ background: "rgba(0,0,0,0.5)", zIndex: 9999 }}>
+						<div
+							className="bg-white p-4 rounded shadow text-center"
+							style={{ minWidth: "300px", maxWidth: "400px" }}>
+							<FaCheckCircle
+								size={50}
+								style={{ color: "green", marginBottom: "15px" }}
+							/>
+							<h5 className="mb-2">Successfully Profile Updated!</h5>
+						</div>
+					</div>
+				)}
+			</div>
+		</div>
+	);
 }
