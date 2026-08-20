@@ -10,6 +10,10 @@ const GalleryComponent = () => {
 	const images = [
 		{ src: "/gallery/Class-1.jpg", alt: "Class 1" },
 		{ src: "/gallery/Entrance.jpg", alt: "Entrance" },
+		{ src: "/gallery/1.jpeg", alt: "1" },
+		{ src: "/gallery/2.jpeg", alt: "2" },
+		{ src: "/gallery/3.jpeg", alt: "3" },
+		{ src: "/gallery/4.jpeg", alt: "4" },
 		{ src: "/gallery/entrance2.jpg", alt: "Entrance 2" },
 		{ src: "/gallery/Counselling-1.jpg", alt: "Counselling 1" },
 		{ src: "/gallery/Counselling-2.jpg", alt: "Counselling 2" },
