@@ -23,10 +23,7 @@ const HomeComponent = () => {
 		"/gallery/Counselling-2.jpg",
 		"/gallery/2.jpeg",
 		"/gallery/3.jpeg",
-		"/gallery/5.jpeg",
-		"/gallery/6.jpeg",
-		"/gallery/7.jpeg",
-		"/gallery/8.jpeg",
+		"/gallery/4.jpeg",
 	];
 	const [currentImage, setCurrentImage] = useState(0);
 	const [errors, setErrors] = useState({});
@@ -261,8 +258,6 @@ const HomeComponent = () => {
 			alert("No batches available right now!");
 			return;
 		}
-		//const audio = new Audio("/partyPop/party.mp3");
-		//audio.play();
 		setGiftClicked(true);
 		setShowBatchPopup(true);
 		startConfetti();
