@@ -269,17 +269,6 @@ const DashboardComponent = () => {
 						<li className="mb-2">
 							<button
 								className="btn btn-outline-primary w-100 d-flex align-items-center"
-								onClick={() => {
-									setAdminPostCheck(false);
-									navigate("/view-students");
-								}}>
-								<FaUserGraduate className="me-2" />
-								View Students
-							</button>
-						</li>
-						<li className="mb-2">
-							<button
-								className="btn btn-outline-primary w-100 d-flex align-items-center"
 								onClick={() => navigate("/enquiry")}>
 								<AiOutlineLineChart className="me-2" /> Show All Enquiries
 							</button>

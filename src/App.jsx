@@ -31,7 +31,6 @@ import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 import StudentDashBoard from "./components/StudentDashBoard";
 import TestiMonialsComponent from "./components/TestiMonialsComponent";
-import ViewStudentComponent from "./components/ViewStudentComponent";
 import CertificateComponent from "./components/CertificateComponent";
 import CertificateFormComponent from "./components/CertificateFormComponent";
 import PrivateCeritificateUrl from "./components/PrivateCeritificateUrl";
@@ -56,7 +55,6 @@ function App() {
 					<Route path="/events" element={<EventComponent />} />
 					<Route path="/forgot-password" element={<ForgotPassword />} />
 					<Route path="/testimonials" element={<TestiMonialsComponent />} />
-					<Route path="/view-students" element={<ViewStudentComponent />} />
 					<Route
 						path="/upload-certificate"
 						element={<CertificateFormComponent />}

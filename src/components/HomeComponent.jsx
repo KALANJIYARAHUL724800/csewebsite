@@ -106,12 +106,12 @@ const HomeComponent = () => {
 			}
 
 			setShowSuccess(true);
-			navigate("/course/" + sessionStorage.getItem("courseId"));
 			setTimeout(() => {
 				setShowSuccess(false);
 				setShowForm(false);
 				setFormData({ name: "", phone: "", course: "", location: "" });
 				closePopup();
+				navigate("/course/" + sessionStorage.getItem("courseId"));
 			}, 3000);
 		} catch (err) {
 			const apiErrors = err.response?.data || {};
@@ -123,6 +123,7 @@ const HomeComponent = () => {
 			setShowSuccess(false);
 		}
 	};
+
 	const navigate = useNavigate();
 	const [searchData, setSearchData] = useState("");
 	const [courses, setCourses] = useState([]);
@@ -172,69 +173,65 @@ const HomeComponent = () => {
 		AOS.refresh();
 		const token = sessionStorage.getItem("token");
 		setUserLogin(!token);
-		showAllBatches()
-			.then((response) => {
-				if (response.data && response.data.length > 0) {
+		const cachedCourses = localStorage.getItem("cached_courses");
+		const cachedBlogs = localStorage.getItem("cached_blogs");
+		const cachedBatches = localStorage.getItem("cached_batches");
+
+		if (cachedCourses) setCourses(JSON.parse(cachedCourses));
+		if (cachedBlogs) setBlogs(JSON.parse(cachedBlogs));
+		if (cachedBatches) {
+			setHasBatches(true);
+			setBatches(JSON.parse(cachedBatches));
+		}
+		Promise.all([
+			showAllBatches(),
+			getAllCourses(),
+			showAllBlogs(),
+			fetchTestimonials(),
+		])
+			.then(([batchRes, courseRes, blogRes]) => {
+				if (batchRes.data && batchRes.data.length > 0) {
 					setHasBatches(true);
-					setBatches(response.data);
+					setBatches(batchRes.data);
+					localStorage.setItem("cached_batches", JSON.stringify(batchRes.data));
 				} else {
 					setHasBatches(false);
 				}
-			})
-			.catch((err) => {
-				setHasBatches(false);
-			});
-		getAllCourses()
-			.then((response) => {
-				const fetchedCourses = response.data;
+
+				const fetchedCourses = courseRes.data;
 				const hasValidCourse = fetchedCourses.some((course) => course.id > 0);
 				if (!hasValidCourse) {
 					navigate("/home");
 					return;
 				}
 				setCourses(fetchedCourses);
-			})
-			.catch((error) => {
-				console.error("Error fetching courses:", error);
-				navigate("/home");
-			});
-		// Blogs
-		showAllBlogs()
-			.then((response) => {
-				if (Array.isArray(response.data)) {
-					setBlogs(response.data);
+				localStorage.setItem("cached_courses", JSON.stringify(fetchedCourses));
+
+				if (Array.isArray(blogRes.data)) {
+					setBlogs(blogRes.data);
+					localStorage.setItem("cached_blogs", JSON.stringify(blogRes.data));
 				} else {
 					setBlogs([]);
 				}
 			})
-			.catch((err) => {
-				console.error("Blogs error:", err);
-				setBlogs([]);
+			.catch((error) => {
+				console.error("Background sync error:", error);
 			});
 
-		fetchTestimonials();
-		let intervalId;
+		// Testimonials & Gallery Intervals...
+		const intervalId = setInterval(() => {
+			if (document.visibilityState === "visible") fetchTestimonials();
+		}, 10000);
 
-		const startPolling = () => {
-			// Tab active-a irundha mattum 10s interval-la fetch pannum
-			intervalId = setInterval(() => {
-				if (document.visibilityState === "visible") {
-					fetchTestimonials();
-				}
-			}, 10000); // 10 seconds is safer for server
-		};
-
-		fetchTestimonials(); // Initial load
-		startPolling();
-
-		// Cleanup on component unmount
-		return () => clearInterval(intervalId);
-		const interval = setInterval(() => {
+		const galleryInterval = setInterval(() => {
 			setCurrentImage((prev) => (prev + 1) % galleryImages.length);
 		}, 2000);
 
-		return () => clearInterval(interval);
-	}, [fetchTestimonials]);
+		return () => {
+			clearInterval(intervalId);
+			clearInterval(galleryInterval);
+		};
+	}, [fetchTestimonials, galleryImages.length, navigate]);
 	const studentLogin = () => navigate("/login");
 	const startConfetti = () => {
 		if (confettiInterval.current) return;
@@ -627,7 +624,7 @@ const HomeComponent = () => {
 					All Courses
 				</h1>
 				<hr />
-				<div className="courses-grid">
+				<div className="courses-grid py-3">
 					{courses.length > 0 ? (
 						courses.map((course, index) => {
 							const ribbonColors = ["green", "blue", "red", "purple"];
@@ -829,41 +826,53 @@ const HomeComponent = () => {
 							{blogs.length > 0 ? (
 								blogs.slice(0, 3).map((blog) => (
 									<div className="col-lg-4 col-md-6" key={blog.id}>
-										<div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
-											<img
-												src={blog.image}
-												className="card-img-top"
-												alt={blog.category}
-												style={{
-													height: "230px",
-													objectFit: "cover",
-												}}
-											/>
+										<Link
+											to={`/blog/${blog.id}`}
+											className="text-decoration-none">
+											<div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover">
+												<img
+													src={blog.image}
+													className="card-img-top"
+													alt={blog.category}
+													loading="lazy"
+													decoding="async"
+													style={{
+														height: "230px",
+														objectFit: "cover",
+													}}
+												/>
 
-											<div className="card-body p-4">
-												<div className="d-flex justify-content-between align-items-center mb-3">
-													<span className="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
-														{blog.category}
+												<div className="card-body p-4">
+													<div className="d-flex justify-content-between align-items-center mb-3">
+														<span className="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+															{blog.category}
+														</span>
+														<small className="text-muted">{blog.date}</small>
+													</div>
+
+													<h5 className="card-title fw-bold text-dark">
+														{blog.title}
+													</h5>
+
+													<p
+														className="card-text text-muted"
+														style={{
+															display: "-webkit-box",
+															WebkitLineClamp: 2,
+															WebkitBoxOrient: "vertical",
+															overflow: "hidden",
+															textOverflow: "ellipsis",
+														}}>
+														{blog.description}
+													</p>
+
+													<span className="text-primary fw-semibold text-decoration-none">
+														{blog.button || "Read More"}
+														<i className="bi bi-arrow-right ms-1"></i>
 													</span>
-
-													<small className="text-muted">{blog.date}</small>
 												</div>
-
-												<h5 className="card-title fw-bold">{blog.title}</h5>
-
-												<p className="card-text text-muted">
-													{blog.description}
-												</p>
-
-												<Link
-													to={`/blog/${blog.id}`}
-													className="text-primary fw-semibold text-decoration-none">
-													{blog.button || "Read More"}
-
-													<i className="bi bi-arrow-right ms-1"></i>
-												</Link>
 											</div>
-										</div>
+										</Link>
 									</div>
 								))
 							) : (

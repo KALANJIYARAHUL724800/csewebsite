@@ -53,10 +53,10 @@ export default defineConfig({
     server: {
         proxy: {
             "/api": {
-                target: "https://hostingcsebackend-50044872368.development.catalystappsail.in ",
+                target: "https://hostingcsebackend-50044872368.development.catalystappsail.in",
                 changeOrigin: true,
                 secure: true,
             },
         },
     },
-});
+}); 
