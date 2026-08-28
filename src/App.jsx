@@ -191,6 +191,7 @@ function App() {
 							</PrivateRoute>
 						}
 					/>
+					<Route path="*" element={<Navigate to="/home" replace />} />
 				</Routes>
 			</Router>
 			<FooterComponent />
