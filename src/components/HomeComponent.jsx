@@ -25,6 +25,7 @@ const HomeComponent = () => {
 		"/gallery/3.jpeg",
 		"/gallery/4.jpeg",
 	];
+	const [loading, setLoading] = useState(true);
 	const [currentImage, setCurrentImage] = useState(0);
 	const [errors, setErrors] = useState({});
 	const [showForm, setShowForm] = useState(() => {
@@ -212,7 +213,8 @@ const HomeComponent = () => {
 			})
 			.catch((error) => {
 				console.error("Background sync error:", error);
-			});
+			})
+			.finally(() => setLoading(false));
 
 		// Testimonials & Gallery Intervals...
 		const intervalId = setInterval(() => {
@@ -498,7 +500,15 @@ const HomeComponent = () => {
 				</div>
 
 				{/* Courses Section */}
-				{searched && courses.length > 0 && (
+				{loading && (
+					<div className="text-center my-5">
+						<div className="spinner-border text-primary" role="status">
+							<span className="visually-hidden">Loading...</span>
+						</div>
+						<p className="mt-3 heading">Loading courses...</p>
+					</div>
+				)}
+				{!loading && searched && courses.length > 0 && (
 					<div className="container py-5 position-relative" id="courses">
 						<button
 							className="btn btn-outline-danger btn-sm position-absolute"

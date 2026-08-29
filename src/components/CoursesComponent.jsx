@@ -9,7 +9,6 @@ const CoursesComponent = () => {
 	const navigate = useNavigate();
 	const [courses, setCourses] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const [showForm, setShowForm] = useState(false);
 	useEffect(() => {
 		AOS.init({ duration: 300, once: true });
 		getAllCourses()
