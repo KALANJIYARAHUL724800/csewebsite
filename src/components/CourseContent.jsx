@@ -136,18 +136,6 @@ const CourseContent = () => {
 		}
 	};
 
-	const openForm = () => {
-		const now = new Date();
-		const date = now.toISOString().split("T")[0];
-		const time = now.toTimeString().split(" ")[0];
-		setFormData((prev) => ({
-			...prev,
-			currentDate: date,
-			currentTime: time,
-		}));
-		setShowForm(true);
-	};
-
 	return (
 		<div className="container my-5">
 			{/* Heading with Back & Fees Buttons */}
@@ -162,12 +150,6 @@ const CourseContent = () => {
 				<h1 className="course-heading mb-0">
 					{courseData.courseName || "Course"}
 				</h1>
-
-				<button
-					className="btn btn-success fees-btn d-flex align-items-center"
-					onClick={openForm}>
-					Join
-				</button>
 			</div>
 			<hr />
 
