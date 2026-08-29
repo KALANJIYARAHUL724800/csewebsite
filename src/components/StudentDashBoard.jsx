@@ -51,7 +51,7 @@ export default function StudentDashBoard() {
 
 		try {
 			const res = await moveImage(formData, "profile");
-			await updateUserRecord(sessionStorage.getItem("email"), formObject)
+			await updateUserRecord(localStorage.getItem("email"), formObject)
 				.then((res) => {
 					setShowSuccess(true);
 					setTimeout(() => {
@@ -121,11 +121,11 @@ export default function StudentDashBoard() {
 			.catch((err) => {
 				console.error("Error fetching post count:", err);
 			});
-		const dark = sessionStorage.getItem("darkmode");
+		const dark = localStorage.getItem("darkmode");
 		if (dark !== null) {
 			setDarkMode(dark === "true");
 		}
-		const email = sessionStorage.getItem("email");
+		const email = localStorage.getItem("email");
 		getEmailData(email).then((res) => {
 			const data = res.data;
 			setName(data.name);
@@ -157,7 +157,7 @@ export default function StudentDashBoard() {
 	const handleToggle = () => {
 		setDarkMode((prev) => {
 			const newMode = !prev;
-			sessionStorage.setItem("darkmode", newMode);
+			localStorage.setItem("darkmode", newMode);
 			return newMode;
 		});
 	};

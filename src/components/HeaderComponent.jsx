@@ -3,15 +3,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 const HeaderComponent = () => {
-	const [login, setLogin] = useState(() => sessionStorage.getItem("token"));
+	const [login, setLogin] = useState(() => localStorage.getItem("token"));
 	const [userType, setUserType] = useState(
-		() => sessionStorage.getItem("userType") === "true",
+		() => localStorage.getItem("userType") === "true",
 	);
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			const token = sessionStorage.getItem("token");
-			const user = sessionStorage.getItem("userType") === "true";
+			const token = localStorage.getItem("token");
+			const user = localStorage.getItem("userType") === "true";
 			setUserType(user);
 			setLogin(token);
 		}, 1000);
@@ -107,9 +107,9 @@ const HeaderComponent = () => {
 								<li
 									className="nav-item"
 									onClick={() => {
-										sessionStorage.removeItem("token");
-										sessionStorage.removeItem("userType");
-										sessionStorage.removeItem("email");
+										localStorage.removeItem("token");
+										localStorage.removeItem("userType");
+										localStorage.removeItem("email");
 										window.location.href = "/home";
 									}}>
 									<a className="nav-link text-danger" href="#">

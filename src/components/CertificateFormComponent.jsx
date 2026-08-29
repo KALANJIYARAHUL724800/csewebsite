@@ -6,7 +6,7 @@ import { insertCertificate } from "../index.js";
 export default function CertificateFormComponent() {
 	const navigate = useNavigate();
 	useEffect(() => {
-		const userType = sessionStorage.getItem("userType");
+		const userType = localStorage.getItem("userType");
 
 		if (userType !== "true") {
 			navigate("/home", { replace: true });

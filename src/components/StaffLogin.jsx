@@ -33,9 +33,9 @@ const StaffLogin = ({ onClose }) => {
 		try {
 			const res = await loginAdmin(formData);
 			const expiryTime = new Date().getTime() + 60 * 60 * 1000;
-			sessionStorage.setItem("token", expiryTime);
-			sessionStorage.setItem("email", formData.email);
-			sessionStorage.setItem("userType", res.data.userType);
+			localStorage.setItem("token", expiryTime);
+			localStorage.setItem("email", formData.email);
+			localStorage.setItem("userType", res.data.userType);
 			setSuccessMessage("Login successful! Redirecting...");
 			setTimeout(() => {
 				navigate("/dashboard", { state: { user: res.data } });

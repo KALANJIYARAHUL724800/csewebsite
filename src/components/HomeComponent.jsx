@@ -29,7 +29,7 @@ const HomeComponent = () => {
 	const [errors, setErrors] = useState({});
 	const [showForm, setShowForm] = useState(true);
 	const [showSuccess, setShowSuccess] = useState(false);
-	const token = sessionStorage.getItem("token");
+	const token = localStorage.getItem("token");
 	const [userLogin, setUserLogin] = useState(!token);
 	const { id } = useParams();
 	const [blogs, setBlogs] = useState([]);
@@ -82,7 +82,7 @@ const HomeComponent = () => {
 		if (!formData.location) newErrors.location = "Location is required";
 		// code here
 		const expiryTime = new Date().getTime() + 60 * 60 * 1000;
-		sessionStorage.setItem("token", expiryTime);
+		localStorage.setItem("token", expiryTime);
 		if (Object.keys(newErrors).length > 0) {
 			setErrors(newErrors);
 			return;
@@ -108,7 +108,7 @@ const HomeComponent = () => {
 				setShowForm(false);
 				setFormData({ name: "", phone: "", course: "", location: "" });
 				closePopup();
-				navigate("/course/" + sessionStorage.getItem("courseId"));
+				navigate("/course/" + localStorage.getItem("courseId"));
 			}, 3000);
 		} catch (err) {
 			const apiErrors = err.response?.data || {};
@@ -168,7 +168,7 @@ const HomeComponent = () => {
 	useEffect(() => {
 		AOS.init({ duration: 300, once: true });
 		AOS.refresh();
-		const token = sessionStorage.getItem("token");
+		const token = localStorage.getItem("token");
 		setUserLogin(!token);
 		const cachedCourses = localStorage.getItem("cached_courses");
 		const cachedBlogs = localStorage.getItem("cached_blogs");
@@ -653,7 +653,7 @@ const HomeComponent = () => {
 												href={`/course/${course.id}`}
 												className="btn btn-primary btn-sm"
 												onClick={() => {
-													sessionStorage.setItem("courseId", course.id);
+													localStorage.setItem("courseId", course.id);
 												}}>
 												Syllabus
 											</a>

@@ -95,7 +95,7 @@ const CoursesComponent = () => {
 													href={`/course/${course.id}`}
 													className="btn btn-primary btn-sm"
 													onClick={() => {
-														sessionStorage.setItem("courseId", course.id);
+														localStorage.setItem("courseId", course.id);
 													}}>
 													Syllabus
 												</a>

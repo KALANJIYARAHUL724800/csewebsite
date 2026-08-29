@@ -3,7 +3,7 @@ import { Navigate, useSearchParams } from "react-router-dom";
 
 const PublicRoute = ({ children }) => {
 
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     const [searchParams] = useSearchParams();
 

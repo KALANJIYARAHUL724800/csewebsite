@@ -16,8 +16,8 @@ const UpdatePassword = () => {
 	const [success, setSuccess] = useState("");
 
 	const handleClose = () => {
-		const userType = sessionStorage.getItem("userType") === "true";
-		const email = sessionStorage.getItem("email");
+		const userType = localStorage.getItem("userType") === "true";
+		const email = localStorage.getItem("email");
 
 		if (email && !userType) navigate("/student-dashboard");
 		else if (email && userType) navigate("/dashboard");
@@ -64,7 +64,7 @@ const UpdatePassword = () => {
 			setError("");
 
 			setTimeout(() => {
-				sessionStorage.clear();
+				localStorage.clear();
 				localStorage.removeItem("token");
 				localStorage.removeItem("userType");
 				localStorage.removeItem("email");

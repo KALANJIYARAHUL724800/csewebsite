@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 
 const PrivateCeritificateUrl = ({ children, allowedUserType }) => {
-	const userType = sessionStorage.getItem("userType");
+	const userType = localStorage.getItem("userType");
 
 	console.log("userType:", userType);
 	console.log("allowedUserType:", allowedUserType);

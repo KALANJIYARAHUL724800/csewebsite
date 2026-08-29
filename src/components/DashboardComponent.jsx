@@ -156,9 +156,9 @@ const DashboardComponent = () => {
 	}, []);
 
 	const handleLogout = () => {
-		sessionStorage.removeItem("token");
-		sessionStorage.removeItem("userType");
-		sessionStorage.removeItem("email");
+		localStorage.removeItem("token");
+		localStorage.removeItem("userType");
+		localStorage.removeItem("email");
 		navigate("/home");
 	};
 
@@ -219,7 +219,7 @@ const DashboardComponent = () => {
 		});
 	};
 	const moveCertificate = () => {
-		const userType = sessionStorage.getItem("userType");
+		const userType = localStorage.getItem("userType");
 
 		if (userType === "true") {
 			navigate("/upload-certificate");
