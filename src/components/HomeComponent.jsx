@@ -27,7 +27,9 @@ const HomeComponent = () => {
 	];
 	const [currentImage, setCurrentImage] = useState(0);
 	const [errors, setErrors] = useState({});
-	const [showForm, setShowForm] = useState(true);
+	const [showForm, setShowForm] = useState(() => {
+		return !localStorage.getItem("token");
+	});
 	const [showSuccess, setShowSuccess] = useState(false);
 	const token = localStorage.getItem("token");
 	const [userLogin, setUserLogin] = useState(!token);
