@@ -58,7 +58,7 @@ const HomeComponent = () => {
 		}
 	};
 	function openFormTemp() {
-		setShowForm(true);
+		setShowForm(!localStorage.getItem("token"));
 	}
 	const getCurrentDate = () => {
 		const today = new Date();
