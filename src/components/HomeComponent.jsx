@@ -500,15 +500,8 @@ const HomeComponent = () => {
 				</div>
 
 				{/* Courses Section */}
-				{loading && (
-					<div className="text-center my-5">
-						<div className="spinner-border text-primary" role="status">
-							<span className="visually-hidden">Loading...</span>
-						</div>
-						<p className="mt-3 heading">Loading courses...</p>
-					</div>
-				)}
-				{!loading && searched && courses.length > 0 && (
+
+				{searched && courses.length > 0 && (
 					<div className="container py-5 position-relative" id="courses">
 						<button
 							className="btn btn-outline-danger btn-sm position-absolute"
@@ -570,18 +563,6 @@ const HomeComponent = () => {
 						No courses found for your search.
 					</p>
 				)}
-				{/* Authentication buttons */}
-				{/* <div className="auth-container mt-5 text-center">
-          {userLogin && (
-            <button
-              id="studentLoginBtn"
-              className="auth-btn primary"
-              onClick={studentLogin}
-            >
-              Student Login
-            </button>
-          )}
-        </div> */}
 				<div className="container-fluid dflex mb-5 marquee-container">
 					<div className="marquee-track">
 						<img src="/gallery/Class-1.jpg" alt="Class 1" />
@@ -608,53 +589,64 @@ const HomeComponent = () => {
 					All Courses
 				</h1>
 				<hr />
-				<div className="courses-grid py-3">
-					{courses.length > 0 ? (
-						courses.map((course, index) => {
-							const ribbonColors = ["green", "blue", "red", "purple"];
+				{loading ? (
+					<div className="text-center my-5">
+						<div className="spinner-border text-primary" role="status">
+							<span className="visually-hidden heading">Loading...</span>
+						</div>
+						<p className="mt-3 heading">Loading courses...</p>
+					</div>
+				) : (
+					<div className="courses-grid py-3">
+						{courses.length > 0 ? (
+							courses.map((course, index) => {
+								const ribbonColors = ["green", "blue", "red", "purple"];
 
-							return (
-								<div key={course.id} data-aos="fade-up">
-									<div className="training-card">
-										<span
-											className={`ribbon ${
-												ribbonColors[index % ribbonColors.length]
-											}`}>
-											FRESHER
-										</span>
-
-										<img
-											src={course.logoUrl || "https://via.placeholder.com/150"}
-											alt={course.courseName}
-											className="course-img"
-										/>
-
-										<h5>{course.courseName}</h5>
-
-										<p className="course-content">{course.courseContent}</p>
-
-										<div className="card-footer-custom">
-											<span className="duration">
-												<i className="fas fa-clock"></i> {course.month}
+								return (
+									<div key={course.id} data-aos="fade-up">
+										<div className="training-card">
+											<span
+												className={`ribbon ${
+													ribbonColors[index % ribbonColors.length]
+												}`}>
+												FRESHER
 											</span>
 
-											<a
-												href={`/course/${course.id}`}
-												className="btn btn-primary btn-sm"
-												onClick={() => {
-													localStorage.setItem("courseId", course.id);
-												}}>
-												Syllabus
-											</a>
+											<img
+												src={
+													course.logoUrl || "https://via.placeholder.com/150"
+												}
+												alt={course.courseName}
+												className="course-img"
+											/>
+
+											<h5>{course.courseName}</h5>
+
+											<p className="course-content">{course.courseContent}</p>
+
+											<div className="card-footer-custom">
+												<span className="duration">
+													<i className="fas fa-clock"></i> {course.month}
+												</span>
+
+												<a
+													href={`/course/${course.id}`}
+													className="btn btn-primary btn-sm"
+													onClick={() => {
+														localStorage.setItem("courseId", course.id);
+													}}>
+													Syllabus
+												</a>
+											</div>
 										</div>
 									</div>
-								</div>
-							);
-						})
-					) : (
-						<p className="text-center heading">No courses available.</p>
-					)}
-				</div>
+								);
+							})
+						) : (
+							<p className="text-center heading">No courses available.</p>
+						)}
+					</div>
+				)}
 				{/* Testimonials Section */}
 				{/* ===================== Testimonials Section ===================== */}
 				<section className="py-5 testimonial-section" data-aos="fade-up">
