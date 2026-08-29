@@ -59,9 +59,6 @@ const HomeComponent = () => {
 			);
 		}
 	};
-	function openFormTemp() {
-		setShowForm(!localStorage.getItem("token"));
-	}
 	const getCurrentDate = () => {
 		const today = new Date();
 		const year = today.getFullYear();
@@ -302,26 +299,6 @@ const HomeComponent = () => {
 						marginBottom: 0,
 						padding: 0,
 					}}>
-					{/* Enquiry button top-right */}
-					<div
-						style={{
-							position: "absolute",
-							top: "20px",
-							right: "20px",
-							zIndex: 10,
-						}}>
-						<button
-							className="btn btn-success me-2 pd-2"
-							onClick={openFormTemp}>
-							<img
-								src="https://cdn-icons-png.flaticon.com/512/1642/1642364.png"
-								alt="enquiry"
-								style={{ height: "30px", width: "30px" }}
-							/>
-							Enquiry
-						</button>
-					</div>
-
 					<div data-aos="" className="heading-content">
 						{/* <img src="public/cselogo.png" alt="CSE Logo" style={{ height: "180px" }} /> */}
 						<h1 className="display-5 fw-bold mt-4 text-white heading">
