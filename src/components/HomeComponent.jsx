@@ -649,227 +649,246 @@ const HomeComponent = () => {
 				)}
 				{/* Testimonials Section */}
 				{/* ===================== Testimonials Section ===================== */}
-				<section className="py-5 testimonial-section" data-aos="fade-up">
-					{/* ===================== TESTIMONIAL HEADING ===================== */}
-
-					<div className="text-center mb-4">
-						<h2 className="heading">Student Testimonials</h2>
-
-						<p className="para text-muted">
-							What our students say about their learning experience
-						</p>
-					</div>
-
-					{/* ===================== TESTIMONIAL CARDS ===================== */}
-
-					<div className="row g-3 testimonial-row">
-						{currentTestimonials?.length > 0 &&
-							currentTestimonials.map((t, i) => (
-								<div
-									key={t.id || i}
-									className="col-6 col-md-4 testimonial-col"
-									data-aos="flip-left"
-									data-aos-delay={i * 150}>
-									<div className="testimonial-card testimonial-mobile-card h-100 position-relative">
-										{/* Animated Border */}
-										<div className="border-animate"></div>
-
-										{/* Card Content */}
-										<div className="testimonial-card-content">
-											{/* ================= LEFT SIDE ================= */}
-
-											<div className="testimonial-left">
-												{/* Student Image */}
-												{/* Testimonial Student Image */}
-												<img
-													src={t.imageUrl}
-													alt={t.name}
-													className="rounded-circle shadow-lg testimonial-img"
-												/>
-
-												{/* Student Details */}
-												<table className="testimonial-table testimonial-info-table">
-													<tbody>
-														<tr>
-															<td className="fw-bold heading">Enroll No:</td>
-
-															<td className="para text-dark">{t.enrollno}</td>
-														</tr>
-
-														<tr>
-															<td className="fw-bold heading">Course:</td>
-
-															<td className="para text-dark">{t.courseName}</td>
-														</tr>
-
-														<tr>
-															<td className="fw-bold heading text-dark">
-																Place:
-															</td>
-
-															<td className="para text-dark">{t.place}</td>
-														</tr>
-													</tbody>
-												</table>
-											</div>
-
-											{/* ================= DIVIDER ================= */}
-
-											<div className="divider"></div>
-
-											{/* ================= RIGHT SIDE ================= */}
-
-											<div className="testimonial-right">
-												<h3 className="heading testimonial-name">
-													{t.name} Says
-												</h3>
-
-												<p className="fst-italic text-dark mb-0 para testimonial-message">
-													“{t.text}”
-												</p>
-											</div>
-										</div>
-									</div>
-								</div>
-							))}
-					</div>
-
-					{/* ===================== PAGINATION ===================== */}
-
-					{totalPages > 1 && (
-						<div className="testimonial-pagination-wrapper">
-							<nav aria-label="Testimonials pagination">
-								<ul className="pagination testimonial-pagination mb-0">
-									{/* ================= PREVIOUS ================= */}
-
-									<li
-										className={`page-item ${
-											currentPage === 1 ? "disabled" : ""
-										}`}>
-										<button
-											type="button"
-											className="page-link"
-											disabled={currentPage === 1}
-											onClick={() => handlePageChange(currentPage - 1)}
-											aria-label="Previous page">
-											<i className="bi bi-chevron-left"></i>
-											<span>Previous</span>
-										</button>
-									</li>
-
-									{/* ================= NEXT ================= */}
-
-									<li
-										className={`page-item ${
-											currentPage === totalPages ? "disabled" : ""
-										}`}>
-										<button
-											type="button"
-											className="page-link"
-											disabled={currentPage === totalPages}
-											onClick={() => handlePageChange(currentPage + 1)}
-											aria-label="Next page">
-											<span>Next</span>
-											<i className="bi bi-chevron-right"></i>
-										</button>
-									</li>
-								</ul>
-							</nav>
+				{loading ? (
+					<div className="text-center my-5">
+						<div className="spinner-border text-primary" role="status">
+							<span className="visually-hidden heading">Loading...</span>
 						</div>
-					)}
-				</section>
+						<p className="mt-3 heading">Loading Testimonials...</p>
+					</div>
+				) : (
+					<section className="py-5 testimonial-section" data-aos="fade-up">
+						{/* ===================== TESTIMONIAL HEADING ===================== */}
 
-				{/* Blog Section */}
+						<div className="text-center mb-4">
+							<h2 className="heading">Student Testimonials</h2>
 
-				<section className="py-5 bg-light">
-					<div className="container">
-						{/* Section Heading */}
-						<div className="text-center mb-5">
-							<span className="text-primary fw-semibold text-uppercase small">
-								Our Blog
-							</span>
-
-							<h2 className="fw-bold mt-2">Latest Articles & Insights</h2>
-
-							<p className="text-muted mx-auto" style={{ maxWidth: "650px" }}>
-								Explore our latest articles, tips, and insights to improve your
-								computer skills and build a successful career.
+							<p className="para text-muted">
+								What our students say about their learning experience
 							</p>
 						</div>
 
-						{/* Blog Cards */}
-						<div className="row g-4">
-							{blogs.length > 0 ? (
-								blogs.slice(0, 3).map((blog) => (
-									<div className="col-lg-4 col-md-6" key={blog.id}>
-										<Link
-											to={`/blog/${blog.id}`}
-											className="text-decoration-none">
-											<div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover">
-												<img
-													src={blog.image}
-													className="card-img-top"
-													alt={blog.category}
-													loading="lazy"
-													decoding="async"
-													style={{
-														height: "230px",
-														objectFit: "cover",
-													}}
-												/>
+						{/* ===================== TESTIMONIAL CARDS ===================== */}
 
-												<div className="card-body p-4">
-													<div className="d-flex justify-content-between align-items-center mb-3">
-														<span className="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
-															{blog.category}
-														</span>
-														<small className="text-muted">{blog.date}</small>
-													</div>
+						<div className="row g-3 testimonial-row">
+							{currentTestimonials?.length > 0 &&
+								currentTestimonials.map((t, i) => (
+									<div
+										key={t.id || i}
+										className="col-6 col-md-4 testimonial-col"
+										data-aos="flip-left"
+										data-aos-delay={i * 150}>
+										<div className="testimonial-card testimonial-mobile-card h-100 position-relative">
+											{/* Animated Border */}
+											<div className="border-animate"></div>
 
-													<h5 className="card-title fw-bold text-dark">
-														{blog.title}
-													</h5>
+											{/* Card Content */}
+											<div className="testimonial-card-content">
+												{/* ================= LEFT SIDE ================= */}
 
-													<p
-														className="card-text text-muted"
-														style={{
-															display: "-webkit-box",
-															WebkitLineClamp: 2,
-															WebkitBoxOrient: "vertical",
-															overflow: "hidden",
-															textOverflow: "ellipsis",
-														}}>
-														{blog.description}
+												<div className="testimonial-left">
+													{/* Student Image */}
+													{/* Testimonial Student Image */}
+													<img
+														src={t.imageUrl}
+														alt={t.name}
+														className="rounded-circle shadow-lg testimonial-img"
+													/>
+
+													{/* Student Details */}
+													<table className="testimonial-table testimonial-info-table">
+														<tbody>
+															<tr>
+																<td className="fw-bold heading">Enroll No:</td>
+
+																<td className="para text-dark">{t.enrollno}</td>
+															</tr>
+
+															<tr>
+																<td className="fw-bold heading">Course:</td>
+
+																<td className="para text-dark">
+																	{t.courseName}
+																</td>
+															</tr>
+
+															<tr>
+																<td className="fw-bold heading text-dark">
+																	Place:
+																</td>
+
+																<td className="para text-dark">{t.place}</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+
+												{/* ================= DIVIDER ================= */}
+
+												<div className="divider"></div>
+
+												{/* ================= RIGHT SIDE ================= */}
+
+												<div className="testimonial-right">
+													<h3 className="heading testimonial-name">
+														{t.name} Says
+													</h3>
+
+													<p className="fst-italic text-dark mb-0 para testimonial-message">
+														“{t.text}”
 													</p>
-
-													<span className="text-primary fw-semibold text-decoration-none">
-														{blog.button || "Read More"}
-														<i className="bi bi-arrow-right ms-1"></i>
-													</span>
 												</div>
 											</div>
-										</Link>
+										</div>
 									</div>
-								))
-							) : (
-								<div className="col-12 text-center">
-									<p className="text-muted">No blogs available.</p>
+								))}
+						</div>
+
+						{/* ===================== PAGINATION ===================== */}
+
+						{totalPages > 1 && (
+							<div className="testimonial-pagination-wrapper">
+								<nav aria-label="Testimonials pagination">
+									<ul className="pagination testimonial-pagination mb-0">
+										{/* ================= PREVIOUS ================= */}
+
+										<li
+											className={`page-item ${
+												currentPage === 1 ? "disabled" : ""
+											}`}>
+											<button
+												type="button"
+												className="page-link"
+												disabled={currentPage === 1}
+												onClick={() => handlePageChange(currentPage - 1)}
+												aria-label="Previous page">
+												<i className="bi bi-chevron-left"></i>
+												<span>Previous</span>
+											</button>
+										</li>
+
+										{/* ================= NEXT ================= */}
+
+										<li
+											className={`page-item ${
+												currentPage === totalPages ? "disabled" : ""
+											}`}>
+											<button
+												type="button"
+												className="page-link"
+												disabled={currentPage === totalPages}
+												onClick={() => handlePageChange(currentPage + 1)}
+												aria-label="Next page">
+												<span>Next</span>
+												<i className="bi bi-chevron-right"></i>
+											</button>
+										</li>
+									</ul>
+								</nav>
+							</div>
+						)}
+					</section>
+				)}
+
+				{/* Blog Section */}
+				{loading ? (
+					<div className="text-center my-5">
+						<div className="spinner-border text-primary" role="status">
+							<span className="visually-hidden heading">Loading...</span>
+						</div>
+						<p className="mt-3 heading">Loading Blogs...</p>
+					</div>
+				) : (
+					<section className="py-5 bg-light">
+						<div className="container">
+							{/* Section Heading */}
+							<div className="text-center mb-5">
+								<span className="text-primary fw-semibold text-uppercase small">
+									Our Blog
+								</span>
+
+								<h2 className="fw-bold mt-2">Latest Articles & Insights</h2>
+
+								<p className="text-muted mx-auto" style={{ maxWidth: "650px" }}>
+									Explore our latest articles, tips, and insights to improve
+									your computer skills and build a successful career.
+								</p>
+							</div>
+
+							{/* Blog Cards */}
+							<div className="row g-4">
+								{blogs.length > 0 ? (
+									blogs.slice(0, 3).map((blog) => (
+										<div className="col-lg-4 col-md-6" key={blog.id}>
+											<Link
+												to={`/blog/${blog.id}`}
+												className="text-decoration-none">
+												<div className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover">
+													<img
+														src={blog.image}
+														className="card-img-top"
+														alt={blog.category}
+														loading="lazy"
+														decoding="async"
+														style={{
+															height: "230px",
+															objectFit: "cover",
+														}}
+													/>
+
+													<div className="card-body p-4">
+														<div className="d-flex justify-content-between align-items-center mb-3">
+															<span className="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+																{blog.category}
+															</span>
+															<small className="text-muted">{blog.date}</small>
+														</div>
+
+														<h5 className="card-title fw-bold text-dark">
+															{blog.title}
+														</h5>
+
+														<p
+															className="card-text text-muted"
+															style={{
+																display: "-webkit-box",
+																WebkitLineClamp: 2,
+																WebkitBoxOrient: "vertical",
+																overflow: "hidden",
+																textOverflow: "ellipsis",
+															}}>
+															{blog.description}
+														</p>
+
+														<span className="text-primary fw-semibold text-decoration-none">
+															{blog.button || "Read More"}
+															<i className="bi bi-arrow-right ms-1"></i>
+														</span>
+													</div>
+												</div>
+											</Link>
+										</div>
+									))
+								) : (
+									<div className="col-12 text-center">
+										<p className="text-muted">No blogs available.</p>
+									</div>
+								)}
+							</div>
+
+							{/* View All */}
+							{blogs.length > 3 && (
+								<div className="text-center mt-5">
+									<Link
+										to="/blogs"
+										className="btn btn-primary px-4 py-2 rounded-pill">
+										View All Blogs
+									</Link>
 								</div>
 							)}
 						</div>
-
-						{/* View All */}
-						{blogs.length > 3 && (
-							<div className="text-center mt-5">
-								<Link
-									to="/blogs"
-									className="btn btn-primary px-4 py-2 rounded-pill">
-									View All Blogs
-								</Link>
-							</div>
-						)}
-					</div>
-				</section>
+					</section>
+				)}
 
 				{/* Show Form */}
 				{showForm && (
