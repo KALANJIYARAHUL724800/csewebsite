@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_BASE = "/api";
+export const API_BASE =
+	"https://hostingcsebackend-50044872368.development.catalystappsail.in/api";
 
 export const logout = () => {
 	localStorage.removeItem("token");

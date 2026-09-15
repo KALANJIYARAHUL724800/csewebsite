@@ -8,18 +8,18 @@ const GalleryComponent = () => {
 	}, []);
 
 	const images = [
-		{ src: "/gallery/Class-1.jpg", alt: "Class 1" },
-		{ src: "/gallery/Entrance.jpg", alt: "Entrance" },
-		{ src: "/gallery/1.jpeg", alt: "1" },
-		{ src: "/gallery/2.jpeg", alt: "2" },
-		{ src: "/gallery/3.jpeg", alt: "3" },
-		{ src: "/gallery/4.jpeg", alt: "4" },
-		{ src: "/gallery/entrance2.jpg", alt: "Entrance 2" },
-		{ src: "/gallery/Counselling-1.jpg", alt: "Counselling 1" },
-		{ src: "/gallery/Counselling-2.jpg", alt: "Counselling 2" },
-		{ src: "/gallery/Class-2.jpg", alt: "Class 2" },
-		{ src: "/gallery/cls3.jpg", alt: "Class 3" },
-		{ src: "/gallery/Lab.png", alt: "Lab" },
+		{ src: "/gallery-images/Class-1.jpg", alt: "Class 1" },
+		{ src: "/gallery-images/Entrance.jpg", alt: "Entrance" },
+		{ src: "/gallery-images/1.jpeg", alt: "1" },
+		{ src: "/gallery-images/2.jpeg", alt: "2" },
+		{ src: "/gallery-images/3.jpeg", alt: "3" },
+		{ src: "/gallery-images/4.jpeg", alt: "4" },
+		{ src: "/gallery-images/entrance2.jpg", alt: "Entrance 2" },
+		{ src: "/gallery-images/Counselling-1.jpg", alt: "Counselling 1" },
+		{ src: "/gallery-images/Counselling-2.jpg", alt: "Counselling 2" },
+		{ src: "/gallery-images/Class-2.jpg", alt: "Class 2" },
+		{ src: "/gallery-images/cls3.jpg", alt: "Class 3" },
+		{ src: "/gallery-images/Lab.png", alt: "Lab" },
 	];
 
 	return (

@@ -18,12 +18,12 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 const HomeComponent = () => {
 	const galleryImages = [
-		"/gallery/entrance2.jpg",
-		"/gallery/Entrance.jpg",
-		"/gallery/Counselling-2.jpg",
-		"/gallery/2.jpeg",
-		"/gallery/3.jpeg",
-		"/gallery/4.jpeg",
+		"/gallery-images/entrance2.jpg",
+		"/gallery-images/Entrance.jpg",
+		"/gallery-images/Counselling-2.jpg",
+		"/gallery-images/2.jpeg",
+		"/gallery-images/3.jpeg",
+		"/gallery-images/4.jpeg",
 	];
 	const [loading, setLoading] = useState(true);
 	const [currentImage, setCurrentImage] = useState(0);
@@ -337,10 +337,10 @@ const HomeComponent = () => {
 										</thead>
 
 										<tbody>
-											{batches
+											{(Array.isArray(batches) ? batches : [])
 												.filter(
 													(batch) =>
-														batch.location?.toLowerCase().trim() === "ramnad",
+														batch.location?.trim().toLowerCase() === "ramnad",
 												)
 												.map((batch) => (
 													<tr key={batch.id}>
@@ -351,17 +351,13 @@ const HomeComponent = () => {
 																	.toUpperCase()}
 															</span>
 														</td>
-
 														<td>{batch.date}</td>
-
 														<td>{batch.time}</td>
-
 														<td>
 															{String(batch.location ?? "")
 																.trim()
 																.toUpperCase()}
 														</td>
-
 														<td>
 															<button
 																type="button"
@@ -396,10 +392,10 @@ const HomeComponent = () => {
 										</thead>
 
 										<tbody>
-											{batches
+											{(Array.isArray(batches) ? batches : [])
 												.filter(
 													(batch) =>
-														batch.location?.toLowerCase().trim() ===
+														batch.location?.trim().toLowerCase() ===
 														"udumalpet",
 												)
 												.map((batch) => (
@@ -411,17 +407,13 @@ const HomeComponent = () => {
 																	.toUpperCase()}
 															</span>
 														</td>
-
 														<td>{batch.date}</td>
-
 														<td>{batch.time}</td>
-
 														<td>
 															{String(batch.location ?? "")
 																.trim()
 																.toUpperCase()}
 														</td>
-
 														<td>
 															<button
 																type="button"
@@ -565,21 +557,21 @@ const HomeComponent = () => {
 				)}
 				<div className="container-fluid dflex mb-5 marquee-container">
 					<div className="marquee-track">
-						<img src="/gallery/Class-1.jpg" alt="Class 1" />
-						<img src="/gallery/Class-2.jpg" alt="Class 2" />
-						<img src="/gallery/cls3.jpg" alt="Class 3" />
-						<img src="/gallery/Counselling-1.jpg" alt="Counselling 1" />
-						<img src="/gallery/Counselling-2.jpg" alt="Counselling 2" />
-						<img src="/gallery/Entrance.jpg" alt="Entrance" />
-						<img src="/gallery/entrance2.jpg" alt="Entrance 2" />
-						<img src="/gallery/Lab.png" alt="Lab" />
-						<img src="/gallery/2.jpeg" alt="Lab" />
-						<img src="/gallery/3.jpeg" alt="Lab" />
-						<img src="/gallery/4.jpeg" alt="Lab" />
-						<img src="/gallery/5.jpeg" alt="Lab" />
-						<img src="/gallery/6.jpeg" alt="Lab" />
-						<img src="/gallery/7.jpeg" alt="Lab" />
-						<img src="/gallery/8.jpeg" alt="Lab" />
+						<img src="/gallery-images/Class-1.jpg" alt="Class 1" />
+						<img src="/gallery-images/Class-2.jpg" alt="Class 2" />
+						<img src="/gallery-images/cls3.jpg" alt="Class 3" />
+						<img src="/gallery-images/Counselling-1.jpg" alt="Counselling 1" />
+						<img src="/gallery-images/Counselling-2.jpg" alt="Counselling 2" />
+						<img src="/gallery-images/Entrance.jpg" alt="Entrance" />
+						<img src="/gallery-images/entrance2.jpg" alt="Entrance 2" />
+						<img src="/gallery-images/Lab.png" alt="Lab" />
+						<img src="/gallery-images/2.jpeg" alt="Lab" />
+						<img src="/gallery-images/3.jpeg" alt="Lab" />
+						<img src="/gallery-images/4.jpeg" alt="Lab" />
+						<img src="/gallery-images/5.jpeg" alt="Lab" />
+						<img src="/gallery-images/6.jpeg" alt="Lab" />
+						<img src="/gallery-images/7.jpeg" alt="Lab" />
+						<img src="/gallery-images/8.jpeg" alt="Lab" />
 					</div>
 				</div>
 				<br />
